@@ -1,0 +1,19 @@
+{
+  "name": "motobook-system",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "concurrently \"npm run dev --prefix frontend\" \"npm start --prefix backend/admin-service\" \"npm start --prefix backend/user-service\" \"npm run dev --prefix backend/business-service\" \"npm start --prefix backend/order-service\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "dependencies": {
+    "dotenv": "^16.5.0"
+  }
+}
