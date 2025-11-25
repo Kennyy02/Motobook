@@ -1,0 +1,15 @@
+/* SellerDashboard.css */
+.seller-dashboard {
+  display: flex;
+  margin-top: 60px; /* Height of header */
+  height: calc(100vh - 60px);
+  overflow: hidden;
+}
+
+.seller-content {
+  flex: 1;
+  overflow-y: auto;
+  background-color: #f9fafb;
+  padding: 2rem;
+  box-sizing: border-box;
+}

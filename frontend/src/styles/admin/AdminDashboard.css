@@ -1,0 +1,45 @@
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.dashboard-main {
+  display: flex;
+  margin-top: 64px; /* Header height */
+}
+
+.dashboard-content {
+  flex-grow: 1;
+  margin-left: 220px; /* Sidebar width */
+  padding: 2rem;
+  width: 85vw;
+  margin-right: 0px;
+  background-color: #f5f7fa;
+  min-height: calc(100vh - 64px);
+  box-sizing: border-box;
+}
+
+.dashboard-content h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.dashboard-content p {
+  color: #555;
+  font-size: 1rem;
+}
+
+.welcome-text {
+  color: #222;
+  font-size: 20px;
+}
+
+.chart-container {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}

@@ -1,0 +1,16 @@
+.cart-icon-wrapper {
+  position: relative;
+  cursor: pointer;
+  margin-left: 1rem;
+}
+
+.cart-count {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background-color: #ff4d4f;
+  color: white;
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 50%;
+}

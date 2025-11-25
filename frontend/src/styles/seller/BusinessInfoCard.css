@@ -1,0 +1,131 @@
+.business-container {
+  padding: 1.5rem;
+}
+
+.business-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 1rem;
+  background-color: #fff;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.identity-card {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  max-width: 600px;
+  flex: 1;
+}
+
+.identity-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.identity-info h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.25rem 0.6rem;
+  border-radius: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-top: 0.25rem;
+  width: fit-content;
+}
+
+.status-badge.open {
+  background-color: #d1f3d1;
+  color: #256029;
+}
+
+.status-badge.closed {
+  background-color: #fbdada;
+  color: #842029;
+}
+
+.business-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-end;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #f5f5f5;
+  border-radius: 0.5rem;
+  border: none;
+  text-decoration: none;
+  font-weight: 500;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.action-btn:hover {
+  background-color: #e0e0e0;
+}
+
+.metrics-row {
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.metric-card {
+  flex: 1;
+  min-width: 200px;
+  background-color: #fff;
+  padding: 1rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  text-align: center;
+}
+
+.metric-card h4 {
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+.identity-card input[type="file"] {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.logo-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 0.5rem;
+}
+
+.business-logo {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 7%;
+  border: 2px solid #ccc;
+}
+
+.change-logo-btn {
+  margin-top: 0.5rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #007bff;
+  text-decoration: underline;
+}

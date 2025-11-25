@@ -1,0 +1,263 @@
+.review-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  overflow-y: auto;
+  z-index: 999;
+}
+
+.review-modal {
+  background: #fff;
+  border-radius: 16px;
+  max-width: 620px;
+  width: 100%;
+  padding: 2rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  animation: fadeIn 0.25s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+  position: relative;
+}
+
+.review-modal h2 {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #222;
+  text-align: center;
+}
+
+/* Section Headers */
+.section-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #333;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 0.25rem;
+}
+
+/* Cart Items */
+.review-cart-items {
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+}
+
+.review-cart-items li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f1f1f1;
+  font-size: 0.95rem;
+  color: #444;
+}
+
+.item-left {
+  display: flex; /* 🟢 key to align image and text horizontally */
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.item-left img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.review-cart-items .item-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.review-cart-items li img {
+  width: 90px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 6px;
+  margin-right: 10px;
+}
+
+.review-total {
+  text-align: right;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #222;
+}
+
+/* Address Input Section */
+.input-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  position: relative;
+}
+
+.address-inline-display {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 0.4rem 0.6rem;
+  flex: 1;
+  background-color: #fafafa;
+  position: relative;
+}
+
+.address-inline-display input {
+  border: none;
+  background: transparent;
+  outline: none;
+  flex: 1;
+  font-size: 0.95rem;
+  padding-left: 0.5rem;
+}
+
+.button-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.button-group button {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 0.9rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.button-group button:hover {
+  background-color: #0056b3;
+}
+
+/* Suggestions List - ABSOLUTE */
+.autocomplete-suggestions {
+  position: sticky;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  max-height: 200px;
+  overflow-y: auto;
+  font-size: 0.9rem;
+  z-index: 1000;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.autocomplete-suggestions li {
+  padding: 0.6rem 0.8rem;
+  cursor: pointer;
+}
+
+.autocomplete-suggestions li:hover {
+  background-color: #f8f8f8;
+}
+
+/* Action Buttons */
+.review-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.review-buttons button {
+  padding: 0.65rem 1.2rem;
+  border-radius: 6px;
+  border: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.review-buttons .secondary-btn {
+  background-color: #f4f4f4;
+  color: #333;
+}
+
+.review-buttons .secondary-btn:hover {
+  background-color: #e4e4e4;
+}
+
+.review-buttons .place-order-btn {
+  background-color: #28a745;
+  color: #fff;
+}
+
+.review-buttons .place-order-btn:hover {
+  background-color: #218838;
+}
+
+.item-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.item-total {
+  font-weight: bold;
+  color: #222;
+  font-size: 0.95rem;
+}
+
+.quantity-price {
+  font-size: 0.9rem;
+  color: #777;
+  margin-top: 4px;
+  font-weight: 500;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .review-modal {
+    padding: 1.25rem;
+  }
+
+  .button-group,
+  .review-buttons {
+    flex-direction: column;
+  }
+
+  .button-group button,
+  .review-buttons button {
+    width: 100%;
+  }
+}

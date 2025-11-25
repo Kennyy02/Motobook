@@ -1,0 +1,24 @@
+.admin-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  background-color: #1e1e2f;
+  color: white;
+  display: flex;
+  align-items: center;
+  padding: 0 2rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  z-index: 1000;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  justify-content: space-between;
+}
+
+.admin-header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #f0f0f0;
+}

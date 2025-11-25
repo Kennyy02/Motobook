@@ -1,0 +1,102 @@
+/* CustomerHome.css */
+
+/* === General Layout === */
+.customer-home {
+  font-family: "Segoe UI", sans-serif;
+  color: #333;
+  min-height: 100vh;
+  width: 100%;
+  position: absolute;
+  right: 0;
+  left: 0;
+  top: 0;
+  overflow: hidden;
+}
+
+/* === Restaurant List === */
+
+/* === Menu Page === */
+.menu-page {
+  position: absolute;
+  flex: 1;
+  padding: 1rem;
+  right: 320px;
+  left: 60px;
+  padding-top: 80px;
+  height: 100vh;
+}
+
+/* === Cart Panel === */
+
+/* === Layout for Menu and Cart Side by Side === */
+.menu-cart-container {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}
+
+/* === ReviewPaymentAddressModal overrides (basic) === */
+.review-modal {
+  z-index: 1000;
+  padding: 1rem;
+  background: white;
+  border-radius: 1rem;
+  max-width: 500px;
+  margin: auto;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.quantity-controls button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.quantity {
+  min-width: 20px;
+  text-align: center;
+}
+
+.checkout-btn:disabled {
+  cursor: pointer;
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.customer-home {
+  display: flex;
+  flex-direction: column;
+}
+
+.restaurant-container {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.filter-search {
+  width: 100%;
+  padding: 6px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.filter-group summary {
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.filter-group ul {
+  list-style: none;
+  padding-left: 10px;
+}

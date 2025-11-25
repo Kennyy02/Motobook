@@ -1,0 +1,147 @@
+.restaurants-main {
+  position: fixed;
+  left: 188px;
+  right: 0;
+  padding: 2rem;
+  height: calc(100vh - 60px);
+  overflow-y: auto;
+  background-color: #f0f0f0;
+  box-sizing: border-box;
+  top: 60px;
+}
+
+.restaurants-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.restaurants-header h2 {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.add-btn {
+  background-color: #2563eb;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.add-btn:hover {
+  background-color: #1d4ed8;
+}
+
+.restaurant-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.restaurant-card {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease;
+}
+
+.restaurant-card:hover {
+  transform: translateY(-3px);
+}
+
+.restaurant-logo {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-bottom: 1px solid #eee;
+}
+
+.restaurant-card h3 {
+  font-size: 1.2rem;
+  margin: 1rem;
+  margin-bottom: 0.5rem;
+  color: #1f2937;
+}
+
+.restaurant-card p {
+  margin: 0 1rem 0.5rem;
+  font-size: 0.92rem;
+  color: #555;
+}
+
+.restaurant-card p strong {
+  color: #111;
+}
+
+.card-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  padding: 1rem;
+  border-top: 1px solid #eee;
+  margin-top: auto;
+}
+
+.card-actions .edit,
+.card-actions .delete {
+  padding: 0.4rem 0.9rem;
+  font-size: 0.85rem;
+  border-radius: 6px;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.2s ease;
+}
+
+.card-actions .edit {
+  background-color: #22c55e;
+  color: white;
+}
+
+.card-actions .edit:hover {
+  background-color: #16a34a;
+}
+
+.card-actions .delete {
+  background-color: #ef4444;
+  color: white;
+}
+
+.card-actions .delete:hover {
+  background-color: #dc2626;
+}
+
+.open {
+  color: #10b981;
+  font-weight: 500;
+}
+
+.closed {
+  color: #ef4444;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .restaurants-main {
+    margin-left: 0;
+    padding: 1rem;
+    width: 100%;
+  }
+
+  .add-btn {
+    font-size: 0.85rem;
+    padding: 0.5rem 1rem;
+  }
+
+  .restaurant-list {
+    grid-template-columns: 1fr;
+  }
+}
