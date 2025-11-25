@@ -1,59 +1,137 @@
 import express from "express";
-import { spawn } from "child_process";
+import cors from "cors";
+import dotenv from "dotenv";
 import { createProxyMiddleware } from "http-proxy-middleware";
 
+dotenv.config();
+
 const app = express();
-const PORT = process.env.PORT || 3000; // cPanel assigns PORT automatically
 
-// Start microservices on internal ports
-const services = [
-  { name: "admin-service", port: 4001 },
-  { name: "business-service", port: 4002 },
-  { name: "order-service", port: 4003 },
-  { name: "user-service", port: 4004 },
-];
+// Middleware
+app.use(express.json());
+app.use(cors());
 
-services.forEach(({ name, port }) => {
-  const child = spawn("node", [`${name}/server.js`], {
-    stdio: "inherit",
-    shell: true,
-    env: { ...process.env, PORT: port }, // assign unique port to each service
-  });
-
-  child.on("error", (err) => {
-    console.error(`Failed to start ${name}:`, err);
-  });
-
-  child.on("exit", (code, signal) => {
-    if (code !== null) {
-      console.log(`${name} exited with code ${code}`);
-    } else if (signal) {
-      console.log(`${name} was killed with signal ${signal}`);
-    }
+// Root route
+app.get("/", (req, res) => {
+  res.json({
+    message: "MotoBook API Gateway",
+    status: "running",
+    version: "1.0.0",
+    services: {
+      admin: "/admin",
+      business: "/api/business",
+      user: "/api/user",
+      order: "/api/order",
+    },
+    timestamp: new Date().toISOString(),
   });
 });
 
-// Proxy routes to services
+// Health check endpoint
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    status: "ok",
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString(),
+  });
+});
+
+// Proxy configuration with error handling
+const proxyOptions = (target, serviceName) => ({
+  target,
+  changeOrigin: true,
+  onError: (err, req, res) => {
+    console.error(`${serviceName} error:`, err.message);
+    res.status(503).json({
+      error: `${serviceName} is currently unavailable`,
+      message: "Please try again later",
+    });
+  },
+  onProxyReq: (proxyReq, req) => {
+    console.log(`[${serviceName}] ${req.method} ${req.path}`);
+  },
+});
+
+// Route to Admin Service
 app.use(
-  "/api/admin",
-  createProxyMiddleware({ target: "http://127.0.0.1:4001", changeOrigin: true })
+  "/admin",
+  createProxyMiddleware(
+    proxyOptions(
+      process.env.ADMIN_SERVICE_URL || "http://localhost:3001",
+      "Admin Service"
+    )
+  )
 );
 
+// Route to Business Service
 app.use(
   "/api/business",
-  createProxyMiddleware({ target: "http://127.0.0.1:4002", changeOrigin: true })
+  createProxyMiddleware(
+    proxyOptions(
+      process.env.BUSINESS_SERVICE_URL || "http://localhost:3003",
+      "Business Service"
+    )
+  )
 );
 
-app.use(
-  "/api/order",
-  createProxyMiddleware({ target: "http://127.0.0.1:4003", changeOrigin: true })
-);
-
+// Route to User Service
 app.use(
   "/api/user",
-  createProxyMiddleware({ target: "http://127.0.0.1:4004", changeOrigin: true })
+  createProxyMiddleware(
+    proxyOptions(
+      process.env.USER_SERVICE_URL || "http://localhost:3002",
+      "User Service"
+    )
+  )
 );
 
+// Route to Order Service
+app.use(
+  "/api/order",
+  createProxyMiddleware(
+    proxyOptions(
+      process.env.ORDER_SERVICE_URL || "http://localhost:3004",
+      "Order Service"
+    )
+  )
+);
+
+// 404 handler
+app.use((req, res) => {
+  res.status(404).json({
+    error: "Not Found",
+    message: `Route ${req.method} ${req.path} does not exist`,
+    availableRoutes: ["/admin", "/api/business", "/api/user", "/api/order"],
+  });
+});
+
+// Error handler
+app.use((err, req, res, next) => {
+  console.error("Gateway error:", err);
+  res.status(500).json({
+    error: "Internal Server Error",
+    message: "Something went wrong",
+  });
+});
+
+const PORT = process.env.PORT || 8080;
+
 app.listen(PORT, () => {
-  console.log(`Gateway running on port ${PORT}`);
+  console.log(`🚀 MotoBook Gateway running on port ${PORT}`);
+  console.log(`📍 Environment: ${process.env.NODE_ENV || "development"}`);
+  console.log(`🔗 Services:`);
+  console.log(
+    `   - Admin: ${process.env.ADMIN_SERVICE_URL || "http://localhost:3001"}`
+  );
+  console.log(
+    `   - Business: ${
+      process.env.BUSINESS_SERVICE_URL || "http://localhost:3003"
+    }`
+  );
+  console.log(
+    `   - User: ${process.env.USER_SERVICE_URL || "http://localhost:3002"}`
+  );
+  console.log(
+    `   - Order: ${process.env.ORDER_SERVICE_URL || "http://localhost:3004"}`
+  );
 });
