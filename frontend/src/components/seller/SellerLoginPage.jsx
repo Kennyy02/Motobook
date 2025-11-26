@@ -5,7 +5,7 @@ import { AuthContext } from "../../context/AuthContext";
 import "../../styles/seller/SellerLoginPage.css";
 
 const SellerLoginPage = () => {
-  const { login } = useContext(AuthContext); // ✅ Get login function from context
+  const { login } = useContext(AuthContext);
   const navigate = useNavigate();
   const [usePhoneLogin, setUsePhoneLogin] = useState(false);
   const [formData, setFormData] = useState({
@@ -14,8 +14,9 @@ const SellerLoginPage = () => {
     phone: "",
   });
 
+  // ✅ FIXED: Use USER service for login
   const userServiceBaseURL =
-    import.meta.env.VITE_USER_SERVICE_URL || "http://localhost:3002";
+    import.meta.env.VITE_USER_SERVICE_URL || "http://localhost:3005";
 
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -39,12 +40,12 @@ const SellerLoginPage = () => {
 
       const { token, user } = response.data;
 
-      // ✅ Store token and user details
+      // Store token and user details
       localStorage.setItem("token", token);
-      localStorage.setItem("userId", user.id); // 👈 add this line
-      localStorage.setItem("user", JSON.stringify(user)); // optional but useful
+      localStorage.setItem("userId", user.id);
+      localStorage.setItem("user", JSON.stringify(user));
 
-      login(user); // ✅ update AuthContext
+      login(user); // Update AuthContext
 
       alert("Login successful!");
       navigate("/seller/dashboard");

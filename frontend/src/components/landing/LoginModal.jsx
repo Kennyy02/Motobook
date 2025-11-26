@@ -19,7 +19,7 @@ function LoginModal({ onClose, mode: initialMode, onShowTerms }) {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [countdown, setCountdown] = useState(30);
-  const [view, setView] = useState("form"); // form | verifyCode | setGooglePassword
+  const [view, setView] = useState("form");
   const [verificationCode, setVerificationCode] = useState([
     "",
     "",
@@ -29,8 +29,9 @@ function LoginModal({ onClose, mode: initialMode, onShowTerms }) {
     "",
   ]);
 
+  // ✅ FIXED: User service handles authentication
   const userServiceBaseURL =
-    import.meta.env.VITE_USER_SERVICE_URL || "http://localhost:3002";
+    import.meta.env.VITE_USER_SERVICE_URL || "http://localhost:3005";
 
   const navigate = useNavigate();
   const inputsRef = useRef([]);
@@ -91,7 +92,7 @@ function LoginModal({ onClose, mode: initialMode, onShowTerms }) {
       return;
     }
 
-    // Name validation - should contain at least first and last name
+    // Name validation
     const nameParts = name.trim().split(/\s+/);
     if (name.trim().length < 2) {
       setError("Please enter your full name.");
@@ -140,16 +141,16 @@ function LoginModal({ onClose, mode: initialMode, onShowTerms }) {
     }
 
     try {
+      // ✅ Check email using USER service
       const res = await axios.post(
         `${userServiceBaseURL}/api/auth/check-email`,
-        {
-          email,
-        }
+        { email }
       );
 
       if (res.data.exists) {
         setError("Email is already registered. Please login.");
       } else {
+        // ✅ Register using USER service
         await axios.post(`${userServiceBaseURL}/api/auth/register`, {
           name,
           email,
@@ -158,11 +159,10 @@ function LoginModal({ onClose, mode: initialMode, onShowTerms }) {
           role: "Customer",
         });
 
+        // ✅ Send verification code using USER service
         await axios.post(
           `${userServiceBaseURL}/api/auth/send-verification-code`,
-          {
-            email,
-          }
+          { email }
         );
 
         setCountdown(30);
@@ -212,9 +212,7 @@ function LoginModal({ onClose, mode: initialMode, onShowTerms }) {
     try {
       await axios.post(
         `${userServiceBaseURL}/api/auth/send-verification-code`,
-        {
-          email,
-        }
+        { email }
       );
       setCountdown(30);
     } catch (err) {
@@ -243,12 +241,9 @@ function LoginModal({ onClose, mode: initialMode, onShowTerms }) {
     }
   };
 
-  // ---------------- HANDLE CLICK POSITION ----------------
   const handleBoxClick = () => {
-    // Find last filled or first empty index
     const filled = verificationCode.findIndex((val) => val === "");
     const targetIndex = filled === -1 ? 5 : filled;
-    // Always focus to last filled or first empty
     inputsRef.current[targetIndex]?.focus();
   };
 
@@ -305,9 +300,7 @@ function LoginModal({ onClose, mode: initialMode, onShowTerms }) {
                   try {
                     const res = await axios.post(
                       `${userServiceBaseURL}/api/auth/google-login`,
-                      {
-                        credential: credentialResponse.credential,
-                      }
+                      { credential: credentialResponse.credential }
                     );
 
                     if (res.data.requiresPassword) {
@@ -337,7 +330,7 @@ function LoginModal({ onClose, mode: initialMode, onShowTerms }) {
             </div>
 
             <p className="switch-mode">
-              Don’t have an account?{" "}
+              Don't have an account?{" "}
               <button
                 onClick={() => {
                   setMode("signup");
@@ -476,7 +469,7 @@ function LoginModal({ onClose, mode: initialMode, onShowTerms }) {
             <p className="countdown-text">
               {countdown > 0
                 ? `You can resend a new code in ${countdown}s`
-                : "Didn’t receive a code? You can request a new one."}
+                : "Didn't receive a code? You can request a new one."}
             </p>
 
             <button
