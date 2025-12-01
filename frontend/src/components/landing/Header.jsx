@@ -81,7 +81,12 @@ function Header({ cartItems, onToggleCart }) {
   return (
     <>
       <header className="header">
-        <div className="logo">MotoBook</div>
+        <div className="logo">
+          <img
+            src="../../../../backend/uploads/logo/Motobook.png"
+            alt="MotoBook Logo"
+          />
+        </div>
         <nav className="navbar">
           <div className="auth-buttons" ref={dropdownRef}>
             {!user || !user.name ? (
