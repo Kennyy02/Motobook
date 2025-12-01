@@ -12,19 +12,20 @@ body {
 }
 
 .landing-container {
-  margin-top: 80px;
+  margin-top: 60px;
   padding: 4rem 1.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
   background-image: url("../../assets/logo/bg1.jpg");
+  background-repeat: no-repeat;
 }
 
 .landing-container h1 {
   font-size: 3rem;
   font-weight: 700;
-  color: #222;
+  color: #ffffff;
   margin-bottom: 1rem;
 }
 
@@ -61,7 +62,7 @@ body {
 }
 
 .feature-icon {
-  color: #ff6b6b;
+  color: #42a9fc;
   margin-bottom: 1rem;
 }
 
@@ -118,7 +119,7 @@ body {
 
 .seller-section h2 {
   font-size: 1.75rem;
-  color: #c0392b;
+  color: #42a9fc;
   margin-bottom: 1rem;
 }
 
