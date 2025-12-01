@@ -2,7 +2,11 @@
   position: sticky;
   width: 100%;
   max-width: 260px;
-  background-color: #343434f9;
+  background-color: rgba(245, 245, 245, 0.9); /* Semi-transparent gray */
+  background-image: url("../../assets/logo/catbg.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   border: 1px solid #ddd;
   border-radius: 10px;
   padding: 1rem;
