@@ -73,21 +73,21 @@
 
 .login-btn {
   background-color: transparent;
-  color: #e63946;
-  border: 2px solid #e63946;
+  color: #42a9fc;
+  border: 2px solid #42a9fc;
 }
 
 .login-btn:hover {
-  background-color: #ffeaea;
+  background-color: transparent;
 }
 
 .signup-btn {
-  background-color: #e63946;
+  background-color: #42a9fc;
   color: #fff;
 }
 
 .signup-btn:hover {
-  background-color: #c4273a;
+  background-color: #2b4cc4;
 }
 
 .user-name {
