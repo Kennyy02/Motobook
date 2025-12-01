@@ -52,7 +52,7 @@ body {
 }
 
 .feature-card {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(10px); /* Adds a blur effect behind the card */
   -webkit-backdrop-filter: blur(10px); /* Safari support */
   border-radius: 1rem;
@@ -67,7 +67,7 @@ body {
 .feature-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
-  background: rgba(255, 255, 255, 0.05); /* Slightly more opaque on hover */
+  background: rgba(255, 255, 255, 0.15); /* Slightly more opaque on hover */
 }
 
 .feature-icon {

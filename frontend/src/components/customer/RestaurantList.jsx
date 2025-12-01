@@ -43,10 +43,12 @@ const RestaurantList = ({
 
   // ⬅️ Fix: Run updateChevronState after recommended list is updated/rendered
   useEffect(() => {
-    const frame = requestAnimationFrame(() => {
+    // Use a small delay to ensure DOM has fully rendered
+    const timer = setTimeout(() => {
       updateChevronState();
-    });
-    return () => cancelAnimationFrame(frame);
+    }, 100);
+
+    return () => clearTimeout(timer);
   }, [recommendedRestaurants, selectedCategories]);
 
   const approvedRecommended = recommendedRestaurants.filter(

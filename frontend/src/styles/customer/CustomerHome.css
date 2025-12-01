@@ -11,6 +11,11 @@
   left: 0;
   top: 0;
   overflow: hidden;
+  background-image: url("../../assets/logo/cbg.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 /* === Restaurant List === */
