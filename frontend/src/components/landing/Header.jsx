@@ -8,6 +8,7 @@ import Cart from "../../components/customer/Cart.jsx";
 import OrdersModal from "../../components/customer/OrdersModal.jsx";
 import TermsAndConditions from "./Terms&Conditions.jsx";
 import axios from "axios";
+import logo from "../../assets/logo/Motobook.png";
 
 function Header({ cartItems, onToggleCart }) {
   const [showModal, setShowModal] = useState({ open: false, mode: "login" });
@@ -82,7 +83,7 @@ function Header({ cartItems, onToggleCart }) {
     <>
       <header className="header">
         <div className="logo">
-          <img src="../../assets/logo/Motobook.png" alt="MotoBook Logo" />
+          <img src={logo} alt="MotoBook Logo" />
         </div>
         <nav className="navbar">
           <div className="auth-buttons" ref={dropdownRef}>
