@@ -18,7 +18,7 @@ body {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  background-image: url("../../assets/logo/bg1.jpg");
+  background-image: url("../../assets/logo/bg7.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
@@ -77,29 +77,33 @@ body {
 
 .feature-card h3 {
   font-size: 1.5rem;
-  color: #333;
+  color: #ffffff;
   margin-bottom: 0.5rem;
 }
 
 .feature-card p {
   font-size: 1rem;
-  color: #666;
+  color: #ffffff;
 }
 
 /* How It Works Section */
 .how-it-works {
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.25); /* 25% opacity */
+  backdrop-filter: blur(10px); /* Frosted glass effect */
+  -webkit-backdrop-filter: blur(10px); /* Safari support */
   border-radius: 1rem;
   padding: 3rem 2rem;
   max-width: 900px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   margin-bottom: 3rem;
+  border: 1px solid rgba(255, 255, 255, 0.3); /* Subtle border */
+  color: #ffffff; /* White text */
 }
 
 .how-it-works h2 {
   font-size: 2rem;
   margin-bottom: 1.5rem;
-  color: #222;
+  color: #ffffff;
 }
 
 .how-it-works ol {
@@ -108,7 +112,7 @@ body {
   margin: 0 auto;
   max-width: 600px;
   font-size: 1.1rem;
-  color: #444;
+  color: #ffffff;
 }
 
 .how-it-works li {
@@ -117,13 +121,17 @@ body {
 
 /* Seller CTA Section */
 .seller-section {
-  background: #fff8f7;
+  background: rgba(255, 248, 247, 0.25); /* 25% opacity */
+  backdrop-filter: blur(10px); /* Frosted glass effect */
+  -webkit-backdrop-filter: blur(10px); /* Safari support */
   border-radius: 1rem;
   padding: 2.5rem 2rem;
   text-align: center;
   max-width: 500px;
   width: 100%;
-  box-shadow: 0 4px 16px rgba(255, 107, 107, 0.2);
+  box-shadow: 0 4px 16px rgba(255, 107, 107, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.3); /* Subtle border */
+  color: #ffffff; /* White text */
 }
 
 .seller-section h2 {
@@ -134,12 +142,12 @@ body {
 
 .seller-section p {
   font-size: 1rem;
-  color: #555;
+  color: #ffffff;
   margin-bottom: 1.5rem;
 }
 
 .register-button {
-  background-color: #ff6b6b;
+  background-color: #42a9fc;
   color: white;
   padding: 0.85rem 1.75rem;
   font-size: 1rem;
