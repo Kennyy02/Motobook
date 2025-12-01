@@ -1,20 +1,11 @@
 /* === Layout & Structure === */
 
 .restaurant-list-layout {
-  font-family: "Segoe UI", sans-serif;
-  color: #333;
-  min-height: 100vh;
+  display: flex;
   width: 100%;
-  position: absolute;
-  right: 0;
-  left: 0;
-  top: 0;
-  overflow: hidden;
+  height: 100vh;
   background-image: url("../../assets/logo/cbg.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
+  position: relative;
 }
 
 .restaurant-list-wrapper {
