@@ -82,10 +82,7 @@ function Header({ cartItems, onToggleCart }) {
     <>
       <header className="header">
         <div className="logo">
-          <img
-            src="../../../../backend/uploads/logo/Motobook.png"
-            alt="MotoBook Logo"
-          />
+          <img src="../../assets/logo/Motobook.png" alt="MotoBook Logo" />
         </div>
         <nav className="navbar">
           <div className="auth-buttons" ref={dropdownRef}>
