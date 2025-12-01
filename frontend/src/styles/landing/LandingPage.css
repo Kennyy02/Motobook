@@ -18,10 +18,10 @@ body {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  background-image: url("../../assets/logo/bg7.jpg");
+  background-image: url("../../assets/logo/bg8.png");
   background-repeat: no-repeat;
   background-size: cover;
-  background-position: center;
+  background-position: center -100px;
   background-attachment: fixed;
   width: 100%;
   min-height: calc(100vh - 60px);
@@ -52,7 +52,7 @@ body {
 }
 
 .feature-card {
-  background: rgba(255, 255, 255, 0.7); /* 70% opacity - adjust as needed */
+  background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(10px); /* Adds a blur effect behind the card */
   -webkit-backdrop-filter: blur(10px); /* Safari support */
   border-radius: 1rem;
@@ -159,7 +159,7 @@ body {
 }
 
 .register-button:hover {
-  background-color: #e74c3c;
+  background-color: #5336c6;
 }
 
 /* Loading Fallback */
