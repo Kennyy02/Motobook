@@ -13,18 +13,18 @@ body {
 
 .landing-container {
   margin-top: 60px;
-  padding: 4rem 0;
+  padding: 4rem 1.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  background-image: url("../../assets/logo/bg8.png");
+  background-image: url("../../assets/logo/bg4.png");
   background-repeat: no-repeat;
   background-size: cover;
-  background-position: center -100px;
+  background-position: center;
   background-attachment: fixed;
   width: 100%;
-  min-height: calc(100vh - 60px);
+  min-height: 100vh;
 }
 
 .landing-container h1 {
@@ -67,7 +67,7 @@ body {
 .feature-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
-  background: rgba(255, 255, 255, 0.85); /* Slightly more opaque on hover */
+  background: rgba(255, 255, 255, 0.05); /* Slightly more opaque on hover */
 }
 
 .feature-icon {
@@ -159,7 +159,7 @@ body {
 }
 
 .register-button:hover {
-  background-color: #5336c6;
+  background-color: #42a8fca7;
 }
 
 /* Loading Fallback */
