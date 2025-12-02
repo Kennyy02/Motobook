@@ -23,6 +23,8 @@ const RestaurantList = ({
   const scrollRecommended = (offset) => {
     if (recommendedRef.current) {
       recommendedRef.current.scrollBy({ left: offset, behavior: "smooth" });
+      // Update chevron state after a short delay to allow scroll animation
+      setTimeout(updateChevronState, 300);
     }
   };
 
@@ -41,9 +43,8 @@ const RestaurantList = ({
     };
   }, []);
 
-  // ⬅️ Fix: Run updateChevronState after recommended list is updated/rendered
+  // Update chevron state after recommended list is updated/rendered
   useEffect(() => {
-    // Use a small delay to ensure DOM has fully rendered
     const timer = setTimeout(() => {
       updateChevronState();
     }, 100);
