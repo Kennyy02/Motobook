@@ -137,3 +137,45 @@ export const markOrderAsCompleted = async (orderId) => {
   );
   return result;
 };
+
+export const getRiderDeliveryHistory = async (riderId) => {
+  const [orders] = await pool.query(
+    `SELECT * FROM orders 
+     WHERE rider_id = ? AND status = 'completed'
+     ORDER BY delivered_at DESC`,
+    [riderId]
+  );
+
+  for (const order of orders) {
+    const [items] = await pool.query(
+      `SELECT product_id, product_name, quantity, price, image 
+       FROM order_items WHERE order_id = ?`,
+      [order.id]
+    );
+    order.items = items;
+  }
+
+  return orders;
+};
+
+export const getRiderStats = async (riderId) => {
+  const [stats] = await pool.query(
+    `SELECT 
+      COUNT(*) as total_deliveries,
+      SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) as completed_deliveries,
+      SUM(CASE WHEN status = 'completed' THEN rider_earnings ELSE 0 END) as total_earnings,
+      SUM(CASE WHEN DATE(delivered_at) = CURDATE() AND status = 'completed' THEN rider_earnings ELSE 0 END) as today_earnings
+     FROM orders 
+     WHERE rider_id = ?`,
+    [riderId]
+  );
+
+  return (
+    stats[0] || {
+      total_deliveries: 0,
+      completed_deliveries: 0,
+      total_earnings: 0,
+      today_earnings: 0,
+    }
+  );
+};

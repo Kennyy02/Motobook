@@ -7,6 +7,8 @@ import {
   assignRiderToOrder,
   getAcceptedOrdersByRider,
   markOrderAsCompleted,
+  getRiderDeliveryHistory, // ← ADD THIS IMPORT
+  getRiderStats,
 } from "../model/orderModel.js";
 
 export const createOrder = async (req, res) => {
@@ -135,5 +137,37 @@ export const completeOrder = async (req, res) => {
   } catch (error) {
     console.error("Error completing order:", error);
     res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const getRiderHistory = async (req, res) => {
+  const { riderId } = req.params;
+
+  if (!riderId) {
+    return res.status(400).json({ message: "Missing riderId" });
+  }
+
+  try {
+    const history = await getRiderDeliveryHistory(riderId);
+    res.status(200).json(history);
+  } catch (error) {
+    console.error("Error fetching rider history:", error);
+    res.status(500).json({ message: "Failed to fetch delivery history" });
+  }
+};
+
+export const getRiderStatistics = async (req, res) => {
+  const { riderId } = req.params;
+
+  if (!riderId) {
+    return res.status(400).json({ message: "Missing riderId" });
+  }
+
+  try {
+    const stats = await getRiderStats(riderId);
+    res.status(200).json(stats);
+  } catch (error) {
+    console.error("Error fetching rider stats:", error);
+    res.status(500).json({ message: "Failed to fetch rider statistics" });
   }
 };
