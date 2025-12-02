@@ -35,7 +35,7 @@
   font-size: 1.75rem;
   font-weight: 600;
   margin-bottom: 1rem;
-  color: #333;
+  color: #ffffff;
   border-left: 4px solid #ff6b35;
   padding-left: 0.75rem;
 }
@@ -47,6 +47,7 @@
   flex-wrap: wrap;
   gap: 1rem;
   margin-bottom: 2rem;
+  background-color: #222;
 }
 
 .restaurant-grid.scrollable {
@@ -54,7 +55,6 @@
   scroll-behavior: smooth;
   padding: 1rem 0;
   flex-wrap: nowrap;
-  background-color: #555;
 }
 
 .restaurant-grid.scrollable::-webkit-scrollbar {
