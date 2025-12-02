@@ -1,55 +1,51 @@
-/* CustomerHome.css */
-
-/* === General Layout === */
 .customer-home {
   font-family: "Segoe UI", sans-serif;
   color: #333;
   min-height: 100vh;
   width: 100%;
-  position: absolute;
-  right: 0;
-  left: 0;
-  top: 0;
-  overflow: hidden;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
+  display: flex;
+  flex-direction: column;
 }
 
-/* === Restaurant List === */
-
-/* === Menu Page === */
-.menu-page {
-  position: absolute;
-  flex: 1;
-  padding: 1rem;
-  right: 320px;
-  left: 60px;
-  padding-top: 80px;
-  height: 100vh;
-}
-
-/* === Cart Panel === */
-
-/* === Layout for Menu and Cart Side by Side === */
+/* === Menu Cart Container === */
 .menu-cart-container {
   display: flex;
   flex-direction: row;
   gap: 1rem;
+  height: calc(100vh - 60px);
+  margin-top: 60px;
+  overflow: hidden;
 }
 
-/* === ReviewPaymentAddressModal overrides (basic) === */
+/* === Menu Page === */
+.menu-page {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+  background: rgba(255, 255, 255, 0.95);
+}
+
+/* === Cart Panel === */
+.cart-panel {
+  width: 320px;
+  background: white;
+  border-left: 1px solid #e2e8f0;
+  overflow-y: auto;
+  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
+}
+
+/* === Review Modal === */
 .review-modal {
   z-index: 1000;
-  padding: 1rem;
+  padding: 2rem;
   background: white;
   border-radius: 1rem;
-  max-width: 500px;
-  margin: auto;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  max-width: 600px;
+  margin: 2rem auto;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
 }
 
+/* === Quantity Controls === */
 .quantity-controls {
   display: flex;
   align-items: center;
@@ -57,50 +53,129 @@
 }
 
 .quantity-controls button {
-  background: none;
-  border: none;
+  background: #f7fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
   cursor: pointer;
-  padding: 4px;
+  padding: 6px 10px;
+  transition: all 0.2s ease;
+  font-weight: 600;
+}
+
+.quantity-controls button:hover {
+  background: #edf2f7;
+  border-color: #cbd5e0;
 }
 
 .quantity {
-  min-width: 20px;
+  min-width: 30px;
   text-align: center;
+  font-weight: 600;
+  color: #2d3748;
+}
+
+/* === Checkout Button === */
+.checkout-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.checkout-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.5);
 }
 
 .checkout-btn:disabled {
-  cursor: pointer;
   opacity: 0.5;
   cursor: not-allowed;
+  transform: none;
 }
 
-.customer-home {
-  display: flex;
-  flex-direction: column;
-}
-
-.restaurant-container {
-  display: flex;
-  flex-direction: row;
-  gap: 1rem;
-  padding: 1rem;
-}
-
+/* === Filter Components === */
 .filter-search {
   width: 100%;
-  padding: 6px;
-  margin-bottom: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.9);
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.filter-search:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.filter-group {
+  margin-bottom: 1.5rem;
 }
 
 .filter-group summary {
-  font-weight: bold;
+  font-weight: 600;
   cursor: pointer;
-  margin-top: 10px;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  transition: background 0.2s ease;
+  color: white;
+}
+
+.filter-group summary:hover {
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .filter-group ul {
   list-style: none;
-  padding-left: 10px;
+  padding-left: 1rem;
+  margin-top: 0.75rem;
+}
+
+.filter-group label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.9);
+  transition: color 0.2s ease;
+}
+
+.filter-group label:hover {
+  color: white;
+}
+
+/* === Responsive Design === */
+@media (max-width: 1024px) {
+  .menu-cart-container {
+    flex-direction: column;
+  }
+
+  .cart-panel {
+    width: 100%;
+    border-left: none;
+    border-top: 1px solid #e2e8f0;
+    max-height: 50vh;
+  }
+}
+
+@media (max-width: 768px) {
+  .menu-page {
+    padding: 1rem;
+  }
+
+  .review-modal {
+    margin: 1rem;
+    padding: 1.5rem;
+  }
 }
