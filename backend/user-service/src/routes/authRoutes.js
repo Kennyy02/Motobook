@@ -17,6 +17,8 @@ import {
   updateUser,
   deleteUser,
   changeUserPassword,
+  getRiderProfile,
+  updateRiderAvailability,
 } from "../controller/authController.js";
 
 const router = express.Router();
@@ -35,7 +37,10 @@ router.post("/login-seller", loginSeller); // seller-specific
 router.post("/preferences", setUserPreferences);
 router.get("/preferences/:userId", getUserPreferencesHandler);
 
+// Rider profile endpoints
 router.post("/rider/login", loginRider);
+router.get("/rider/:id/profile", getRiderProfile);
+router.patch("/rider/:id/availability", updateRiderAvailability);
 
 //AMIN-PANEL SIDE
 router.get("/users", getUsers);

@@ -8,16 +8,22 @@ import {
   acceptOrder,
   getAcceptedOrders,
   completeOrder,
+  getRiderHistory, // ✅ NEW
+  getRiderStatistics, // ✅ NEW
 } from "../controller/orderController.js";
 
 const router = express.Router();
 
 router.get("/all", getOrders);
 router.get("/accepted", getAcceptedOrders);
-router.get("/pending", getPendingOrders); // ✅ NEW endpoint
+router.get("/pending", getPendingOrders);
 router.post("/create", createOrder);
-router.patch("/:id/status", updateOrderStatus);
-router.patch("/:id/assign", acceptOrder); // for assigning a rider
+router.patch("/:id/status", updateOrderStatus); // Keep this one, it already works
+router.patch("/:id/assign", acceptOrder);
 router.patch("/:orderId/complete", completeOrder);
+
+// ✅ NEW: Rider-specific endpoints
+router.get("/rider/:riderId/history", getRiderHistory);
+router.get("/rider/:riderId/stats", getRiderStatistics);
 
 export default router;

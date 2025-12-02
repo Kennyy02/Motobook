@@ -8,6 +8,8 @@ import {
   createSeller,
   saveUserPreferences,
   getUserPreferences,
+  getRiderProfile, // ← ADD THIS
+  updateRiderAvailability, // ← ADD THIS
 } from "../model/userModel.js";
 import { pool } from "../config/db.js";
 import { sendVerificationCodeEmail } from "../utils/sendVerificationEmail.js";
@@ -604,6 +606,49 @@ export const loginRider = async (req, res) => {
     });
   } catch (error) {
     console.error("Rider login error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// Get rider profile
+export const getRiderProfile = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const profile = await getRiderProfile(id);
+
+    if (!profile) {
+      return res.status(404).json({ message: "Rider not found" });
+    }
+
+    res.status(200).json(profile);
+  } catch (error) {
+    console.error("Error fetching rider profile:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// Update rider availability
+export const updateRiderAvailability = async (req, res) => {
+  const { id } = req.params;
+  const { isAvailable } = req.body;
+
+  if (typeof isAvailable !== "boolean") {
+    return res
+      .status(400)
+      .json({ message: "isAvailable must be true or false" });
+  }
+
+  try {
+    const result = await updateRiderAvailability(id, isAvailable);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "Rider not found" });
+    }
+
+    res.status(200).json({ message: "Availability updated", isAvailable });
+  } catch (error) {
+    console.error("Error updating rider availability:", error);
     res.status(500).json({ message: "Server error" });
   }
 };

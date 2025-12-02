@@ -115,6 +115,24 @@ export const getUserPreferences = async (userId) => {
   }
 };
 
+// Get rider profile with basic info
+export const getRiderProfile = async (riderId) => {
+  const [rows] = await pool.query(
+    "SELECT userid, name, email, phone, role, is_available FROM users WHERE userid = ? AND role = 'Rider'",
+    [riderId]
+  );
+  return rows[0];
+};
+
+// Update rider availability
+export const updateRiderAvailability = async (riderId, isAvailable) => {
+  const [result] = await pool.query(
+    "UPDATE users SET is_available = ? WHERE userid = ? AND role = 'Rider'",
+    [isAvailable, riderId]
+  );
+  return result;
+};
+
 //ADMIN
 
 const User = {
