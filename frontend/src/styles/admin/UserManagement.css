@@ -1,6 +1,7 @@
 .user-management {
   padding: 2rem;
   font-family: "Segoe UI", sans-serif;
+  background-color: transparent; /* ✅ ADDED: Make container transparent */
 }
 
 .user-management h2 {
@@ -32,6 +33,7 @@
 
 .user-list {
   overflow-x: auto;
+  background-color: transparent; /* ✅ ADDED: Make list container transparent */
 }
 
 .user-table {
