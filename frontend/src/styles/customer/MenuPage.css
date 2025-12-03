@@ -74,7 +74,7 @@
 
 /* Individual Menu Card */
 .menu-item-card {
-  background: white;
+  background: rgb(19, 19, 19);
   border: 1px solid #ddd;
   border-radius: 1rem;
   padding: 1rem;
