@@ -141,34 +141,59 @@ function LoginModal({ onClose, mode: initialMode, onShowTerms }) {
     }
 
     try {
-      // ✅ Check email using USER service
-      const res = await axios.post(
+      // ✅ Step 1: Check if email exists and get verification status
+      const checkResponse = await axios.post(
         `${userServiceBaseURL}/api/auth/check-email`,
         { email }
       );
 
-      if (res.data.exists) {
-        setError("Email is already registered. Please login.");
-      } else {
-        // ✅ Register using USER service
-        await axios.post(`${userServiceBaseURL}/api/auth/register`, {
-          name,
-          email,
-          password,
-          phone,
-          role: "Customer",
-        });
+      if (checkResponse.data.exists) {
+        // ✅ FIX: Check if account is verified
+        if (checkResponse.data.isVerified === false) {
+          // Account exists but not verified - resend code using dedicated endpoint
+          console.log("📧 Account exists but not verified. Resending code...");
 
-        // ✅ Send verification code using USER service
-        await axios.post(
-          `${userServiceBaseURL}/api/auth/send-verification-code`,
-          { email }
-        );
+          await axios.post(
+            `${userServiceBaseURL}/api/auth/resend-verification`,
+            { email }
+          );
 
-        setCountdown(30);
-        setView("verifyCode");
+          setCountdown(30);
+          setView("verifyCode");
+          setError(""); // Clear any previous errors
+
+          // Show success message (optional)
+          console.log("✅ Verification code resent successfully!");
+        } else {
+          // Account exists and is verified - tell them to login
+          setError("Email is already registered. Please login instead.");
+        }
+        setLoading(false);
+        return;
       }
+
+      // ✅ Step 2: New user - register account
+      await axios.post(`${userServiceBaseURL}/api/auth/register`, {
+        name,
+        email,
+        password,
+        phone,
+        role: "Customer",
+      });
+
+      // ✅ Step 3: Send verification code for new user
+      console.log("📧 Sending verification code to:", email);
+      const verificationResponse = await axios.post(
+        `${userServiceBaseURL}/api/auth/send-verification-code`,
+        { email }
+      );
+      console.log("✅ Verification code response:", verificationResponse.data);
+
+      setCountdown(30);
+      setView("verifyCode");
+      setError(""); // Clear any previous errors
     } catch (err) {
+      console.error("❌ Signup error:", err);
       setError(err.response?.data?.message || "Something went wrong.");
     } finally {
       setLoading(false);
