@@ -1,112 +1,34 @@
 .menu-page {
   min-height: 100vh;
-  /* Match RestaurantList theme with overlay */
   background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)),
     url("../../assets/logo/bg10.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: fixed;
-  padding: 2rem;
-  padding-top: 80px; /* Account for any navbar */
+  padding-top: 200px; /* Space for fixed header */
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* === Header Section === */
-.menu-header {
-  margin-bottom: 2rem;
-  position: relative;
-  z-index: 10; /* Ensure it stays below sticky controls */
-}
-
-.back-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  background: rgba(255, 255, 255, 0.95);
-  border: none;
-  border-radius: 50px;
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #2d3748;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  margin-bottom: 1.5rem;
-}
-
-.back-btn:hover {
-  background: white;
-  transform: translateX(-4px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
-  color: #ff6b35;
-}
-
-.back-btn:active {
-  transform: translateX(-2px);
-}
-
-/* Restaurant Name Section */
-.restaurant-name-section {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  padding: 2rem 2.5rem;
-  border-radius: 20px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  position: relative; /* Changed from any sticky/fixed positioning */
-  z-index: 10; /* Below sticky controls */
-}
-
-.restaurant-name {
-  font-size: 2.5rem;
-  font-weight: 800;
-  background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin: 0 0 0.5rem 0;
-  letter-spacing: -0.5px;
-}
-
-.restaurant-subtitle {
-  font-size: 1.1rem;
-  color: #64748b;
-  margin: 0;
-  font-weight: 400;
-}
-
-/* === Menu Controls === */
+/* === Fixed Header Section === */
 .menu-controls {
+  position: fixed;
+  top: 60px; /* Below navbar */
+  left: 0;
+  right: 0;
+  z-index: 150;
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
-  margin-bottom: 2rem;
-  position: sticky;
-  top: 60px; /* Adjust based on your navbar height */
-  z-index: 200; /* Higher than header */
-  padding: 1.5rem 0;
-  background: transparent;
-}
-
-/* Add backdrop blur container for controls */
-.menu-controls::before {
-  content: "";
-  position: absolute;
-  top: -10px;
-  left: -2rem;
-  right: -2rem;
-  bottom: -10px;
+  padding: 1.5rem 2rem;
   background: linear-gradient(
     to bottom,
-    rgba(0, 0, 0, 0.5) 0%,
-    rgba(0, 0, 0, 0.4) 80%,
+    rgba(0, 0, 0, 0.6) 0%,
+    rgba(0, 0, 0, 0.5) 90%,
     transparent 100%
   );
-  backdrop-filter: blur(12px);
-  z-index: -1;
-  border-radius: 0;
+  backdrop-filter: blur(15px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* === Search Bar === */
@@ -201,15 +123,76 @@
   transform: translateY(-2px);
 }
 
+/* === Content Area (scrollable) === */
+.menu-header {
+  padding: 0 2rem;
+  margin-bottom: 2rem;
+}
+
+/* Back Button */
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: rgba(255, 255, 255, 0.95);
+  border: none;
+  border-radius: 50px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #2d3748;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  margin-bottom: 1.5rem;
+}
+
+.back-btn:hover {
+  background: white;
+  transform: translateX(-4px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  color: #ff6b35;
+}
+
+.back-btn:active {
+  transform: translateX(-2px);
+}
+
+/* Restaurant Name Section */
+.restaurant-name-section {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  padding: 2rem 2.5rem;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.restaurant-name {
+  font-size: 2.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0 0 0.5rem 0;
+  letter-spacing: -0.5px;
+}
+
+.restaurant-subtitle {
+  font-size: 1.1rem;
+  color: #64748b;
+  margin: 0;
+  font-weight: 400;
+}
+
 /* === Menu Grid === */
 .menu-grid {
   display: grid;
   gap: 1.5rem;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   animation: fadeIn 0.5s ease;
-  padding-bottom: 2rem;
-  position: relative;
-  z-index: 1; /* Below sticky controls */
+  padding: 0 2rem 2rem 2rem;
 }
 
 @keyframes fadeIn {
@@ -407,6 +390,7 @@
   justify-content: center;
   min-height: 400px;
   gap: 1.5rem;
+  padding: 0 2rem;
 }
 
 .spinner {
@@ -442,6 +426,7 @@
   backdrop-filter: blur(20px);
   border-radius: 20px;
   padding: 3rem;
+  margin: 0 2rem 2rem 2rem;
   text-align: center;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.3);
@@ -469,17 +454,16 @@
 /* === Responsive Design === */
 @media (max-width: 768px) {
   .menu-page {
-    padding: 1rem;
-    padding-top: 70px;
+    padding-top: 180px;
   }
 
   .menu-controls {
     top: 50px;
+    padding: 1rem;
   }
 
-  .menu-controls::before {
-    left: -1rem;
-    right: -1rem;
+  .menu-header {
+    padding: 0 1rem;
   }
 
   .restaurant-name-section {
@@ -497,6 +481,7 @@
   .menu-grid {
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     gap: 1rem;
+    padding: 0 1rem 2rem 1rem;
   }
 
   .menu-item-image {
@@ -505,6 +490,10 @@
 
   .item-price {
     font-size: 1.3rem;
+  }
+
+  .empty-state {
+    margin: 0 1rem 2rem 1rem;
   }
 }
 
@@ -523,10 +512,5 @@
 
   .add-to-cart-btn {
     padding: 0.75rem;
-  }
-
-  .menu-controls::before {
-    left: -1rem;
-    right: -1rem;
   }
 }
