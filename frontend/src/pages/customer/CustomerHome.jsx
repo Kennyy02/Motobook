@@ -21,6 +21,7 @@ const CustomerHome = () => {
   const [selectedRestaurant, setSelectedRestaurant] = useState(null);
   const [cartItems, setCartItems] = useState([]);
   const [menuCartVisible, setMenuCartVisible] = useState(false);
+  const [isCartPanelOpen, setIsCartPanelOpen] = useState(false);
   const [checkoutModalOpen, setCheckoutModalOpen] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [allRestaurants, setAllRestaurants] = useState([]);
@@ -33,7 +34,6 @@ const CustomerHome = () => {
   const fetchAllRestaurants = async () => {
     try {
       const res = await axios.get(
-        // `/api/business/all-restaurants`
         `${businessServiceBaseURL}/api/business/all-restaurants`
       );
       return res.data;
@@ -50,7 +50,6 @@ const CustomerHome = () => {
   const fetchRecommendedRestaurants = async (userId) => {
     try {
       const res = await axios.get(
-        // `/api/business/recommended/${userId}`
         `${businessServiceBaseURL}/api/business/recommended/${userId}`
       );
       return res.data;
@@ -73,14 +72,10 @@ const CustomerHome = () => {
   };
 
   const saveUserPreferences = async (userId, categories) => {
-    await axios.post(
-      // `/api/auth/preferences`,
-      `${userServiceBaseURL}/api/auth/preferences`,
-      {
-        userId,
-        categories,
-      }
-    );
+    await axios.post(`${userServiceBaseURL}/api/auth/preferences`, {
+      userId,
+      categories,
+    });
   };
 
   const handleCategoryConfirm = async (categories) => {
@@ -134,19 +129,10 @@ const CustomerHome = () => {
   const handleConfirmOrder = ({ location }) => {
     console.log("Confirmed order with location:", location);
     setSelectedLocation(location);
-    // send order to backend
   };
 
-  const toggleMenuCartVisible = () => {
-    if (!selectedRestaurant) {
-      if (cartItems.length > 0) {
-        alert("Select a restaurant first.");
-      }
-      return;
-    }
-    const newState = !menuCartVisible;
-    setMenuCartVisible(newState);
-    localStorage.setItem("menuCartVisible", JSON.stringify(newState));
+  const toggleCartPanel = () => {
+    setIsCartPanelOpen((prev) => !prev);
   };
 
   useEffect(() => {
@@ -221,7 +207,7 @@ const CustomerHome = () => {
       <Header
         showCart={!!selectedRestaurant}
         cartItems={cartItems}
-        onToggleCart={toggleMenuCartVisible}
+        onToggleCart={toggleCartPanel}
         navigateToMenu={() => {
           if (!selectedRestaurant) return;
           setMenuCartVisible(true);
@@ -272,9 +258,9 @@ const CustomerHome = () => {
           />
           <CartPanel
             cartItems={cartItems}
+            isOpen={isCartPanelOpen}
             onClose={() => {
-              setMenuCartVisible(false);
-              localStorage.setItem("menuCartVisible", JSON.stringify(false));
+              setIsCartPanelOpen(false);
             }}
             onCheckoutClick={() => setCheckoutModalOpen(true)}
             onIncrease={handleIncrease}
@@ -289,7 +275,7 @@ const CustomerHome = () => {
             onConfirm={handleConfirmOrder}
             defaultLocation={selectedLocation}
             user={user}
-            restaurant={selectedRestaurant} // 👈 pass restaurant
+            restaurant={selectedRestaurant}
           />
         </div>
       )}
