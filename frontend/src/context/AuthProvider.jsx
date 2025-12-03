@@ -3,7 +3,7 @@ import { AuthContext } from "./AuthContext.js";
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true); // Add loading state
+  const [loading, setLoading] = useState(true);
 
   // Load user from localStorage on initial load
   useEffect(() => {
@@ -20,7 +20,7 @@ export const AuthProvider = ({ children }) => {
       }
     }
 
-    setLoading(false); // Finish loading
+    setLoading(false);
   }, []);
 
   const login = (token, userData) => {
@@ -35,6 +35,8 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem("token");
     localStorage.removeItem("cartItems");
     localStorage.removeItem("selectedRestaurant");
+    localStorage.removeItem("riderActiveMenu"); // Clear rider menu state
+    // Note: We don't navigate here - let the calling component handle navigation
   };
 
   return (
