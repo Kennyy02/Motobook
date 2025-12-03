@@ -68,3 +68,13 @@
   margin-bottom: 1rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
+
+/* ✅ CRITICAL FIX: Override MUI Box default backgrounds */
+.dashboard-content .MuiBox-root {
+  background-color: transparent !important;
+}
+
+/* ✅ Ensure all child containers are transparent */
+.dashboard-content > div {
+  background-color: transparent;
+}
