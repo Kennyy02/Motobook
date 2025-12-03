@@ -1,11 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
-import { CalendarClock, Wallet, Menu } from "lucide-react";
+import { CalendarClock, Wallet, Menu, LogOut } from "lucide-react";
 import "../../styles/rider/RiderDashboard.css";
 
 const RiderDashboard = () => {
-  const { user } = useContext(AuthContext);
+  const { user, logout } = useContext(AuthContext);
+  const navigate = useNavigate();
   const [pendingOrders, setPendingOrders] = useState([]);
   const [acceptedOrders, setAcceptedOrders] = useState([]);
   const [completedOrders, setCompletedOrders] = useState([]);
@@ -95,6 +97,11 @@ const RiderDashboard = () => {
     }
   };
 
+  const handleLogout = () => {
+    logout();
+    navigate("/rider/login");
+  };
+
   return (
     <div className="rider-dashboard-container">
       {/* Sidebar */}
@@ -123,17 +130,47 @@ const RiderDashboard = () => {
             My Deliveries
           </button>
         </nav>
+
+        {/* Logout Button at Bottom of Sidebar */}
+        <div className="sidebar-footer">
+          <button className="logout-btn" onClick={handleLogout}>
+            <LogOut size={18} />
+            <span>Logout</span>
+          </button>
+        </div>
       </aside>
 
       {/* Main Content */}
       <main className="rider-dashboard-main">
+        {/* Header with User Info and Logout */}
+        <div className="dashboard-header">
+          <h2>Welcome, {user?.name || "Rider"}</h2>
+          <button className="logout-btn-mobile" onClick={handleLogout}>
+            <LogOut size={18} />
+            Logout
+          </button>
+        </div>
+
         {activeMenu === "dashboard" && (
-          <>
-            <h2>Welcome, {user?.name || "Rider"}</h2>
+          <div className="dashboard-welcome">
             <p>
               Use the sidebar to view available orders and manage deliveries.
             </p>
-          </>
+            <div className="dashboard-stats">
+              <div className="stat-card">
+                <h3>Pending Orders</h3>
+                <p className="stat-number">{pendingOrders.length}</p>
+              </div>
+              <div className="stat-card">
+                <h3>Ongoing Deliveries</h3>
+                <p className="stat-number">{acceptedOrders.length}</p>
+              </div>
+              <div className="stat-card">
+                <h3>Completed Today</h3>
+                <p className="stat-number">{completedOrders.length}</p>
+              </div>
+            </div>
+          </div>
         )}
 
         {activeMenu === "orders" && (
