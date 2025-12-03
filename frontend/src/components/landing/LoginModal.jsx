@@ -68,8 +68,8 @@ function LoginModal({ onClose, mode: initialMode, onShowTerms }) {
         return;
       }
 
-      localStorage.setItem("token", token);
-      login(user);
+      // ✅ FIXED: Pass both token and user to login
+      login(token, user);
       onClose();
       navigate("/customer/home");
     } catch (err) {
@@ -315,8 +315,8 @@ function LoginModal({ onClose, mode: initialMode, onShowTerms }) {
                       return;
                     }
 
-                    localStorage.setItem("token", token);
-                    login(user);
+                    // ✅ FIXED: Pass both token and user to login
+                    login(token, user);
                     onClose();
                     navigate("/customer/home");
                   } catch {
@@ -528,8 +528,9 @@ function LoginModal({ onClose, mode: initialMode, onShowTerms }) {
                   );
 
                   const { token, user } = res.data;
-                  localStorage.setItem("token", token);
-                  login(user);
+
+                  // ✅ FIXED: Pass both token and user to login
+                  login(token, user);
                   onClose();
                   navigate("/customer/home");
                 } catch {
