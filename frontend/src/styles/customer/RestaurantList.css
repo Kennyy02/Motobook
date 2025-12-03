@@ -28,8 +28,7 @@
 }
 
 /* === Section Titles === */
-
-.section-title {
+.restaurant-section .section-title {
   font-size: 1.75rem;
   font-weight: 600;
   margin-bottom: 1.5rem;
@@ -40,20 +39,18 @@
 }
 
 /* === Restaurant Section === */
-
 .restaurant-section {
   margin-bottom: 3rem;
 }
 
 /* === Restaurant Grid === */
-
-.restaurant-grid {
+.restaurant-section .restaurant-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 2rem; /* Increased from 1.5rem for better breathing room */
+  gap: 2rem;
 }
 
-.restaurant-grid.scrollable {
+.restaurant-section .restaurant-grid.scrollable {
   overflow-x: auto;
   scroll-behavior: smooth;
   padding: 1rem 0;
@@ -61,73 +58,86 @@
   scrollbar-width: none;
 }
 
-.restaurant-grid.scrollable::-webkit-scrollbar {
+.restaurant-section .restaurant-grid.scrollable::-webkit-scrollbar {
   display: none;
 }
 
-/* === Restaurant Card === */
-
-.restaurant-card {
+/* === Restaurant Card (Higher Specificity) === */
+.restaurant-section .restaurant-grid .restaurant-card {
   position: relative;
   display: flex;
   flex-direction: column;
   flex: 0 0 280px;
-  background: #ffffff;
-  border: none; /* Removed border for cleaner look */
-  border-radius: 12px; /* More modern - slightly less rounded */
+  background: #ffffff !important;
+  border: none !important;
+  border-radius: 12px !important;
   overflow: hidden;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Smooth easing */
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* More subtle at rest */
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
 }
 
-.restaurant-card:hover {
-  transform: translateY(-6px); /* Slightly less lift for more refinement */
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15); /* Enhanced but not overwhelming */
+.restaurant-section .restaurant-grid .restaurant-card:hover {
+  transform: translateY(-6px) !important;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15) !important;
 }
 
-.restaurant-card:active {
-  transform: translateY(-2px); /* Pressed state */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+.restaurant-section .restaurant-grid .restaurant-card:active {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12) !important;
 }
 
-.restaurant-card.closed {
+.restaurant-section .restaurant-grid .restaurant-card.closed {
   opacity: 0.7;
   pointer-events: none;
 }
 
-/* === Restaurant Image === */
-
-.image-wrapper {
+/* === Restaurant Image Wrapper === */
+.restaurant-section .restaurant-grid .restaurant-card .image-wrapper {
   position: relative;
   width: 100%;
   height: 180px;
   overflow: hidden;
-  /* More appetizing gradient - warm food colors */
-  background: linear-gradient(135deg, #ff6b35 0%, #f7931e 50%, #ffc107 100%);
+  background: linear-gradient(
+    135deg,
+    #ff6b35 0%,
+    #f7931e 50%,
+    #ffc107 100%
+  ) !important;
 }
 
-.restaurant-logo {
+.restaurant-section
+  .restaurant-grid
+  .restaurant-card
+  .image-wrapper
+  .restaurant-logo {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); /* Smoother zoom */
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.restaurant-card:hover .restaurant-logo {
-  transform: scale(1.08); /* Slightly more zoom for impact */
+.restaurant-section
+  .restaurant-grid
+  .restaurant-card:hover
+  .image-wrapper
+  .restaurant-logo {
+  transform: scale(1.08);
 }
 
 /* === Closed Overlay === */
-
-.image-overlay {
+.restaurant-section
+  .restaurant-grid
+  .restaurant-card
+  .image-wrapper
+  .image-overlay {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.65); /* Slightly darker */
+  background-color: rgba(0, 0, 0, 0.65);
   backdrop-filter: blur(4px);
   display: flex;
   justify-content: center;
@@ -145,7 +155,12 @@
   }
 }
 
-.overlay-content {
+.restaurant-section
+  .restaurant-grid
+  .restaurant-card
+  .image-wrapper
+  .image-overlay
+  .overlay-content {
   text-align: center;
   color: white;
   display: flex;
@@ -154,46 +169,53 @@
   gap: 0.5rem;
 }
 
-.overlay-text {
+.restaurant-section
+  .restaurant-grid
+  .restaurant-card
+  .image-wrapper
+  .image-overlay
+  .overlay-content
+  .overlay-text {
   font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.5px;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-.lock-icon {
+.restaurant-section
+  .restaurant-grid
+  .restaurant-card
+  .image-wrapper
+  .image-overlay
+  .overlay-content
+  .lock-icon {
   color: white;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
 }
 
-/* === Restaurant Info === */
-
-.restaurant-content {
-  padding: 1.25rem;
-  background: #ffffff;
-  flex-grow: 1; /* Push content to fill available space */
+/* === Restaurant Content (Info Section) === */
+.restaurant-section .restaurant-grid .restaurant-card .restaurant-content {
+  padding: 1.25rem !important;
+  background: #ffffff !important;
+  flex-grow: 1;
 }
 
-.restaurant-card h3,
-.restaurant-content h3 {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #1a202c; /* Darker for better contrast */
-  margin: 0 0 0.5rem 0;
-  line-height: 1.3;
-  /* Truncate long names */
+.restaurant-section .restaurant-grid .restaurant-card .restaurant-content h3 {
+  font-size: 1.25rem !important;
+  font-weight: 700 !important;
+  color: #1a202c !important;
+  margin: 0 0 0.5rem 0 !important;
+  line-height: 1.3 !important;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.restaurant-card p,
-.restaurant-content p {
-  font-size: 0.9rem;
-  color: #4a5568;
-  margin: 0;
-  line-height: 1.5;
-  /* Allow address to wrap to 2 lines max */
+.restaurant-section .restaurant-grid .restaurant-card .restaurant-content p {
+  font-size: 0.9rem !important;
+  color: #4a5568 !important;
+  margin: 0 !important;
+  line-height: 1.5 !important;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -201,16 +223,14 @@
 }
 
 /* === No Restaurants Message === */
-
-.no-restaurants-message {
+.restaurant-list-wrapper.center-content {
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   min-height: 60vh;
-  width: 100%;
 }
 
-.no-restaurants {
+.restaurant-list-wrapper .no-restaurants {
   text-align: center;
   color: #ffffff;
   font-size: 1.5rem;
@@ -219,16 +239,15 @@
 }
 
 /* === Chevron Navigation === */
-
-.chevron-wrapper {
+.restaurant-section .chevron-wrapper {
   display: flex;
   align-items: center;
   position: relative;
   gap: 1rem;
 }
 
-.chevron-button {
-  background: rgba(255, 255, 255, 0.95); /* Slightly more opaque */
+.restaurant-section .chevron-wrapper .chevron-button {
+  background: rgba(255, 255, 255, 0.95);
   border: none;
   cursor: pointer;
   padding: 0.75rem;
@@ -241,66 +260,56 @@
   z-index: 10;
 }
 
-.chevron-button:hover:not(:disabled) {
+.restaurant-section .chevron-wrapper .chevron-button:hover:not(:disabled) {
   background: white;
   transform: scale(1.1);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
 }
 
-.chevron-button:active:not(:disabled) {
-  transform: scale(1.05); /* Pressed state */
+.restaurant-section .chevron-wrapper .chevron-button:active:not(:disabled) {
+  transform: scale(1.05);
 }
 
-.chevron-button:disabled {
+.restaurant-section .chevron-wrapper .chevron-button:disabled {
   opacity: 0.3;
   cursor: not-allowed;
 }
 
-.chevron-button svg {
+.restaurant-section .chevron-wrapper .chevron-button svg {
   color: #2d3748;
   width: 24px;
   height: 24px;
 }
 
-/* === Utility Classes === */
-
-.center-content {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 60vh;
-}
-
 /* === Responsive Design === */
-
 @media (max-width: 768px) {
   .restaurant-list-wrapper {
     padding: 1rem;
   }
 
-  .restaurant-card {
+  .restaurant-section .restaurant-grid .restaurant-card {
     flex: 0 0 240px;
   }
 
-  .section-title {
+  .restaurant-section .section-title {
     font-size: 1.5rem;
   }
 
-  .chevron-button {
+  .restaurant-section .chevron-wrapper .chevron-button {
     padding: 0.5rem;
   }
 
-  .restaurant-grid {
-    gap: 1.5rem; /* Slightly smaller gap on mobile */
+  .restaurant-section .restaurant-grid {
+    gap: 1.5rem;
   }
 }
 
 @media (max-width: 480px) {
-  .restaurant-card {
+  .restaurant-section .restaurant-grid .restaurant-card {
     flex: 0 0 220px;
   }
 
-  .image-wrapper {
-    height: 160px; /* Slightly smaller on very small screens */
+  .restaurant-section .restaurant-grid .restaurant-card .image-wrapper {
+    height: 160px;
   }
 }
