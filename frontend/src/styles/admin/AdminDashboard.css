@@ -26,6 +26,7 @@
   color: white;
 }
 
+/* Optional: Add overlay to darken background for better text readability */
 .dashboard-content::before {
   content: "";
   position: absolute;
@@ -68,24 +69,61 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
-.dashboard-content .MuiBox-root {
+/* ✅ Override MUI Box backgrounds EXCEPT for the dashboard cards */
+.dashboard-content .MuiBox-root:not(.dashboard-overview-box) {
   background-color: transparent !important;
   background: transparent !important;
 }
 
+/* ✅ Target the specific MUI Box class from DevTools for user management */
 .dashboard-content .css-1rm7u2e {
   background-color: transparent !important;
   background: transparent !important;
 }
 
-.dashboard-content .MuiPaper-root {
+/* ✅ Keep dashboard card backgrounds intact */
+.dashboard-content .MuiCard-root {
+  background: linear-gradient(135deg, #1e2130 0%, #252936 100%) !important;
+  border: 1px solid rgba(79, 134, 247, 0.2) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* ✅ Style for Total Users Card */
+.dashboard-content .MuiCard-root:has(svg[data-testid="PeopleIcon"]) {
+  background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%) !important;
+}
+
+/* ✅ Style for Total Businesses Card */
+.dashboard-content .MuiCard-root:has(svg[data-testid="BusinessIcon"]) {
+  background: linear-gradient(135deg, #9c27b0 0%, #7b1fa2 100%) !important;
+}
+
+/* ✅ Card text colors */
+.dashboard-content .MuiCard-root .MuiTypography-root {
+  color: #ffffff !important;
+}
+
+.dashboard-content .MuiCard-root .MuiTypography-subtitle2 {
+  color: rgba(255, 255, 255, 0.8) !important;
+  font-weight: 500 !important;
+}
+
+.dashboard-content .MuiCard-root .MuiTypography-h5 {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+}
+
+/* ✅ Card icon colors */
+.dashboard-content .MuiCard-root .MuiBox-root svg {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* ✅ Ensure all child containers are transparent except cards */
+.dashboard-content > div:not(.MuiCard-root) {
   background-color: transparent !important;
 }
 
-.dashboard-content > div {
-  background-color: transparent !important;
-}
-
+/* ✅ Force transparency on user-management wrapper */
 .dashboard-content .user-management {
   background-color: transparent !important;
   background: transparent !important;
