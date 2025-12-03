@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Search, ArrowLeft, ShoppingCart, Plus } from "lucide-react";
 import "../../styles/customer/MenuPage.css";
 
@@ -28,8 +28,10 @@ const MenuPage = ({ businessId, businessName, onBack, onAddToCart }) => {
       }
     };
 
-    fetchMenu();
-  }, [businessId]);
+    if (businessId) {
+      fetchMenu();
+    }
+  }, [businessId, businessServiceBaseURL]);
 
   const categories = [
     "All",
@@ -47,7 +49,9 @@ const MenuPage = ({ businessId, businessName, onBack, onAddToCart }) => {
   });
 
   const handleAddToCart = (item) => {
-    onAddToCart(item);
+    if (onAddToCart) {
+      onAddToCart(item);
+    }
     // Visual feedback
     setAddedItems((prev) => ({ ...prev, [item.id]: true }));
     setTimeout(() => {
@@ -117,9 +121,13 @@ const MenuPage = ({ businessId, businessName, onBack, onAddToCart }) => {
               </div>
               <div className="menu-item-content">
                 <h4 className="item-name">{item.productName}</h4>
-                <p className="item-description">{item.description}</p>
+                <p className="item-description">
+                  {item.description || "Delicious dish"}
+                </p>
                 <div className="item-footer">
-                  <span className="item-price">₱{item.price.toFixed(2)}</span>
+                  <span className="item-price">
+                    ₱{Number(item.price).toFixed(2)}
+                  </span>
                   <button
                     className={`add-to-cart-btn ${
                       addedItems[item.id] ? "added" : ""
