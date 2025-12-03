@@ -26,7 +26,6 @@
   color: white;
 }
 
-/* Optional: Add overlay to darken background for better text readability */
 .dashboard-content::before {
   content: "";
   position: absolute;
@@ -69,12 +68,25 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
-/* ✅ CRITICAL FIX: Override MUI Box default backgrounds */
 .dashboard-content .MuiBox-root {
+  background-color: transparent !important;
+  background: transparent !important;
+}
+
+.dashboard-content .css-1rm7u2e {
+  background-color: transparent !important;
+  background: transparent !important;
+}
+
+.dashboard-content .MuiPaper-root {
   background-color: transparent !important;
 }
 
-/* ✅ Ensure all child containers are transparent */
 .dashboard-content > div {
-  background-color: transparent;
+  background-color: transparent !important;
+}
+
+.dashboard-content .user-management {
+  background-color: transparent !important;
+  background: transparent !important;
 }
