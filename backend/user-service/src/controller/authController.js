@@ -383,6 +383,68 @@ export const checkEmail = async (req, res) => {
   }
 };
 
+export const sendVerification = async (req, res) => {
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ message: "Email is required" });
+
+  try {
+    const user = await findUserByEmail(email);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    const verificationCode = Math.floor(
+      100000 + Math.random() * 900000
+    ).toString();
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+
+    await pool.query(
+      `UPDATE users SET verification_code = ?, code_expires_at = ? WHERE email = ?`,
+      [verificationCode, expiresAt, email]
+    );
+
+    await sendVerificationCodeEmail(email, verificationCode);
+    console.log(`✅ Verification code sent to: ${email}`);
+    return res.json({ message: "Verification code sent to your email" });
+  } catch (error) {
+    console.error("Send verification code error:", error);
+    res.status(500).json({ message: "Failed to send verification code" });
+  }
+};
+
+// ✅ ADD: Verify the code user entered
+export const verifyCode = async (req, res) => {
+  const { email, code } = req.body;
+  if (!email || !code)
+    return res.status(400).json({ message: "Email and code are required" });
+
+  try {
+    const [rows] = await pool.query(
+      `SELECT verification_code, code_expires_at FROM users WHERE email = ?`,
+      [email]
+    );
+
+    if (rows.length === 0)
+      return res.status(404).json({ message: "User not found" });
+
+    const user = rows[0];
+
+    if (user.verification_code !== code)
+      return res.status(400).json({ message: "Invalid verification code" });
+
+    if (new Date() > new Date(user.code_expires_at))
+      return res.status(400).json({ message: "Verification code expired" });
+
+    await pool.query(
+      `UPDATE users SET is_verified = TRUE, verification_code = NULL, code_expires_at = NULL WHERE email = ?`,
+      [email]
+    );
+
+    res.json({ success: true, message: "Email verified successfully!" });
+  } catch (error) {
+    console.error("Verify code error:", error);
+    res.status(500).json({ message: "Server error during verification" });
+  }
+};
+
 // ✅ NEW ENDPOINT: Resend verification code for unverified accounts
 export const resendVerification = async (req, res) => {
   const { email } = req.body;
