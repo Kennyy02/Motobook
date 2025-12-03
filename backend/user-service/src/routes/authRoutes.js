@@ -8,11 +8,12 @@ import {
   verifyCode,
   checkEmail,
   sendVerification,
+  resendVerification,
   registerSeller,
   setUserPreferences,
   getUserPreferencesHandler,
   loginRider,
-  getUsers, //ADMIN
+  getUsers,
   adminCreateUser,
   updateUser,
   deleteUser,
@@ -31,18 +32,17 @@ router.post("/verify-code", verifyCode);
 
 router.post("/check-email", checkEmail);
 router.post("/send-verification-code", sendVerification);
+router.post("/resend-verification", resendVerification);
 router.post("/register-seller", registerSeller);
-router.post("/login-seller", loginSeller); // seller-specific
+router.post("/login-seller", loginSeller);
 
 router.post("/preferences", setUserPreferences);
 router.get("/preferences/:userId", getUserPreferencesHandler);
 
-// Rider profile endpoints
 router.post("/rider/login", loginRider);
 router.get("/rider/:id/profile", getRiderProfile);
 router.patch("/rider/:id/availability", updateRiderAvailability);
 
-//AMIN-PANEL SIDE
 router.get("/users", getUsers);
 router.post("/users", adminCreateUser);
 router.put("/users/:id", updateUser);

@@ -359,6 +359,7 @@ export const verifyEmail = async (req, res) => {
   }
 };
 
+// ✅ UPDATED: Now returns isVerified status
 export const checkEmail = async (req, res) => {
   const { email } = req.body;
 
@@ -366,70 +367,68 @@ export const checkEmail = async (req, res) => {
 
   try {
     const user = await findUserByEmail(email);
-    return res.json({ exists: !!user });
+
+    if (!user) {
+      return res.json({ exists: false });
+    }
+
+    // ✅ FIX: Return verification status so frontend knows what to do
+    return res.json({
+      exists: true,
+      isVerified: user.is_verified,
+    });
   } catch (error) {
     console.error("Check email error:", error);
     res.status(500).json({ message: "Server error" });
   }
 };
 
-export const sendVerification = async (req, res) => {
+// ✅ NEW ENDPOINT: Resend verification code for unverified accounts
+export const resendVerification = async (req, res) => {
   const { email } = req.body;
-  if (!email) return res.status(400).json({ message: "Email is required" });
+
+  if (!email) {
+    return res.status(400).json({ message: "Email is required" });
+  }
 
   try {
     const user = await findUserByEmail(email);
-    if (!user) return res.status(404).json({ message: "User not found" });
 
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // ✅ Only allow resending if account is NOT verified
+    if (user.is_verified) {
+      return res.status(400).json({
+        message: "Email is already verified. Please login.",
+      });
+    }
+
+    // Generate new 6-digit code
     const verificationCode = Math.floor(
       100000 + Math.random() * 900000
     ).toString();
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
-    const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
-
+    // Update database with new code
     await pool.query(
       `UPDATE users SET verification_code = ?, code_expires_at = ? WHERE email = ?`,
       [verificationCode, expiresAt, email]
     );
 
+    // Send email
     await sendVerificationCodeEmail(email, verificationCode);
 
-    return res.json({ message: "Verification code sent to your email" });
+    console.log(`✅ Verification code resent to: ${email}`);
+
+    return res.json({
+      success: true,
+      message: "Verification code resent to your email",
+    });
   } catch (error) {
-    console.error("Send verification code error:", error);
-    res.status(500).json({ message: "Failed to send verification code" });
-  }
-};
-
-export const verifyCode = async (req, res) => {
-  const { email, code } = req.body;
-  if (!email || !code)
-    return res.status(400).json({ message: "Email and code are required" });
-
-  try {
-    const [rows] = await pool.query(
-      `SELECT verification_code, code_expires_at FROM users WHERE email = ?`,
-      [email]
-    );
-    if (rows.length === 0)
-      return res.status(404).json({ message: "User not found" });
-
-    const user = rows[0];
-    if (user.verification_code !== code)
-      return res.status(400).json({ message: "Invalid verification code" });
-
-    if (new Date() > new Date(user.code_expires_at))
-      return res.status(400).json({ message: "Verification code expired" });
-
-    await pool.query(
-      `UPDATE users SET is_verified = TRUE, verification_code = NULL, code_expires_at = NULL WHERE email = ?`,
-      [email]
-    );
-
-    res.json({ success: true, message: "Email verified successfully!" });
-  } catch (error) {
-    console.error("Verify code error:", error);
-    res.status(500).json({ message: "Server error during verification" });
+    console.error("Resend verification error:", error);
+    res.status(500).json({ message: "Failed to resend verification code" });
   }
 };
 
