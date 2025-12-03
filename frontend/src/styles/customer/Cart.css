@@ -2,15 +2,59 @@
   position: relative;
   cursor: pointer;
   margin-left: 1rem;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cart-icon-wrapper:hover {
+  background: rgba(255, 107, 53, 0.1);
+  transform: scale(1.1);
+}
+
+.cart-icon-wrapper:active {
+  transform: scale(0.95);
+}
+
+.cart-icon-wrapper svg {
+  color: #2d3748;
+  transition: color 0.3s ease;
+}
+
+.cart-icon-wrapper:hover svg {
+  color: #ff6b35;
 }
 
 .cart-count {
   position: absolute;
-  top: -6px;
-  right: -6px;
-  background-color: #ff4d4f;
+  top: 0;
+  right: 0;
+  background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
   color: white;
-  font-size: 12px;
-  padding: 2px 6px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 6px;
   border-radius: 50%;
+  min-width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(255, 107, 53, 0.4);
+  animation: popIn 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes popIn {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
 }

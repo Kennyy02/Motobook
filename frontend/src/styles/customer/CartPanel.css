@@ -1,6 +1,6 @@
 .cart-panel {
   position: fixed;
-  right: 0;
+  right: -400px; /* Hidden by default */
   top: 60px;
   height: calc(100vh - 60px);
   width: 380px;
@@ -14,6 +14,12 @@
   z-index: 300; /* Higher than everything */
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   overflow: hidden;
+  transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Show cart panel when active */
+.cart-panel.open {
+  right: 0;
 }
 
 /* ========== Cart Header ========== */

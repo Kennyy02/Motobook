@@ -5,17 +5,8 @@ import "../../styles/customer/Cart.css";
 const Cart = ({ cartItems = [], onToggleCart }) => {
   const itemCount = cartItems.reduce((total, item) => total + item.quantity, 0);
 
-  const handleClick = () => {
-    if (itemCount > 0) {
-      onToggleCart();
-    }
-  };
-
   return (
-    <div
-      className={`cart-icon-wrapper ${itemCount === 0 ? "disabled" : ""}`}
-      onClick={handleClick}
-    >
+    <div className="cart-icon-wrapper" onClick={onToggleCart}>
       <ShoppingCart size={24} />
       {itemCount > 0 && <span className="cart-count">{itemCount}</span>}
     </div>

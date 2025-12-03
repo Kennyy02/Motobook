@@ -8,6 +8,7 @@ const CartPanel = ({
   onIncrease,
   onDecrease,
   onBulkDelete,
+  isOpen = false, // Add this prop
 }) => {
   const [editMode, setEditMode] = useState(false);
   const [selectedItems, setSelectedItems] = useState([]);
@@ -44,7 +45,7 @@ const CartPanel = ({
   };
 
   return (
-    <div className="cart-panel">
+    <div className={`cart-panel ${isOpen ? "open" : ""}`}>
       <div className="cart-panel-header">
         <h2>Your Cart</h2>
         {cartItems.length > 0 && (
