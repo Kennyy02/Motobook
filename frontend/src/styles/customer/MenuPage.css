@@ -1,14 +1,14 @@
 .menu-page {
   min-height: 100vh;
-  background: linear-gradient(
-    135deg,
-    #667eea 0%,
-    #764ba2 25%,
-    #f093fb 50%,
-    #4facfe 75%,
-    #00f2fe 100%
-  );
+  /* Match RestaurantList theme with overlay */
+  background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)),
+    url("../../assets/logo/bg10.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
   padding: 2rem;
+  padding-top: 80px; /* Account for any navbar */
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
@@ -26,18 +26,19 @@
   border: none;
   border-radius: 50px;
   font-size: 0.95rem;
-  font-weight: 500;
-  color: #475569;
+  font-weight: 600;
+  color: #2d3748;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   margin-bottom: 1.5rem;
 }
 
 .back-btn:hover {
   background: white;
   transform: translateX(-4px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  color: #ff6b35;
 }
 
 .back-btn:active {
@@ -50,14 +51,14 @@
   backdrop-filter: blur(20px);
   padding: 2rem 2.5rem;
   border-radius: 20px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .restaurant-name {
   font-size: 2.5rem;
   font-weight: 800;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -79,17 +80,25 @@
   gap: 1.25rem;
   margin-bottom: 2rem;
   position: sticky;
-  top: 0;
+  top: 60px; /* Adjust based on your navbar height */
   z-index: 100;
   padding: 1.5rem 0;
-  background: linear-gradient(
-    135deg,
-    #667eea 0%,
-    #764ba2 25%,
-    #f093fb 50%,
-    #4facfe 75%,
-    #00f2fe 100%
-  );
+  /* Remove the gradient background that was causing overlap */
+  background: transparent;
+}
+
+/* Add backdrop blur container for controls */
+.menu-controls::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: -2rem;
+  right: -2rem;
+  bottom: -10px;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  z-index: -1;
+  border-radius: 0;
 }
 
 /* === Search Bar === */
@@ -100,14 +109,15 @@
   backdrop-filter: blur(20px);
   padding: 1rem 1.5rem;
   border-radius: 50px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   border: 1px solid rgba(255, 255, 255, 0.3);
   transition: all 0.3s ease;
 }
 
 .search-bar:focus-within {
-  box-shadow: 0 8px 30px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 8px 30px rgba(255, 107, 53, 0.3);
   transform: translateY(-2px);
+  border-color: rgba(255, 107, 53, 0.3);
 }
 
 .search-icon {
@@ -156,7 +166,7 @@
 
 .tab-button {
   padding: 0.75rem 1.5rem;
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(10px);
   border: 2px solid transparent;
   border-radius: 50px;
@@ -166,20 +176,20 @@
   color: #475569;
   transition: all 0.3s ease;
   white-space: nowrap;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .tab-button:hover {
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.95);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .tab-button.active {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
   color: white;
   border-color: rgba(255, 255, 255, 0.3);
-  box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 4px 20px rgba(255, 107, 53, 0.4);
   transform: translateY(-2px);
 }
 
@@ -189,6 +199,7 @@
   gap: 1.5rem;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   animation: fadeIn 0.5s ease;
+  padding-bottom: 2rem;
 }
 
 @keyframes fadeIn {
@@ -212,14 +223,37 @@
   display: flex;
   flex-direction: column;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   cursor: pointer;
+}
+
+.menu-item-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 107, 53, 0.05),
+    rgba(247, 147, 30, 0.05)
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 1;
+  border-radius: 20px;
+}
+
+.menu-item-card:hover::before {
+  opacity: 1;
 }
 
 .menu-item-card:hover {
   transform: translateY(-8px) scale(1.02);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-  border-color: rgba(102, 126, 234, 0.3);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+  border-color: rgba(255, 107, 53, 0.3);
 }
 
 /* === Menu Item Image === */
@@ -227,7 +261,7 @@
   width: 100%;
   height: 200px;
   overflow: hidden;
-  background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
   position: relative;
 }
 
@@ -249,12 +283,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
 }
 
 .placeholder-icon {
   font-size: 64px;
-  opacity: 0.4;
+  opacity: 0.3;
   animation: float 3s ease-in-out infinite;
 }
 
@@ -275,6 +309,9 @@
   flex-direction: column;
   gap: 0.75rem;
   flex-grow: 1;
+  background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
+  position: relative;
+  z-index: 2;
 }
 
 .item-name {
@@ -313,7 +350,7 @@
 .item-price {
   font-size: 1.5rem;
   font-weight: 800;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -325,7 +362,7 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem 1.5rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
   border: none;
   border-radius: 50px;
   color: white;
@@ -333,12 +370,13 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
 }
 
 .add-to-cart-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 25px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 6px 25px rgba(255, 107, 53, 0.4);
+  filter: brightness(1.1);
 }
 
 .add-to-cart-btn:active {
@@ -364,7 +402,7 @@
   width: 50px;
   height: 50px;
   border: 4px solid rgba(255, 255, 255, 0.3);
-  border-top-color: white;
+  border-top-color: #ff6b35;
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -378,7 +416,8 @@
 .loading-state p {
   color: white;
   font-size: 1.1rem;
-  font-weight: 500;
+  font-weight: 600;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 /* === Empty State === */
@@ -393,7 +432,8 @@
   border-radius: 20px;
   padding: 3rem;
   text-align: center;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .empty-icon {
@@ -419,6 +459,16 @@
 @media (max-width: 768px) {
   .menu-page {
     padding: 1rem;
+    padding-top: 70px;
+  }
+
+  .menu-controls {
+    top: 50px;
+  }
+
+  .menu-controls::before {
+    left: -1rem;
+    right: -1rem;
   }
 
   .restaurant-name-section {
@@ -462,5 +512,10 @@
 
   .add-to-cart-btn {
     padding: 0.75rem;
+  }
+
+  .menu-controls::before {
+    left: -1rem;
+    right: -1rem;
   }
 }
