@@ -8,8 +8,6 @@ import {
   createSeller,
   saveUserPreferences,
   getUserPreferences,
-  getRiderProfileModel, // ← ADD THIS
-  updateRiderAvailabilityModel, // ← ADD THIS
 } from "../model/userModel.js";
 import { pool } from "../config/db.js";
 import { sendVerificationCodeEmail } from "../utils/sendVerificationEmail.js";
@@ -81,12 +79,6 @@ export const registerUser = async (req, res) => {
 
     const hashed = await bcrypt.hash(password, 10);
 
-    // Generate 6-digit numeric verification code and expiry (10 minutes)
-    // const verification_code = Math.floor(
-    //   100000 + Math.random() * 900000
-    // ).toString();
-    // const code_expires_at = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
-
     const userId = await createUser({
       name,
       email,
@@ -96,19 +88,6 @@ export const registerUser = async (req, res) => {
       is_verified: false,
       needs_password: false,
     });
-
-    // Send verification email with the 6-digit code (non-blocking best effort)
-    // try {
-    //   await sendVerificationCodeEmail(email, verification_code);
-    // } catch (emailErr) {
-    //   console.error("Failed to send verification email:", emailErr);
-    //   // You may still want to return 201 but inform the client that email failed:
-    //   return res.status(201).json({
-    //     message:
-    //       "Registration created but failed to send verification email. Contact support or try resending verification.",
-    //     userId,
-    //   });
-    // }
 
     res.status(201).json({
       message:
@@ -141,7 +120,6 @@ export const googleLogin = async (req, res) => {
     let user = await findUserByEmail(email);
 
     if (!user) {
-      // If password not provided yet, request it
       if (!password) {
         return res.status(200).json({
           requiresPassword: true,
@@ -403,20 +381,17 @@ export const sendVerification = async (req, res) => {
     const user = await findUserByEmail(email);
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    // Generate 6-digit OTP
     const verificationCode = Math.floor(
       100000 + Math.random() * 900000
     ).toString();
 
-    const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // expires in 10 min
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
-    // Save to DB
     await pool.query(
       `UPDATE users SET verification_code = ?, code_expires_at = ? WHERE email = ?`,
       [verificationCode, expiresAt, email]
     );
 
-    // Send email
     await sendVerificationCodeEmail(email, verificationCode);
 
     return res.json({ message: "Verification code sent to your email" });
@@ -610,18 +585,23 @@ export const loginRider = async (req, res) => {
   }
 };
 
-// Get rider profile (around line 614)
+// Get rider profile
 export const getRiderProfile = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const profile = await getRiderProfileModel(id); // ← Use renamed function
+    const [rows] = await pool.query(
+      `SELECT userid, name, email, phone, is_available, created_at 
+       FROM users 
+       WHERE userid = ? AND role = 'Rider'`,
+      [id]
+    );
 
-    if (!profile) {
+    if (rows.length === 0) {
       return res.status(404).json({ message: "Rider not found" });
     }
 
-    res.status(200).json(profile);
+    res.status(200).json(rows[0]);
   } catch (error) {
     console.error("Error fetching rider profile:", error);
     res.status(500).json({ message: "Server error" });
@@ -640,7 +620,10 @@ export const updateRiderAvailability = async (req, res) => {
   }
 
   try {
-    const result = await updateRiderAvailabilityModel(id, isAvailable); // ← Use renamed function
+    const [result] = await pool.query(
+      `UPDATE users SET is_available = ? WHERE userid = ? AND role = 'Rider'`,
+      [isAvailable, id]
+    );
 
     if (result.affectedRows === 0) {
       return res.status(404).json({ message: "Rider not found" });
@@ -653,7 +636,7 @@ export const updateRiderAvailability = async (req, res) => {
   }
 };
 
-//AMIN-PANEL SIDE
+//ADMIN-PANEL SIDE
 
 export const getUsers = async (req, res) => {
   try {
