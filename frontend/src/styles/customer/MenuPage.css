@@ -1,120 +1,466 @@
-/* Layout for the controls above the menu grid */
-.menu-controls {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  margin: 1rem 0;
+.menu-page {
+  min-height: 100vh;
+  background: linear-gradient(
+    135deg,
+    #667eea 0%,
+    #764ba2 25%,
+    #f093fb 50%,
+    #4facfe 75%,
+    #00f2fe 100%
+  );
+  padding: 2rem;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Search Bar */
+/* === Header Section === */
+.menu-header {
+  margin-bottom: 2rem;
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: rgba(255, 255, 255, 0.95);
+  border: none;
+  border-radius: 50px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
+}
+
+.back-btn:hover {
+  background: white;
+  transform: translateX(-4px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.back-btn:active {
+  transform: translateX(-2px);
+}
+
+/* Restaurant Name Section */
+.restaurant-name-section {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  padding: 2rem 2.5rem;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.restaurant-name {
+  font-size: 2.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0 0 0.5rem 0;
+  letter-spacing: -0.5px;
+}
+
+.restaurant-subtitle {
+  font-size: 1.1rem;
+  color: #64748b;
+  margin: 0;
+  font-weight: 400;
+}
+
+/* === Menu Controls === */
+.menu-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: 1.5rem 0;
+  background: linear-gradient(
+    135deg,
+    #667eea 0%,
+    #764ba2 25%,
+    #f093fb 50%,
+    #4facfe 75%,
+    #00f2fe 100%
+  );
+}
+
+/* === Search Bar === */
 .search-bar {
-  border: 1px solid black;
   display: flex;
   align-items: center;
-  background: #f1f1f1;
-  padding: 0.5rem 0.75rem;
-  border-radius: 2rem;
-  flex: 1 1 300px;
-  max-width: 300px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  padding: 1rem 1.5rem;
+  border-radius: 50px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.search-bar:focus-within {
+  box-shadow: 0 8px 30px rgba(102, 126, 234, 0.3);
+  transform: translateY(-2px);
+}
+
+.search-icon {
+  color: #94a3b8;
+  flex-shrink: 0;
 }
 
 .search-bar input {
   border: none;
   background: transparent;
   outline: none;
-  margin-left: 0.5rem;
+  margin-left: 1rem;
   width: 100%;
+  font-size: 1rem;
+  color: #1e293b;
+  font-weight: 500;
 }
 
-.search-icon {
-  color: #888;
+.search-bar input::placeholder {
+  color: #94a3b8;
 }
 
-/* Category Tabs */
+/* === Category Tabs === */
 .category-tabs {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-  flex: 2;
+  gap: 0.75rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+}
+
+.category-tabs::-webkit-scrollbar {
+  height: 6px;
+}
+
+.category-tabs::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+.category-tabs::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
 }
 
 .tab-button {
-  padding: 0.5rem 1rem;
-  background: #e0e0e0;
-  border: none;
-  border-radius: 2rem;
+  padding: 0.75rem 1.5rem;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  border: 2px solid transparent;
+  border-radius: 50px;
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #475569;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
-/* Back Button */
-.back-btn {
-  border: none;
-  font-size: 1rem;
-  cursor: pointer;
-  margin-bottom: 1rem;
-  background: none;
-  width: 200px;
-  padding: 0;
+.tab-button:hover {
+  background: rgba(255, 255, 255, 0.9);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.back-btn:hover {
-  text-decoration: underline;
-}
-
-/* Menu Grid */
-.menu-grid {
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-}
-
-/* Individual Menu Card */
-.menu-item-card {
-  background: rgb(255, 255, 255);
-  border: 1px solid #ddd;
-  border-radius: 1rem;
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  transition: transform 0.2s ease;
-}
-
-.menu-item-card:hover {
+.tab-button.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
   transform: translateY(-2px);
 }
 
-.menu-item-card img {
-  width: 100%;
-  height: 160px;
-  object-fit: cover;
-  border-radius: 0.75rem;
+/* === Menu Grid === */
+.menu-grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  animation: fadeIn 0.5s ease;
 }
 
-.menu-item-card h4 {
-  margin: 0;
-  font-size: 1rem;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.menu-item-card p {
-  font-size: 0.9rem;
-  color: #666;
-}
-
-.menu-item-card strong {
-  color: #000;
-}
-
-.menu-item-card button {
-  margin-top: auto;
-  padding: 0.5rem;
-  border: none;
-  background-color: #007bff;
-  color: white;
-  border-radius: 0.5rem;
+/* === Menu Item Card === */
+.menu-item-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   cursor: pointer;
+}
+
+.menu-item-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  border-color: rgba(102, 126, 234, 0.3);
+}
+
+/* === Menu Item Image === */
+.menu-item-image {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+  position: relative;
+}
+
+.menu-item-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.menu-item-card:hover .menu-item-image img {
+  transform: scale(1.1) rotate(2deg);
+}
+
+/* Image Placeholder */
+.image-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+}
+
+.placeholder-icon {
+  font-size: 64px;
+  opacity: 0.4;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* === Menu Item Content === */
+.menu-item-content {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  flex-grow: 1;
+}
+
+.item-name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.item-description {
+  font-size: 0.9rem;
+  color: #64748b;
+  line-height: 1.6;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  flex-grow: 1;
+}
+
+/* === Item Footer === */
+.item-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 0.5rem;
+}
+
+.item-price {
+  font-size: 1.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* === Add to Cart Button === */
+.add-to-cart-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 50px;
+  color: white;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.add-to-cart-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(102, 126, 234, 0.4);
+}
+
+.add-to-cart-btn:active {
+  transform: translateY(0);
+}
+
+.add-to-cart-btn.added {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+}
+
+/* === Loading State === */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: 1.5rem;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-state p {
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+/* === Empty State === */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 3rem;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.empty-icon {
+  font-size: 80px;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.empty-state h3 {
+  font-size: 1.5rem;
+  color: #1e293b;
+  margin: 0 0 0.5rem 0;
+  font-weight: 700;
+}
+
+.empty-state p {
+  font-size: 1rem;
+  color: #64748b;
+  margin: 0;
+}
+
+/* === Responsive Design === */
+@media (max-width: 768px) {
+  .menu-page {
+    padding: 1rem;
+  }
+
+  .restaurant-name-section {
+    padding: 1.5rem;
+  }
+
+  .restaurant-name {
+    font-size: 2rem;
+  }
+
+  .restaurant-subtitle {
+    font-size: 1rem;
+  }
+
+  .menu-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1rem;
+  }
+
+  .menu-item-image {
+    height: 180px;
+  }
+
+  .item-price {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .restaurant-name {
+    font-size: 1.75rem;
+  }
+
+  .menu-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .add-to-cart-btn span {
+    display: none;
+  }
+
+  .add-to-cart-btn {
+    padding: 0.75rem;
+  }
 }
