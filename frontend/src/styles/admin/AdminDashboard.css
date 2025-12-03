@@ -11,13 +11,36 @@
 
 .dashboard-content {
   flex-grow: 1;
-  margin-left: 240px; /* Updated sidebar width */
+  margin-left: 240px;
   padding: 2rem;
   width: 85vw;
   margin-right: 0px;
-  background: linear-gradient(135deg, #0f1117 0%, #1a1d29 100%);
+  background-image: url("../../assets/logo/bg11.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
   min-height: calc(100vh - 64px);
   box-sizing: border-box;
+  position: relative;
+}
+
+/* Optional: Add overlay to darken background for better text readability */
+.dashboard-content::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 17, 23, 0.7); /* Dark overlay */
+  z-index: 0;
+  pointer-events: none;
+}
+
+.dashboard-content > * {
+  position: relative;
+  z-index: 1;
 }
 
 .dashboard-content h2 {

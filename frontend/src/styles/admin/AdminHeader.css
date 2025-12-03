@@ -8,10 +8,23 @@
   color: white;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   padding: 0 2rem;
   z-index: 1000;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
   border-bottom: 1px solid #2d3142;
+}
+
+.header-logo {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
+.header-logo img {
+  height: 45px;
+  width: auto;
+  object-fit: contain;
 }
 
 .admin-header h1 {
@@ -20,4 +33,12 @@
   font-weight: 700;
   color: #ffffff;
   letter-spacing: 0.5px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.header-spacer {
+  flex: 0 0 auto;
+  width: 45px; /* Same as logo width to balance */
 }
