@@ -2,8 +2,11 @@
   display: flex;
   width: 100%;
   min-height: 100vh;
-  /* Changed from dark image to clean gradient */
-  background: linear-gradient(135deg, #f5f7fa 0%, #e8edf2 100%);
+  background-image: url("../../assets/logo/cbg.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
   padding-top: 60px;
 }
 
@@ -29,7 +32,7 @@
   font-size: 1.75rem;
   font-weight: 700;
   margin-bottom: 1.5rem;
-  color: #1a202c !important;
+  color: #ffffff !important;
   border-left: 4px solid #3b82f6;
   padding-left: 0.75rem;
   text-shadow: none;
