@@ -23,12 +23,10 @@ const RestaurantList = ({
   const scrollRecommended = (offset) => {
     if (recommendedRef.current) {
       recommendedRef.current.scrollBy({ left: offset, behavior: "smooth" });
-      // Update chevron state after a short delay to allow scroll animation
       setTimeout(updateChevronState, 300);
     }
   };
 
-  // Handle scroll & resize
   useEffect(() => {
     const el = recommendedRef.current;
     if (!el) return;
@@ -43,7 +41,6 @@ const RestaurantList = ({
     };
   }, []);
 
-  // Update chevron state after recommended list is updated/rendered
   useEffect(() => {
     const timer = setTimeout(() => {
       updateChevronState();
@@ -120,11 +117,8 @@ const RestaurantList = ({
   if (!hasAnyRestaurants) {
     return (
       <div className="restaurant-list-layout">
-        <div className="restaurant-container">
-          <CategoryFilterPanel onCategoryChange={setSelectedCategories} />
-          <div className="restaurant-list-wrapper center-content">
-            <p className="no-restaurants">No restaurants available.</p>
-          </div>
+        <div className="restaurant-list-wrapper center-content">
+          <p className="no-restaurants">No restaurants available.</p>
         </div>
       </div>
     );
@@ -132,9 +126,12 @@ const RestaurantList = ({
 
   return (
     <div className="restaurant-list-layout">
-      <CategoryFilterPanel onCategoryChange={setSelectedCategories} />
-
       <div className="restaurant-list-wrapper">
+        {/* Filter button at the top */}
+        <div className="filter-section">
+          <CategoryFilterPanel onCategoryChange={setSelectedCategories} />
+        </div>
+
         {availableRecommended.length > 0 && (
           <div className="restaurant-section">
             <h2 className="section-title">Recommended For You</h2>

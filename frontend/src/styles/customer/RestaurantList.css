@@ -2,11 +2,8 @@
   display: flex;
   width: 100%;
   min-height: 100vh;
-  background-image: url("../../assets/logo/cbg.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
+  /* Changed from dark image to clean gradient */
+  background: linear-gradient(135deg, #f5f7fa 0%, #e8edf2 100%);
   padding-top: 60px;
 }
 
@@ -19,12 +16,11 @@
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.filter-panel {
-  position: sticky;
-  top: 60px;
-  height: calc(100vh - 60px);
-  overflow-y: auto;
-  border-right: 1px solid rgba(0, 0, 0, 0.08);
+/* === Filter Section === */
+.filter-section {
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
 }
 
 /* === Section Titles === */
@@ -32,7 +28,7 @@
   font-size: 1.75rem;
   font-weight: 700;
   margin-bottom: 1.5rem;
-  color: #ffffff !important;
+  color: #1a202c !important;
   border-left: 4px solid #3b82f6;
   padding-left: 0.75rem;
   text-shadow: none;
