@@ -8,8 +8,8 @@ import {
   createSeller,
   saveUserPreferences,
   getUserPreferences,
-  getRiderProfile, // ← ADD THIS
-  updateRiderAvailability, // ← ADD THIS
+  getRiderProfileModel, // ← ADD THIS
+  updateRiderAvailabilityModel, // ← ADD THIS
 } from "../model/userModel.js";
 import { pool } from "../config/db.js";
 import { sendVerificationCodeEmail } from "../utils/sendVerificationEmail.js";
@@ -610,12 +610,12 @@ export const loginRider = async (req, res) => {
   }
 };
 
-// Get rider profile
+// Get rider profile (around line 614)
 export const getRiderProfile = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const profile = await getRiderProfile(id);
+    const profile = await getRiderProfileModel(id); // ← Use renamed function
 
     if (!profile) {
       return res.status(404).json({ message: "Rider not found" });
@@ -640,7 +640,7 @@ export const updateRiderAvailability = async (req, res) => {
   }
 
   try {
-    const result = await updateRiderAvailability(id, isAvailable);
+    const result = await updateRiderAvailabilityModel(id, isAvailable); // ← Use renamed function
 
     if (result.affectedRows === 0) {
       return res.status(404).json({ message: "Rider not found" });
