@@ -86,12 +86,18 @@ function AdminDashboard() {
         <AdminSidebar />
         <div className="dashboard-content">
           {location.pathname === "/admin/dashboard" && (
-            <Box sx={{ width: "100%", p: isSmallScreen ? 2 : 4 }}>
+            <Box
+              sx={{
+                width: "100%",
+                p: isSmallScreen ? 2 : 4,
+                backgroundColor: "transparent", // ✅ ADDED: Force transparent background
+              }}
+            >
               <Typography
                 variant="h5"
                 fontWeight={600}
                 gutterBottom
-                sx={{ mb: 3 }}
+                sx={{ mb: 3, color: "#ffffff" }} // ✅ ADDED: White text color
               >
                 Admin Overview
               </Typography>
@@ -111,7 +117,7 @@ function AdminDashboard() {
                   <DashboardCard
                     icon={<BusinessIcon sx={{ fontSize: 40 }} />}
                     label="Total Businesses"
-                    value={businesses.length} // DYNAMIC VALUE
+                    value={businesses.length}
                     bgColor="#F3E5F5"
                     color="#7B1FA2"
                   />
@@ -120,7 +126,10 @@ function AdminDashboard() {
             </Box>
           )}
 
-          <Outlet />
+          {/* ✅ WRAPPED Outlet in a transparent Box */}
+          <Box sx={{ backgroundColor: "transparent" }}>
+            <Outlet />
+          </Box>
         </div>
       </div>
     </div>
