@@ -1,33 +1,58 @@
 .user-management {
   padding: 2rem;
   font-family: "Segoe UI", sans-serif;
-  background-color: #f0f2f5;
+  background-image: url("../../assets/logo/bg13.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
   min-height: 100vh;
+  position: relative;
 }
 
-h2 {
+/* Dark overlay for better readability */
+.user-management::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 17, 23, 0.75);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.user-management > * {
+  position: relative;
+  z-index: 1;
+}
+
+.user-management h2 {
   margin-bottom: 1.5rem;
-  color: #222;
+  color: #ffffff;
   font-size: 2rem;
   font-weight: 600;
 }
 
 .add-user-btn {
-  background-color: #007bff;
+  background: linear-gradient(135deg, #4f86f7 0%, #3d6fd9 100%);
   color: white;
-  padding: 0.55rem 1.2rem;
+  padding: 0.75rem 1.5rem;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0, 123, 255, 0.1);
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 12px rgba(79, 134, 247, 0.4);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-bottom: 1.5rem;
 }
 
 .add-user-btn:hover {
-  background-color: #0056b3;
-  transform: translateY(-1px);
+  background: linear-gradient(135deg, #5a8fff 0%, #4f7ee8 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(79, 134, 247, 0.5);
 }
 
 .user-list {
@@ -37,7 +62,7 @@ h2 {
 .user-table {
   width: 100%;
   border-collapse: separate;
-  border-spacing: 0 10px;
+  border-spacing: 0 12px;
   font-size: 0.95rem;
   background-color: transparent;
   min-width: 600px;
@@ -49,45 +74,70 @@ h2 {
 
 .user-table th {
   text-align: left;
-  padding: 12px;
+  padding: 14px 16px;
   font-weight: 600;
-  color: #555;
+  color: #a0a4b8;
   background-color: transparent;
   font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .user-table tbody tr {
-  background-color: #fff;
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
-  border-radius: 8px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+  background: linear-gradient(135deg, #1e2130 0%, #252936 100%);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  border: 1px solid #2d3142;
 }
 
 .user-table tbody tr:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  transform: translateY(-2px);
-  background-color: #fdfdfd;
+  box-shadow: 0 6px 20px rgba(79, 134, 247, 0.3);
+  transform: translateY(-3px);
+  background: linear-gradient(135deg, #252936 0%, #2d3142 100%);
   cursor: pointer;
+  border-color: rgba(79, 134, 247, 0.5);
 }
 
 .user-table td {
-  padding: 16px 12px;
-  color: #333;
-  background-color: #fff;
+  padding: 18px 16px;
+  color: #e4e6eb;
+  background-color: transparent;
+  font-size: 0.95rem;
 }
 
-.user-table tbody tr:nth-child(even) {
-  background-color: #f9fafb;
+.user-table td:first-child {
+  color: #a0a4b8;
+  font-weight: 600;
+}
+
+.user-table td:last-child {
+  color: #4f86f7;
+  font-weight: 600;
 }
 
 .user-table td:first-child,
 .user-table th:first-child {
-  border-top-left-radius: 8px;
-  border-bottom-left-radius: 8px;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  padding-left: 20px;
 }
 
 .user-table td:last-child,
 .user-table th:last-child {
-  border-top-right-radius: 8px;
-  border-bottom-right-radius: 8px;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  padding-right: 20px;
+}
+
+/* Loading and empty states */
+.user-management p {
+  color: #a0a4b8;
+  font-size: 1rem;
+  text-align: center;
+  padding: 2rem;
+  background: linear-gradient(135deg, #1e2130 0%, #252936 100%);
+  border: 1px solid #2d3142;
+  border-radius: 10px;
+  margin-top: 1rem;
 }

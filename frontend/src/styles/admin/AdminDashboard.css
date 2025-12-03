@@ -23,6 +23,7 @@
   min-height: calc(100vh - 64px);
   box-sizing: border-box;
   position: relative;
+  color: white;
 }
 
 /* Optional: Add overlay to darken background for better text readability */

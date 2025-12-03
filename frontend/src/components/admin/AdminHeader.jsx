@@ -1,6 +1,6 @@
 import React from "react";
 import "../../styles/admin/AdminHeader.css";
-import logo from "../../assets/logo/Motobook.png";
+import logo from "../../assets/logo/Motobook2.png";
 
 function AdminHeader() {
   return (
