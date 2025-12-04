@@ -12,8 +12,8 @@ body {
 }
 
 .landing-container {
-  margin-top: 60px;
-  padding: 4rem 1.5rem;
+  margin-top: 60px; /* Mobile header height */
+  padding: 2rem 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -28,46 +28,46 @@ body {
 }
 
 .landing-container h1 {
-  font-size: 3rem;
+  font-size: 2rem;
   font-weight: 700;
   color: #ffffff;
   margin-bottom: 1rem;
+  line-height: 1.2;
 }
 
 .landing-container p {
-  font-size: 1.25rem;
+  font-size: 1rem;
   color: #fffefe;
   max-width: 650px;
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
+  line-height: 1.5;
 }
 
 /* Features Section */
 .features {
   display: flex;
-  flex-wrap: wrap;
-  gap: 2rem;
-  justify-content: center;
-  max-width: 1100px;
-  margin-bottom: 4rem;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 500px;
+  margin-bottom: 3rem;
 }
 
 .feature-card {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px); /* Adds a blur effect behind the card */
-  -webkit-backdrop-filter: blur(10px); /* Safari support */
-  border-radius: 1rem;
-  padding: 2rem;
-  width: 320px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 16px;
+  padding: 1.5rem;
+  width: 100%;
   text-align: center;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  border: 1px solid rgba(255, 255, 255, 0.3); /* Optional: adds a subtle border */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.feature-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
-  background: rgba(255, 255, 255, 0.15); /* Slightly more opaque on hover */
+.feature-card:active {
+  transform: scale(0.98);
 }
 
 .feature-icon {
@@ -76,43 +76,47 @@ body {
 }
 
 .feature-card h3 {
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   color: #ffffff;
   margin-bottom: 0.5rem;
+  font-weight: 600;
 }
 
 .feature-card p {
-  font-size: 1rem;
-  color: #ffffff;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
 }
 
 /* How It Works Section */
 .how-it-works {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px); /* Frosted glass effect */
-  -webkit-backdrop-filter: blur(10px); /* Safari support */
-  border-radius: 1rem;
-  padding: 3rem 2rem;
-  max-width: 900px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-  margin-bottom: 3rem;
-  border: 1px solid rgba(255, 255, 255, 0.3); /* Subtle border */
-  color: #ffffff; /* White text */
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 16px;
+  padding: 2rem 1.5rem;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  margin-bottom: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
 }
 
 .how-it-works h2 {
-  font-size: 2rem;
+  font-size: 1.5rem;
   margin-bottom: 1.5rem;
   color: #ffffff;
+  font-weight: 600;
 }
 
 .how-it-works ol {
   list-style: decimal inside;
   text-align: left;
   margin: 0 auto;
-  max-width: 600px;
-  font-size: 1.1rem;
-  color: #ffffff;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.6;
 }
 
 .how-it-works li {
@@ -121,45 +125,50 @@ body {
 
 /* Seller CTA Section */
 .seller-section {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px); /* Frosted glass effect */
-  -webkit-backdrop-filter: blur(10px); /* Safari support */
-  border-radius: 1rem;
-  padding: 2.5rem 2rem;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 16px;
+  padding: 2rem 1.5rem;
   text-align: center;
-  max-width: 500px;
   width: 100%;
-  box-shadow: 0 4px 16px rgba(255, 107, 107, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.3); /* Subtle border */
-  color: #ffffff; /* White text */
+  max-width: 500px;
+  box-shadow: 0 4px 12px rgba(66, 169, 252, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  margin-bottom: 2rem;
 }
 
 .seller-section h2 {
-  font-size: 1.75rem;
+  font-size: 1.5rem;
   color: #42a9fc;
   margin-bottom: 1rem;
+  font-weight: 600;
 }
 
 .seller-section p {
-  font-size: 1rem;
-  color: #ffffff;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.9);
   margin-bottom: 1.5rem;
 }
 
 .register-button {
   background-color: #42a9fc;
   color: white;
-  padding: 0.85rem 1.75rem;
+  padding: 14px 32px;
   font-size: 1rem;
   font-weight: 600;
   border: none;
-  border-radius: 0.5rem;
+  border-radius: 12px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.2s ease;
+  width: 100%;
+  max-width: 300px;
 }
 
-.register-button:hover {
-  background-color: #42a8fca7;
+.register-button:active {
+  background-color: #3090db;
+  transform: scale(0.98);
 }
 
 /* Loading Fallback */
@@ -168,38 +177,137 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   color: #888;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .features {
-    flex-direction: column;
-    align-items: center;
-  }
+/* ============================================
+   TABLET (768px+)
+   ============================================ */
 
-  .feature-card {
-    width: 90%;
-  }
-
-  .how-it-works ol {
-    padding-left: 1rem;
+@media (min-width: 768px) {
+  .landing-container {
+    margin-top: 70px; /* Desktop header height */
+    padding: 3rem 2rem;
   }
 
   .landing-container h1 {
-    font-size: 2rem;
+    font-size: 2.5rem;
   }
 
   .landing-container p {
+    font-size: 1.15rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .features {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 1100px;
+    gap: 2rem;
+  }
+
+  .feature-card {
+    width: calc(50% - 1rem);
+    min-width: 280px;
+    padding: 2rem;
+  }
+
+  .feature-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    background: rgba(255, 255, 255, 0.12);
+  }
+
+  .feature-card h3 {
+    font-size: 1.5rem;
+  }
+
+  .feature-card p {
     font-size: 1rem;
   }
 
   .how-it-works {
-    padding: 2rem 1.5rem;
+    max-width: 700px;
+    padding: 2.5rem 2rem;
+  }
+
+  .how-it-works h2 {
+    font-size: 1.75rem;
+  }
+
+  .how-it-works ol {
+    font-size: 1.05rem;
   }
 
   .seller-section {
-    padding: 2rem 1.25rem;
+    max-width: 600px;
+    padding: 2.5rem 2rem;
+  }
+
+  .seller-section h2 {
+    font-size: 1.75rem;
+  }
+
+  .seller-section p {
+    font-size: 1.05rem;
+  }
+
+  .register-button {
+    padding: 14px 40px;
+    width: auto;
+  }
+
+  .register-button:hover {
+    background-color: #3090db;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(66, 169, 252, 0.3);
+  }
+}
+
+/* ============================================
+   DESKTOP (1024px+)
+   ============================================ */
+
+@media (min-width: 1024px) {
+  .landing-container {
+    margin-top: 75px;
+    padding: 4rem 2rem;
+  }
+
+  .landing-container h1 {
+    font-size: 3rem;
+  }
+
+  .landing-container p {
+    font-size: 1.25rem;
+    margin-bottom: 3rem;
+  }
+
+  .features {
+    gap: 2rem;
+  }
+
+  .feature-card {
+    width: 320px;
+  }
+
+  .how-it-works {
+    max-width: 800px;
+    padding: 3rem 2.5rem;
+  }
+
+  .how-it-works h2 {
+    font-size: 2rem;
+  }
+
+  .how-it-works ol {
+    font-size: 1.1rem;
+    max-width: 600px;
+  }
+
+  .seller-section {
+    max-width: 650px;
   }
 }
