@@ -79,6 +79,12 @@ export const registerUser = async (req, res) => {
 
     const hashed = await bcrypt.hash(password, 10);
 
+    // ✅ Generate verification code BEFORE creating user
+    const verificationCode = Math.floor(
+      100000 + Math.random() * 900000
+    ).toString();
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+
     const userId = await createUser({
       name,
       email,
@@ -88,6 +94,15 @@ export const registerUser = async (req, res) => {
       is_verified: false,
       needs_password: false,
     });
+
+    // ✅ Update user with verification code
+    await pool.query(
+      `UPDATE users SET verification_code = ?, code_expires_at = ? WHERE userid = ?`,
+      [verificationCode, expiresAt, userId]
+    );
+
+    await sendVerificationCodeEmail(email, verificationCode);
+    console.log(`✅ Verification code sent to: ${email}`);
 
     res.status(201).json({
       message:
