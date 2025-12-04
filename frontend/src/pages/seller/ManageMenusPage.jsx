@@ -1,11 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from "axios";
+import { AuthContext } from "../../context/AuthContext"; // ✅ Import AuthContext
 import "../../styles/seller/ManageMenusPage.css";
 
 const businessServiceBaseURL =
   import.meta.env.VITE_BUSINESS_SERVICE_URL || "http://localhost:3003";
 
 const ManageMenusPage = () => {
+  const { user } = useContext(AuthContext); // ✅ Get user from context
   const [categories, setCategories] = useState([]);
   const [productsByCategory, setProductsByCategory] = useState({});
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -20,13 +22,23 @@ const ManageMenusPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState("");
-  const [uploading, setUploading] = useState(false); // ✅ NEW: Track upload state
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     const fetchMenuItems = async () => {
       try {
-        const userId = localStorage.getItem("userId");
+        // ✅ Use user.id from context with fallback to localStorage
+        const userId = user?.id || localStorage.getItem("userId");
         const token = localStorage.getItem("token");
+
+        // ✅ Validate userId before making request
+        if (!userId || userId === "null" || userId === "undefined") {
+          console.error("❌ Invalid userId:", userId);
+          alert("Unable to fetch menu items. Please log in again.");
+          return;
+        }
+
+        console.log("✅ Fetching business for userId:", userId);
 
         const businessResponse = await axios.get(
           `${businessServiceBaseURL}/api/business/${userId}`,
@@ -39,6 +51,8 @@ const ManageMenusPage = () => {
 
         const business = businessResponse.data;
         const businessId = business.id;
+
+        console.log("✅ Business found:", business.businessName);
 
         const menuResponse = await axios.get(
           `${businessServiceBaseURL}/api/business/menu-items/${businessId}`,
@@ -76,17 +90,21 @@ const ManageMenusPage = () => {
 
         setCategories([...uniqueCategories]);
         setProductsByCategory(grouped);
-
-        // Set "All" as selected by default
         setSelectedCategory("All");
       } catch (error) {
-        console.error("Error fetching menu items:", error);
-        alert("Failed to fetch menu items.");
+        console.error("❌ Error fetching menu items:", error);
+        alert(
+          error.response?.data?.message ||
+            "Failed to fetch menu items. Please check your connection and try again."
+        );
       }
     };
 
-    fetchMenuItems();
-  }, []);
+    // ✅ Only fetch if user exists
+    if (user?.id) {
+      fetchMenuItems();
+    }
+  }, [user?.id]); // ✅ Add user.id as dependency
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -122,11 +140,21 @@ const ManageMenusPage = () => {
       return;
     }
 
-    setUploading(true); // ✅ Start upload
+    setUploading(true);
 
     try {
-      const userId = localStorage.getItem("userId");
+      // ✅ Get userId from context with fallback
+      const userId = user?.id || localStorage.getItem("userId");
       const token = localStorage.getItem("token");
+
+      // ✅ CRITICAL: Validate userId before sending
+      if (!userId || userId === "null" || userId === "undefined") {
+        alert("Session expired. Please log in again.");
+        setUploading(false);
+        return;
+      }
+
+      console.log("✅ Adding product for userId:", userId);
 
       const formData = new FormData();
       formData.append("userId", userId);
@@ -135,6 +163,12 @@ const ManageMenusPage = () => {
       formData.append("description", description);
       formData.append("category", category);
       formData.append("productImage", image);
+
+      // ✅ Log FormData contents for debugging
+      console.log("FormData contents:");
+      for (let [key, value] of formData.entries()) {
+        console.log(`  ${key}:`, value instanceof File ? value.name : value);
+      }
 
       const response = await axios.post(
         `${businessServiceBaseURL}/api/business/menu/add-items`,
@@ -150,12 +184,11 @@ const ManageMenusPage = () => {
       const data = response.data;
       console.log("✅ Product saved with ID:", data.id);
 
-      // ✅ FIX: Use the Cloudinary URL from the response
       const newEntry = {
         name,
         price,
         description,
-        image: data.image, // ✅ Use server response URL, not local blob
+        image: data.image,
         category,
       };
 
@@ -165,22 +198,21 @@ const ManageMenusPage = () => {
 
       const updated = { ...productsByCategory };
       updated[category] = [...(updated[category] || []), newEntry];
-
-      // Also add to "All" category
       updated["All"] = [...(updated["All"] || []), newEntry];
 
       setProductsByCategory(updated);
       setSelectedCategory(category);
       resetForm();
-      alert("Product added successfully!"); // ✅ Success feedback
+      alert("Product added successfully!");
     } catch (error) {
       console.error("❌ Error saving product:", error);
+      console.error("Error response:", error.response?.data);
       alert(
         error.response?.data?.message ||
           "Failed to add product. Please try again."
       );
     } finally {
-      setUploading(false); // ✅ End upload
+      setUploading(false);
     }
   };
 
@@ -252,16 +284,23 @@ const ManageMenusPage = () => {
     setIsModalOpen(false);
   };
 
-  // Get sorted categories with "All" always first
   const getSortedCategories = () => {
     const cats = Object.keys(productsByCategory).filter(
       (cat) => productsByCategory[cat] && productsByCategory[cat].length > 0
     );
 
-    // Remove "All" if it exists, then add it at the beginning
     const filteredCats = cats.filter((cat) => cat !== "All");
     return ["All", ...filteredCats.sort()];
   };
+
+  // ✅ Show loading state if user is not loaded yet
+  if (!user) {
+    return (
+      <div className="menus-page">
+        <p>Loading user information...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="menus-page">
