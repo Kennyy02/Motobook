@@ -79,30 +79,45 @@ export const registerUser = async (req, res) => {
 
     const hashed = await bcrypt.hash(password, 10);
 
-    // ✅ Generate verification code BEFORE creating user
+    // ✅ Generate verification code FIRST
     const verificationCode = Math.floor(
       100000 + Math.random() * 900000
     ).toString();
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
+    console.log(
+      `🔐 Generated verification code: ${verificationCode} for ${email}`
+    );
+
+    // ✅ Create user WITH verification code
     const userId = await createUser({
       name,
       email,
       passwordhash: hashed,
       phone,
       role,
+      verification_code: verificationCode,
+      code_expires_at: expiresAt,
       is_verified: false,
       needs_password: false,
     });
 
-    // ✅ Update user with verification code
-    await pool.query(
-      `UPDATE users SET verification_code = ?, code_expires_at = ? WHERE userid = ?`,
-      [verificationCode, expiresAt, userId]
-    );
+    console.log(`👤 User created with ID: ${userId}`);
 
-    await sendVerificationCodeEmail(email, verificationCode);
-    console.log(`✅ Verification code sent to: ${email}`);
+    // ✅ Send the verification email
+    try {
+      await sendVerificationCodeEmail(email, verificationCode);
+      console.log(`✅ Verification email sent successfully to: ${email}`);
+    } catch (emailError) {
+      console.error(`❌ Failed to send email:`, emailError);
+      // ⚠️ User is created but email failed - you might want to handle this differently
+      return res.status(201).json({
+        message:
+          "Account created but failed to send verification email. Please request a new code.",
+        userId,
+        emailError: true,
+      });
+    }
 
     res.status(201).json({
       message:
@@ -110,8 +125,8 @@ export const registerUser = async (req, res) => {
       userId,
     });
   } catch (error) {
-    console.error("Signup error:", error);
-    res.status(500).json({ message: "Server error" });
+    console.error("❌ Signup error:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 

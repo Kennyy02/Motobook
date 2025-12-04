@@ -1,13 +1,8 @@
-import { Resend } from "resend";
-
-// Only initialize Resend if API key exists
-const resend = process.env.RESEND_API_KEY
-  ? new Resend(process.env.RESEND_API_KEY)
-  : null;
+import nodemailer from "nodemailer";
 
 export const sendVerificationCodeEmail = async (email, code) => {
-  // If no Resend API key, just log and return
-  if (!resend) {
+  // Check if Gmail credentials are set
+  if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD) {
     console.log(`
 ╔════════════════════════════════════════════════════════════════╗
 ║                    📧 EMAIL MOCK MODE                          ║
@@ -15,24 +10,36 @@ export const sendVerificationCodeEmail = async (email, code) => {
 ║  To: ${email.padEnd(54)} ║
 ║  Verification Code: ${code.padEnd(44)} ║
 ╠════════════════════════════════════════════════════════════════╣
-║  ⚠️  RESEND_API_KEY NOT SET - Email not actually sent         ║
+║  ⚠️  Gmail credentials NOT SET - Email not sent                ║
 ║                                                                ║
 ║  To send real emails:                                         ║
-║  1. Sign up at https://resend.com                             ║
-║  2. Get your API key                                          ║
-║  3. Add to .env: RESEND_API_KEY=re_xxxxx                      ║
+║  1. Enable 2FA on Gmail                                       ║
+║  2. Generate App Password at:                                 ║
+║     https://myaccount.google.com/apppasswords                 ║
+║  3. Add to Railway Variables:                                 ║
+║     GMAIL_USER=youremail@gmail.com                            ║
+║     GMAIL_APP_PASSWORD=xxxx xxxx xxxx xxxx                    ║
 ╚════════════════════════════════════════════════════════════════╝
     `);
     return { success: true, mock: true, code };
   }
 
   try {
-    console.log(`📧 Sending verification email to: ${email}`);
+    console.log(`📧 Sending verification email via Gmail to: ${email}`);
 
-    const { data, error } = await resend.emails.send({
-      // ✅ Use Resend's test domain for now (works without domain verification)
-      from: "MotoBook <onboarding@resend.dev>",
-      to: [email],
+    // Create Gmail transporter
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.GMAIL_USER,
+        pass: process.env.GMAIL_APP_PASSWORD,
+      },
+    });
+
+    // Email options
+    const mailOptions = {
+      from: `"MotoBook" <${process.env.GMAIL_USER}>`,
+      to: email,
       subject: "MotoBook - Email Verification Code",
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
@@ -61,18 +68,20 @@ export const sendVerificationCodeEmail = async (email, code) => {
           </div>
         </div>
       `,
-    });
+      text: `MotoBook - Email Verification\n\nYour verification code is: ${code}\n\nThis code will expire in 10 minutes.\n\nIf you didn't request this code, please ignore this email.`,
+    };
 
-    if (error) {
-      console.error("❌ Error sending verification email:", error);
-      throw new Error("Failed to send verification email: " + error.message);
-    }
+    // Send email
+    const info = await transporter.sendMail(mailOptions);
 
-    console.log("✅ Verification email sent successfully!");
-    console.log("📧 Email ID:", data?.id);
-    return { success: true, data };
+    console.log("✅ Verification email sent successfully via Gmail!");
+    console.log("📧 Message ID:", info.messageId);
+    console.log("📬 Preview URL:", nodemailer.getTestMessageUrl(info));
+
+    return { success: true, messageId: info.messageId };
   } catch (error) {
-    console.error("❌ Failed to send verification email:", error);
-    throw error;
+    console.error("❌ Failed to send verification email via Gmail:", error);
+    console.error("Error details:", error.message);
+    throw new Error("Failed to send verification email: " + error.message);
   }
 };
