@@ -1,7 +1,7 @@
 import "../../styles/customer/RestaurantList.css";
 import React, { useState, useMemo, useRef, useEffect } from "react";
 import CategoryFilterPanel from "./CategoryFilterPanel";
-import { Lock, ChevronLeft, ChevronRight } from "lucide-react";
+import { Lock, ChevronLeft, ChevronRight, Search } from "lucide-react";
 
 const RestaurantList = ({
   recommendedRestaurants = [],
@@ -9,6 +9,7 @@ const RestaurantList = ({
   onSelectRestaurant,
 }) => {
   const [selectedCategories, setSelectedCategories] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const recommendedRef = useRef(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
@@ -56,19 +57,32 @@ const RestaurantList = ({
     (restaurant) => restaurant.status === "approved"
   );
 
+  // Filter by categories AND search query
   const filteredRecommended = useMemo(() => {
     return approvedRecommended.filter((r) => {
-      if (selectedCategories.length === 0) return true;
-      return r.categories?.some((cat) => selectedCategories.includes(cat));
+      const matchesCategory =
+        selectedCategories.length === 0 ||
+        r.categories?.some((cat) => selectedCategories.includes(cat));
+      const matchesSearch =
+        searchQuery === "" ||
+        r.businessName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        r.address.toLowerCase().includes(searchQuery.toLowerCase());
+      return matchesCategory && matchesSearch;
     });
-  }, [approvedRecommended, selectedCategories]);
+  }, [approvedRecommended, selectedCategories, searchQuery]);
 
   const filteredAll = useMemo(() => {
     return approvedAll.filter((r) => {
-      if (selectedCategories.length === 0) return true;
-      return r.categories?.some((cat) => selectedCategories.includes(cat));
+      const matchesCategory =
+        selectedCategories.length === 0 ||
+        r.categories?.some((cat) => selectedCategories.includes(cat));
+      const matchesSearch =
+        searchQuery === "" ||
+        r.businessName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        r.address.toLowerCase().includes(searchQuery.toLowerCase());
+      return matchesCategory && matchesSearch;
     });
-  }, [approvedAll, selectedCategories]);
+  }, [approvedAll, selectedCategories, searchQuery]);
 
   const availableRecommended = filteredRecommended.filter((r) => r.isOpen);
   const unavailableRecommended = filteredRecommended.filter((r) => !r.isOpen);
@@ -95,8 +109,8 @@ const RestaurantList = ({
         {!restaurant.isOpen && (
           <div className="image-overlay">
             <div className="overlay-content">
-              <Lock size={24} className="lock-icon" />
-              <span className="overlay-text">Not Available</span>
+              <Lock size={20} className="lock-icon" />
+              <span className="overlay-text">Closed</span>
             </div>
           </div>
         )}
@@ -114,11 +128,22 @@ const RestaurantList = ({
     unavailableRecommended.length ||
     unavailableAll.length;
 
-  if (!hasAnyRestaurants) {
+  const noResultsFound =
+    searchQuery &&
+    availableRecommended.length === 0 &&
+    availableAll.length === 0 &&
+    unavailableRecommended.length === 0 &&
+    unavailableAll.length === 0;
+
+  if (!hasAnyRestaurants && !searchQuery) {
     return (
       <div className="restaurant-list-layout">
         <div className="restaurant-list-wrapper center-content">
-          <p className="no-restaurants">No restaurants available.</p>
+          <div className="no-restaurants">
+            <div className="empty-icon">🍽️</div>
+            <h3>No restaurants available</h3>
+            <p>Check back later for delicious options!</p>
+          </div>
         </div>
       </div>
     );
@@ -127,19 +152,57 @@ const RestaurantList = ({
   return (
     <div className="restaurant-list-layout">
       <div className="restaurant-list-wrapper">
-        {/* Filter button at the top */}
-        <div className="filter-section">
+        {/* Search & Filter Section */}
+        <div className="search-filter-section">
+          <div className="search-bar">
+            <Search className="search-icon" size={18} />
+            <input
+              type="text"
+              placeholder="Search restaurants..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            {searchQuery && (
+              <button
+                className="clear-search"
+                onClick={() => setSearchQuery("")}
+              >
+                ×
+              </button>
+            )}
+          </div>
           <CategoryFilterPanel onCategoryChange={setSelectedCategories} />
         </div>
 
+        {noResultsFound && (
+          <div className="no-results-state">
+            <div className="empty-icon">🔍</div>
+            <h3>No restaurants found</h3>
+            <p>Try adjusting your search or filters</p>
+            <button
+              className="clear-filters-btn"
+              onClick={() => {
+                setSearchQuery("");
+                setSelectedCategories([]);
+              }}
+            >
+              Clear All Filters
+            </button>
+          </div>
+        )}
+
         {availableRecommended.length > 0 && (
           <div className="restaurant-section">
-            <h2 className="section-title">Recommended For You</h2>
+            <h2 className="section-title">
+              <span className="title-icon">⭐</span>
+              Recommended For You
+            </h2>
             <div className="chevron-wrapper">
               <button
                 className="chevron-button left"
-                onClick={() => scrollRecommended(-300)}
+                onClick={() => scrollRecommended(-250)}
                 disabled={!canScrollLeft}
+                aria-label="Scroll left"
               >
                 <ChevronLeft />
               </button>
@@ -150,8 +213,9 @@ const RestaurantList = ({
               </div>
               <button
                 className="chevron-button right"
-                onClick={() => scrollRecommended(300)}
+                onClick={() => scrollRecommended(250)}
                 disabled={!canScrollRight}
+                aria-label="Scroll right"
               >
                 <ChevronRight />
               </button>
@@ -161,7 +225,10 @@ const RestaurantList = ({
 
         {availableAll.length > 0 && (
           <div className="restaurant-section">
-            <h2 className="section-title">All Restaurants</h2>
+            <h2 className="section-title">
+              <span className="title-icon">🍴</span>
+              All Restaurants
+            </h2>
             <div className="restaurant-grid">
               {availableAll.map((r) =>
                 renderRestaurantCard(r, "all-available")
@@ -171,8 +238,11 @@ const RestaurantList = ({
         )}
 
         {(unavailableRecommended.length > 0 || unavailableAll.length > 0) && (
-          <div className="restaurant-section">
-            <h2 className="section-title">Currently Not Available</h2>
+          <div className="restaurant-section unavailable-section">
+            <h2 className="section-title">
+              <span className="title-icon">🔒</span>
+              Currently Closed
+            </h2>
             <div className="restaurant-grid">
               {unavailableRecommended.map((r) =>
                 renderRestaurantCard(r, "rec-unavailable")

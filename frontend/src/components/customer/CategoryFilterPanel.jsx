@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Filter, X, ChevronDown, Search } from "lucide-react";
+import { Filter, X, ChevronDown } from "lucide-react";
 import "../../styles/customer/CategoryFilterPanel.css";
 
 const groupedCategories = {
@@ -66,21 +66,12 @@ const groupedCategories = {
   "Fast Food": ["Fast Food", "Burgers", "Corndogs", "Fries"],
 };
 
-const allCategories = Array.from(
-  new Set(
-    Object.values(groupedCategories)
-      .flat()
-      .map((cat) => cat.trim())
-  )
-).sort((a, b) => a.localeCompare(b));
-
 const CategoryFilterPanel = ({ onCategoryChange }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategories, setSelectedCategories] = useState([]);
+  const [expandedGroups, setExpandedGroups] = useState({});
   const dropdownRef = useRef(null);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -111,9 +102,12 @@ const CategoryFilterPanel = ({ onCategoryChange }) => {
     onCategoryChange([]);
   };
 
-  const filteredCategories = allCategories.filter((cat) =>
-    cat.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const toggleGroup = (group) => {
+    setExpandedGroups((prev) => ({
+      ...prev,
+      [group]: !prev[group],
+    }));
+  };
 
   return (
     <div className="filter-dropdown-container" ref={dropdownRef}>
@@ -143,36 +137,42 @@ const CategoryFilterPanel = ({ onCategoryChange }) => {
             )}
           </div>
 
-          <div className="filter-search-wrapper">
-            <Search size={16} className="search-icon" />
-            <input
-              type="text"
-              placeholder="Search categories..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="filter-search-input"
-            />
-          </div>
-
           <div className="filter-categories-list">
-            {filteredCategories.length > 0 ? (
-              filteredCategories.map((item) => (
-                <label key={item} className="category-checkbox-label">
-                  <input
-                    type="checkbox"
-                    checked={selectedCategories.includes(item)}
-                    onChange={() => handleCheckboxChange(item)}
-                    className="category-checkbox"
+            {Object.entries(groupedCategories).map(([group, categories]) => (
+              <div key={group} className="category-group">
+                <button
+                  className="group-header"
+                  onClick={() => toggleGroup(group)}
+                >
+                  <span className="group-name">{group}</span>
+                  <ChevronDown
+                    size={16}
+                    className={`group-chevron ${
+                      expandedGroups[group] ? "rotated" : ""
+                    }`}
                   />
-                  <span className="category-name">{item}</span>
-                  {selectedCategories.includes(item) && (
-                    <span className="checkmark">✓</span>
-                  )}
-                </label>
-              ))
-            ) : (
-              <p className="no-results">No categories found</p>
-            )}
+                </button>
+
+                {expandedGroups[group] && (
+                  <div className="category-items">
+                    {categories.map((item) => (
+                      <label key={item} className="category-checkbox-label">
+                        <input
+                          type="checkbox"
+                          checked={selectedCategories.includes(item)}
+                          onChange={() => handleCheckboxChange(item)}
+                          className="category-checkbox"
+                        />
+                        <span className="category-name">{item}</span>
+                        {selectedCategories.includes(item) && (
+                          <span className="checkmark">✓</span>
+                        )}
+                      </label>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
 
           <div className="filter-footer">
