@@ -40,12 +40,8 @@ const SellerLoginPage = () => {
 
       const { token, user } = response.data;
 
-      // Store token and user details
-      localStorage.setItem("token", token);
-      localStorage.setItem("userId", user.id);
-      localStorage.setItem("user", JSON.stringify(user));
-
-      login(user); // Update AuthContext
+      // ✅ FIXED: Pass both token and user to login
+      login(token, user);
 
       alert("Login successful!");
       navigate("/seller/dashboard");
@@ -56,7 +52,6 @@ const SellerLoginPage = () => {
       alert(message);
     }
   };
-
   return (
     <>
       <div className="seller-access-wrapper">
