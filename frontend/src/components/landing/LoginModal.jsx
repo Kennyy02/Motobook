@@ -172,7 +172,7 @@ function LoginModal({ onClose, mode: initialMode, onShowTerms }) {
         return;
       }
 
-      // ✅ Step 2: New user - register account
+      // ✅ Step 2: New user - register account (this already sends the email!)
       await axios.post(`${userServiceBaseURL}/api/auth/register`, {
         name,
         email,
@@ -181,13 +181,9 @@ function LoginModal({ onClose, mode: initialMode, onShowTerms }) {
         role: "Customer",
       });
 
-      // ✅ Step 3: Send verification code for new user
-      console.log("📧 Sending verification code to:", email);
-      const verificationResponse = await axios.post(
-        `${userServiceBaseURL}/api/auth/send-verification-code`,
-        { email }
-      );
-      console.log("✅ Verification code response:", verificationResponse.data);
+      // ✅ REMOVED: No need to call send-verification-code again!
+      // The /register endpoint already sends the verification email
+      console.log("✅ User registered, verification email sent!");
 
       setCountdown(30);
       setView("verifyCode");
