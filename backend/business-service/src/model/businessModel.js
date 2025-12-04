@@ -7,6 +7,23 @@ const businessServiceBaseURL =
   process.env.BUSINESS_SERVICE_URL || "http://localhost:3003";
 const DEFAULT_LOGO_URL = `${businessServiceBaseURL}/uploads/logo/default-business-logo.png`;
 
+const safeParseCategories = (value) => {
+  if (!value) return [];
+  if (Array.isArray(value)) return value;
+  if (typeof value === "string") {
+    try {
+      return JSON.parse(value);
+    } catch {
+      // maybe stored as comma-separated
+      return value
+        .split?.(",")
+        .map((v) => v.trim())
+        .filter(Boolean);
+    }
+  }
+  return [];
+};
+
 export const createRestaurant = async ({
   name,
   ownerFullName,
@@ -45,7 +62,10 @@ export const getRestaurantByEmail = async (email) => {
   const [rows] = await pool.query("SELECT * FROM business WHERE email = ?", [
     email,
   ]);
-  return rows[0];
+  if (!rows[0]) return null;
+  const row = rows[0];
+  row.categories = safeParseCategories(row.categories);
+  return row;
 };
 
 export const getBusinessByUserId = async (userId) => {
@@ -53,7 +73,10 @@ export const getBusinessByUserId = async (userId) => {
     "SELECT * FROM business WHERE userId = ? LIMIT 1",
     [userId]
   );
-  return rows[0];
+  if (!rows[0]) return null;
+  const row = rows[0];
+  row.categories = safeParseCategories(row.categories);
+  return row;
 };
 
 export const addProductToMenu = async ({
@@ -100,9 +123,7 @@ export const getRecommendedRestaurants = async (userCategories) => {
   const parsedRestaurants = rows.map((restaurant) => {
     return {
       ...restaurant,
-      categories: Array.isArray(restaurant.categories)
-        ? restaurant.categories
-        : [],
+      categories: safeParseCategories(restaurant.categories),
     };
   });
 
@@ -132,15 +153,12 @@ export const getRecommendedRestaurants = async (userCategories) => {
 export const getAllRestaurants = async () => {
   try {
     const [rows] = await pool.query(`SELECT * FROM business`);
-    // console.log("Fetched rows:", rows); // 👈 Add this to show all restaurants list in the console for debug
     return rows.map((restaurant) => ({
       ...restaurant,
-      categories: Array.isArray(restaurant.categories)
-        ? restaurant.categories
-        : [],
+      categories: safeParseCategories(restaurant.categories),
     }));
   } catch (error) {
-    console.error("Error in getAllRestaurants:", error); // 👈 Add this
+    console.error("Error in getAllRestaurants:", error);
     throw error;
   }
 };
@@ -156,7 +174,10 @@ export const getBusinessLocations = async () => {
 
 export const getAllBusinesses = async () => {
   const [rows] = await pool.query("SELECT * FROM business");
-  return rows; // ✅ Always an array
+  return rows.map((b) => ({
+    ...b,
+    categories: safeParseCategories(b.categories),
+  }));
 };
 
 export const updateBusinessStatus = (businessId, newStatus) => {

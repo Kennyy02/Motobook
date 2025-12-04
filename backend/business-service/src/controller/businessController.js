@@ -12,7 +12,7 @@ import {
   getBusinessLocations,
   getAllBusinesses,
   updateBusinessStatus,
-} from "../../src/model/businessModel.js";
+} from "../model/businessModel.js"; // <- FIXED import path
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -227,7 +227,7 @@ export const fetchRecommendedRestaurants = async (req, res) => {
     const userServiceUrl =
       process.env.USER_SERVICE_URL || "http://localhost:3002"; // Default to localhost:3003
     const response = await fetch(
-      `${userServiceUrl}/api/user/preferences/${userId}`
+      `${userServiceUrl}/api/auth/preferences/${userId}`
     );
 
     if (!response.ok) {
@@ -239,17 +239,22 @@ export const fetchRecommendedRestaurants = async (req, res) => {
     }
 
     const data = await response.json();
-    if (!data.categories) {
+    if (!data.categories && !data.preferences) {
       console.log("No preferences found. Fetching fallback recommendations.");
       const recommendedRestaurants = await getRecommendedRestaurants([]);
       return res.status(200).json(recommendedRestaurants);
     }
 
-    const preferencesRaw = String(data.categories || "");
-    const preferences = preferencesRaw
-      .split(",")
-      .map((cat) => cat.trim())
-      .filter(Boolean);
+    const preferencesRaw =
+      Array.isArray(data.preferences) && data.preferences.length
+        ? data.preferences
+        : String(data.categories || "");
+    const preferences = Array.isArray(preferencesRaw)
+      ? preferencesRaw
+      : preferencesRaw
+          .split(",")
+          .map((cat) => cat.trim())
+          .filter(Boolean);
 
     const recommendedRestaurants = await getRecommendedRestaurants(preferences);
     return res.status(200).json(recommendedRestaurants);
@@ -271,7 +276,7 @@ export const fetchAllRestaurants = async (req, res) => {
 
 export const fetchBusinessLocations = async (req, res) => {
   try {
-    const locations = await fetchLocations();
+    const locations = await getBusinessLocations();
     res.json(locations);
   } catch (err) {
     console.error("Error fetching business locations:", err);
