@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Filter, X, ChevronDown } from "lucide-react";
+import { Filter, ChevronDown } from "lucide-react";
 import "../../styles/customer/CategoryFilterPanel.css";
 
 const groupedCategories = {
@@ -72,10 +72,33 @@ const CategoryFilterPanel = ({ onCategoryChange }) => {
   const [expandedGroups, setExpandedGroups] = useState({});
   const dropdownRef = useRef(null);
 
+  // Handle body scroll lock for mobile
+  useEffect(() => {
+    if (isOpen) {
+      // Lock body scroll on mobile
+      document.body.classList.add("filter-open");
+    } else {
+      // Unlock body scroll
+      document.body.classList.remove("filter-open");
+    }
+
+    // Cleanup on unmount
+    return () => {
+      document.body.classList.remove("filter-open");
+    };
+  }, [isOpen]);
+
+  // Handle click outside to close (desktop only)
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsOpen(false);
+      // Only close on desktop
+      if (window.innerWidth >= 768) {
+        if (
+          dropdownRef.current &&
+          !dropdownRef.current.contains(event.target)
+        ) {
+          setIsOpen(false);
+        }
       }
     };
 
@@ -87,6 +110,13 @@ const CategoryFilterPanel = ({ onCategoryChange }) => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isOpen]);
+
+  // Handle backdrop click on mobile
+  const handleBackdropClick = (e) => {
+    if (e.target === e.currentTarget) {
+      setIsOpen(false);
+    }
+  };
 
   const handleCheckboxChange = (category) => {
     const updated = selectedCategories.includes(category)
@@ -109,11 +139,17 @@ const CategoryFilterPanel = ({ onCategoryChange }) => {
     }));
   };
 
+  const handleApplyFilters = () => {
+    setIsOpen(false);
+  };
+
   return (
     <div className="filter-dropdown-container" ref={dropdownRef}>
       <button
         className="filter-toggle-button"
         onClick={() => setIsOpen(!isOpen)}
+        aria-label="Toggle filters"
+        aria-expanded={isOpen}
       >
         <Filter size={18} />
         <span>Filters</span>
@@ -127,60 +163,87 @@ const CategoryFilterPanel = ({ onCategoryChange }) => {
       </button>
 
       {isOpen && (
-        <div className="filter-dropdown-panel">
-          <div className="filter-header">
-            <h3>Filter by Category</h3>
-            {selectedCategories.length > 0 && (
-              <button className="clear-all-button" onClick={handleClearAll}>
-                Clear All
-              </button>
-            )}
-          </div>
+        <>
+          {/* Mobile backdrop - only visible on mobile */}
+          <div
+            className="filter-backdrop"
+            onClick={handleBackdropClick}
+            aria-hidden="true"
+          />
 
-          <div className="filter-categories-list">
-            {Object.entries(groupedCategories).map(([group, categories]) => (
-              <div key={group} className="category-group">
+          <div className="filter-dropdown-panel">
+            <div className="filter-header">
+              <h3>Filter by Category</h3>
+              {selectedCategories.length > 0 && (
                 <button
-                  className="group-header"
-                  onClick={() => toggleGroup(group)}
+                  className="clear-all-button"
+                  onClick={handleClearAll}
+                  aria-label="Clear all filters"
                 >
-                  <span className="group-name">{group}</span>
-                  <ChevronDown
-                    size={16}
-                    className={`group-chevron ${
-                      expandedGroups[group] ? "rotated" : ""
-                    }`}
-                  />
+                  Clear All
                 </button>
+              )}
+            </div>
 
-                {expandedGroups[group] && (
-                  <div className="category-items">
-                    {categories.map((item) => (
-                      <label key={item} className="category-checkbox-label">
-                        <input
-                          type="checkbox"
-                          checked={selectedCategories.includes(item)}
-                          onChange={() => handleCheckboxChange(item)}
-                          className="category-checkbox"
-                        />
-                        <span className="category-name">{item}</span>
-                        {selectedCategories.includes(item) && (
-                          <span className="checkmark">✓</span>
-                        )}
-                      </label>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
+            <div className="filter-categories-list">
+              {Object.entries(groupedCategories).map(([group, categories]) => (
+                <div key={group} className="category-group">
+                  <button
+                    className="group-header"
+                    onClick={() => toggleGroup(group)}
+                    aria-expanded={expandedGroups[group]}
+                    aria-controls={`group-${group}`}
+                  >
+                    <span className="group-name">{group}</span>
+                    <ChevronDown
+                      size={16}
+                      className={`group-chevron ${
+                        expandedGroups[group] ? "rotated" : ""
+                      }`}
+                    />
+                  </button>
 
-          <div className="filter-footer">
-            <button className="apply-button" onClick={() => setIsOpen(false)}>
-              Apply Filters
-            </button>
+                  {expandedGroups[group] && (
+                    <div
+                      className="category-items"
+                      id={`group-${group}`}
+                      role="group"
+                      aria-label={`${group} categories`}
+                    >
+                      {categories.map((item) => (
+                        <label key={item} className="category-checkbox-label">
+                          <input
+                            type="checkbox"
+                            checked={selectedCategories.includes(item)}
+                            onChange={() => handleCheckboxChange(item)}
+                            className="category-checkbox"
+                            aria-label={item}
+                          />
+                          <span className="category-name">{item}</span>
+                          {selectedCategories.includes(item) && (
+                            <span className="checkmark" aria-hidden="true">
+                              ✓
+                            </span>
+                          )}
+                        </label>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            <div className="filter-footer">
+              <button
+                className="apply-button"
+                onClick={handleApplyFilters}
+                aria-label="Apply filters"
+              >
+                Apply Filters
+              </button>
+            </div>
           </div>
-        </div>
+        </>
       )}
     </div>
   );

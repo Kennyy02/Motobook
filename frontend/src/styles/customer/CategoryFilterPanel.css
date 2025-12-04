@@ -68,18 +68,23 @@
   touch-action: pan-y;
 }
 
-/* Mobile Overlay */
-.filter-dropdown-panel::before {
-  content: "";
+/* Mobile Backdrop - separate element for better control */
+.filter-backdrop {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.5);
-  z-index: -1;
+  z-index: 9999;
   animation: fadeIn 0.3s ease-out;
-  pointer-events: auto;
+  display: block;
+}
+
+@media (min-width: 768px) {
+  .filter-backdrop {
+    display: none;
+  }
 }
 
 @keyframes slideUp {
@@ -354,10 +359,6 @@
 
   /* Remove mobile handle bar on desktop */
   .filter-dropdown-panel::after {
-    display: none;
-  }
-
-  .filter-dropdown-panel::before {
     display: none;
   }
 
