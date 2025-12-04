@@ -13,6 +13,10 @@ import { pool } from "../config/db.js";
 import { sendVerificationCodeEmail } from "../utils/sendVerificationEmail.js";
 import User from "../model/userModel.js";
 
+// ✅ Duplicate prevention tracking
+const recentRegistrations = new Map(); // Prevent duplicate registrations
+const recentResends = new Map(); // Prevent duplicate resend attempts
+
 // Replace with your actual Google Client ID
 const client = new OAuth2Client(
   "1023403274598-s5af7lju6vva7e2aoqvp3185ke568r8n.apps.googleusercontent.com"
@@ -72,6 +76,18 @@ export const registerUser = async (req, res) => {
   }
 
   try {
+    // ✅ CRITICAL: Prevent duplicate registration attempts within 10 seconds
+    const now = Date.now();
+    const lastRegistration = recentRegistrations.get(email);
+
+    if (lastRegistration && now - lastRegistration < 10000) {
+      console.log(`⚠️ Duplicate registration attempt blocked for: ${email}`);
+      return res.status(429).json({
+        message: "Please wait before requesting another verification code",
+        alreadyProcessing: true,
+      });
+    }
+
     const existing = await findUserByEmail(email);
     if (existing) {
       return res.status(409).json({ message: "Email already in use" });
@@ -79,7 +95,7 @@ export const registerUser = async (req, res) => {
 
     const hashed = await bcrypt.hash(password, 10);
 
-    // ✅ Generate verification code FIRST
+    // ✅ Generate verification code
     const verificationCode = Math.floor(
       100000 + Math.random() * 900000
     ).toString();
@@ -88,6 +104,15 @@ export const registerUser = async (req, res) => {
     console.log(
       `🔐 Generated verification code: ${verificationCode} for ${email}`
     );
+
+    // ✅ Mark this email as being processed BEFORE creating user
+    recentRegistrations.set(email, now);
+
+    // Clean up the entry after 10 seconds
+    setTimeout(() => {
+      recentRegistrations.delete(email);
+      console.log(`🧹 Cleaned up registration lock for: ${email}`);
+    }, 10000);
 
     // ✅ Create user WITH verification code
     const userId = await createUser({
@@ -110,7 +135,7 @@ export const registerUser = async (req, res) => {
       console.log(`✅ Verification email sent successfully to: ${email}`);
     } catch (emailError) {
       console.error(`❌ Failed to send email:`, emailError);
-      // ⚠️ User is created but email failed - you might want to handle this differently
+      // User is created but email failed
       return res.status(201).json({
         message:
           "Account created but failed to send verification email. Please request a new code.",
@@ -126,6 +151,8 @@ export const registerUser = async (req, res) => {
     });
   } catch (error) {
     console.error("❌ Signup error:", error);
+    // Clean up the lock if there's an error
+    recentRegistrations.delete(email);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
@@ -389,7 +416,6 @@ export const verifyEmail = async (req, res) => {
   }
 };
 
-// ✅ UPDATED: Now returns isVerified status
 export const checkEmail = async (req, res) => {
   const { email } = req.body;
 
@@ -402,7 +428,6 @@ export const checkEmail = async (req, res) => {
       return res.json({ exists: false });
     }
 
-    // ✅ FIX: Return verification status so frontend knows what to do
     return res.json({
       exists: true,
       isVerified: user.is_verified,
@@ -418,6 +443,17 @@ export const sendVerification = async (req, res) => {
   if (!email) return res.status(400).json({ message: "Email is required" });
 
   try {
+    // ✅ Prevent duplicate resend attempts within 10 seconds
+    const now = Date.now();
+    const lastResend = recentResends.get(email);
+
+    if (lastResend && now - lastResend < 10000) {
+      console.log(`⚠️ Duplicate resend attempt blocked for: ${email}`);
+      return res.status(429).json({
+        message: "Please wait before requesting another code",
+      });
+    }
+
     const user = await findUserByEmail(email);
     if (!user) return res.status(404).json({ message: "User not found" });
 
@@ -425,6 +461,12 @@ export const sendVerification = async (req, res) => {
       100000 + Math.random() * 900000
     ).toString();
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+
+    // ✅ Mark as processing
+    recentResends.set(email, now);
+    setTimeout(() => {
+      recentResends.delete(email);
+    }, 10000);
 
     await pool.query(
       `UPDATE users SET verification_code = ?, code_expires_at = ? WHERE email = ?`,
@@ -436,11 +478,11 @@ export const sendVerification = async (req, res) => {
     return res.json({ message: "Verification code sent to your email" });
   } catch (error) {
     console.error("Send verification code error:", error);
+    recentResends.delete(email); // Clean up on error
     res.status(500).json({ message: "Failed to send verification code" });
   }
 };
 
-// ✅ ADD: Verify the code user entered
 export const verifyCode = async (req, res) => {
   const { email, code } = req.body;
   if (!email || !code)
@@ -475,7 +517,6 @@ export const verifyCode = async (req, res) => {
   }
 };
 
-// ✅ NEW ENDPOINT: Resend verification code for unverified accounts
 export const resendVerification = async (req, res) => {
   const { email } = req.body;
 
@@ -484,24 +525,40 @@ export const resendVerification = async (req, res) => {
   }
 
   try {
+    // ✅ Prevent duplicate resend attempts within 10 seconds
+    const now = Date.now();
+    const lastResend = recentResends.get(email);
+
+    if (lastResend && now - lastResend < 10000) {
+      console.log(`⚠️ Duplicate resend attempt blocked for: ${email}`);
+      return res.status(429).json({
+        message: "Please wait before requesting another code",
+      });
+    }
+
     const user = await findUserByEmail(email);
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // ✅ Only allow resending if account is NOT verified
     if (user.is_verified) {
       return res.status(400).json({
         message: "Email is already verified. Please login.",
       });
     }
 
+    // ✅ Mark as processing
+    recentResends.set(email, now);
+    setTimeout(() => {
+      recentResends.delete(email);
+    }, 10000);
+
     // Generate new 6-digit code
     const verificationCode = Math.floor(
       100000 + Math.random() * 900000
     ).toString();
-    const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
     // Update database with new code
     await pool.query(
@@ -520,6 +577,7 @@ export const resendVerification = async (req, res) => {
     });
   } catch (error) {
     console.error("Resend verification error:", error);
+    recentResends.delete(email); // Clean up on error
     res.status(500).json({ message: "Failed to resend verification code" });
   }
 };
@@ -676,7 +734,6 @@ export const loginRider = async (req, res) => {
   }
 };
 
-// Get rider profile
 export const getRiderProfile = async (req, res) => {
   const { id } = req.params;
 
@@ -699,7 +756,6 @@ export const getRiderProfile = async (req, res) => {
   }
 };
 
-// Update rider availability
 export const updateRiderAvailability = async (req, res) => {
   const { id } = req.params;
   const { isAvailable } = req.body;
@@ -727,7 +783,7 @@ export const updateRiderAvailability = async (req, res) => {
   }
 };
 
-//ADMIN-PANEL SIDE
+// ADMIN-PANEL SIDE
 
 export const getUsers = async (req, res) => {
   try {
