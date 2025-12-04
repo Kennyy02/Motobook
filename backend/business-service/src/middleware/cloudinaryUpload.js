@@ -1,54 +1,69 @@
 import multer from "multer";
-import cloudinary from "cloudinary";
-import streamifier from "streamifier";
+import { v2 as cloudinary } from "cloudinary";
 import dotenv from "dotenv";
 
 dotenv.config();
 
-cloudinary.v2.config({
+cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// Multer memory storage so we can upload buffer to Cloudinary
+// Multer memory storage
 const uploadMemory = multer({
   storage: multer.memoryStorage(),
-  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit (adjust if needed)
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
 });
 
-// Helper to upload buffer to Cloudinary and return result
-const streamUpload = (buffer, folder = "motobook") =>
-  new Promise((resolve, reject) => {
-    const stream = cloudinary.v2.uploader.upload_stream(
+// Helper to upload buffer to Cloudinary using DataURI (no streamifier needed!)
+const uploadToCloudinary = (buffer, folder = "motobook") => {
+  return new Promise((resolve, reject) => {
+    // Convert buffer to base64 DataURI
+    const dataUri = `data:image/jpeg;base64,${buffer.toString("base64")}`;
+
+    cloudinary.uploader.upload(
+      dataUri,
       { folder, resource_type: "auto" },
       (error, result) => {
         if (error) return reject(error);
         resolve(result);
       }
     );
-    streamifier.createReadStream(buffer).pipe(stream);
   });
+};
 
-// We'll export an object with single(fieldName) that returns [multerMiddleware, uploadToCloudinaryMiddleware]
+// Export middleware that works with your routes
 export const upload = {
   single: (fieldName) => [
     uploadMemory.single(fieldName),
     async (req, res, next) => {
       try {
-        if (!req.file || !req.file.buffer) return next();
+        if (!req.file || !req.file.buffer) {
+          console.log("No file uploaded");
+          return next();
+        }
 
-        // optionally choose folder by fieldname
-        const folder = fieldName === "logo" ? "logos" : "products";
+        console.log(`Uploading ${fieldName} to Cloudinary...`);
 
-        const result = await streamUpload(req.file.buffer, folder);
-        // put cloudinary secure_url into req.file.path to match controller expectations
+        // Choose folder by field name
+        const folder =
+          fieldName === "logo" ? "motobook/logos" : "motobook/products";
+
+        const result = await uploadToCloudinary(req.file.buffer, folder);
+
+        // Put cloudinary URL into req.file.path (controller expects this)
         req.file.path = result.secure_url;
         req.file.public_id = result.public_id;
+
+        console.log("✅ Upload successful:", result.secure_url);
         return next();
       } catch (err) {
-        console.error("Cloudinary upload error:", err);
-        return next(err);
+        console.error("❌ Cloudinary upload error:", err);
+        return res.status(500).json({
+          message: "Image upload failed",
+          error: err.message,
+        });
       }
     },
   ],

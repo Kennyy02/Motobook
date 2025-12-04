@@ -12,7 +12,6 @@ import {
   fetchBusiness,
   changeBusinessStatus,
 } from "../controller/businessController.js";
-// import { upload } from "../middleware/upload.js";
 import { upload } from "../middleware/cloudinaryUpload.js";
 
 const router = express.Router();
@@ -26,8 +25,15 @@ router.get("/locations", fetchBusinessLocations);
 
 router.post("/add", registerRestaurant);
 router.get("/:userId", fetchUserBusiness);
-router.put("/logo/:userId", upload.single("logo"), updateBusinessLogo);
-router.post("/menu/add-items", upload.single("productImage"), createMenuItem);
+
+// ✅ FIX: Spread the array returned by upload.single()
+router.put("/logo/:userId", ...upload.single("logo"), updateBusinessLogo);
+router.post(
+  "/menu/add-items",
+  ...upload.single("productImage"),
+  createMenuItem
+);
+
 router.get("/menu-items/:businessId", fetchMenuItemsByBusiness);
 router.put("/:id/open", toggleBusinessOpenState);
 
