@@ -20,6 +20,7 @@ const ManageMenusPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState("");
+  const [uploading, setUploading] = useState(false); // ✅ NEW: Track upload state
 
   useEffect(() => {
     const fetchMenuItems = async () => {
@@ -121,6 +122,8 @@ const ManageMenusPage = () => {
       return;
     }
 
+    setUploading(true); // ✅ Start upload
+
     try {
       const userId = localStorage.getItem("userId");
       const token = localStorage.getItem("token");
@@ -145,15 +148,14 @@ const ManageMenusPage = () => {
       );
 
       const data = response.data;
+      console.log("✅ Product saved with ID:", data.id);
 
-      console.log("Product saved with ID:", data.id);
-
-      // Add to UI
+      // ✅ FIX: Use the Cloudinary URL from the response
       const newEntry = {
         name,
         price,
         description,
-        image: URL.createObjectURL(image),
+        image: data.image, // ✅ Use server response URL, not local blob
         category,
       };
 
@@ -170,12 +172,15 @@ const ManageMenusPage = () => {
       setProductsByCategory(updated);
       setSelectedCategory(category);
       resetForm();
+      alert("Product added successfully!"); // ✅ Success feedback
     } catch (error) {
-      console.error("Error saving product:", error);
+      console.error("❌ Error saving product:", error);
       alert(
         error.response?.data?.message ||
           "Failed to add product. Please try again."
       );
+    } finally {
+      setUploading(false); // ✅ End upload
     }
   };
 
@@ -326,9 +331,16 @@ const ManageMenusPage = () => {
               {editingIndex !== null ? (
                 <button onClick={handleSaveEdit}>Save</button>
               ) : (
-                <button onClick={handleAddProduct}>Add</button>
+                <button onClick={handleAddProduct} disabled={uploading}>
+                  {uploading ? "Uploading..." : "Add"}
+                </button>
               )}
-              <button onClick={() => setIsModalOpen(false)}>Cancel</button>
+              <button
+                onClick={() => setIsModalOpen(false)}
+                disabled={uploading}
+              >
+                Cancel
+              </button>
             </div>
           </div>
         </div>
