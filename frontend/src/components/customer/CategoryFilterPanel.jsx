@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Filter, ChevronDown } from "lucide-react";
+import { Filter, ChevronDown, X } from "lucide-react";
 import "../../styles/customer/CategoryFilterPanel.css";
 
 const groupedCategories = {
@@ -75,14 +75,11 @@ const CategoryFilterPanel = ({ onCategoryChange }) => {
   // Handle body scroll lock for mobile
   useEffect(() => {
     if (isOpen) {
-      // Lock body scroll on mobile
       document.body.classList.add("filter-open");
     } else {
-      // Unlock body scroll
       document.body.classList.remove("filter-open");
     }
 
-    // Cleanup on unmount
     return () => {
       document.body.classList.remove("filter-open");
     };
@@ -91,7 +88,6 @@ const CategoryFilterPanel = ({ onCategoryChange }) => {
   // Handle click outside to close (desktop only)
   useEffect(() => {
     const handleClickOutside = (event) => {
-      // Only close on desktop
       if (window.innerWidth >= 768) {
         if (
           dropdownRef.current &&
@@ -111,7 +107,24 @@ const CategoryFilterPanel = ({ onCategoryChange }) => {
     };
   }, [isOpen]);
 
-  // Handle backdrop click on mobile
+  // Handle ESC key to close
+  useEffect(() => {
+    const handleEscKey = (event) => {
+      if (event.key === "Escape" && isOpen) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("keydown", handleEscKey);
+    return () => {
+      document.removeEventListener("keydown", handleEscKey);
+    };
+  }, [isOpen]);
+
+  const handleClose = () => {
+    setIsOpen(false);
+  };
+
   const handleBackdropClick = (e) => {
     if (e.target === e.currentTarget) {
       setIsOpen(false);
@@ -164,7 +177,7 @@ const CategoryFilterPanel = ({ onCategoryChange }) => {
 
       {isOpen && (
         <>
-          {/* Mobile backdrop - only visible on mobile */}
+          {/* Backdrop for tablet view */}
           <div
             className="filter-backdrop"
             onClick={handleBackdropClick}
@@ -173,7 +186,16 @@ const CategoryFilterPanel = ({ onCategoryChange }) => {
 
           <div className="filter-dropdown-panel">
             <div className="filter-header">
-              <h3>Filter by Category</h3>
+              <div className="filter-header-left">
+                <button
+                  className="close-button"
+                  onClick={handleClose}
+                  aria-label="Close filters"
+                >
+                  <X size={24} />
+                </button>
+                <h3>Filter by Category</h3>
+              </div>
               {selectedCategories.length > 0 && (
                 <button
                   className="clear-all-button"
@@ -220,11 +242,6 @@ const CategoryFilterPanel = ({ onCategoryChange }) => {
                             aria-label={item}
                           />
                           <span className="category-name">{item}</span>
-                          {selectedCategories.includes(item) && (
-                            <span className="checkmark" aria-hidden="true">
-                              ✓
-                            </span>
-                          )}
                         </label>
                       ))}
                     </div>
