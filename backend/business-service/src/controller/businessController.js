@@ -12,7 +12,7 @@ import {
   getBusinessLocations,
   getAllBusinesses,
   updateBusinessStatus,
-} from "../model/businessModel.js"; // <- FIXED import path
+} from "../model/businessModel.js";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -33,7 +33,7 @@ export const registerRestaurant = async (req, res) => {
       longitude,
       userId,
       logo,
-      categories, // Add this
+      categories,
     } = req.body;
 
     // Validate all required fields
@@ -61,7 +61,7 @@ export const registerRestaurant = async (req, res) => {
       return res.status(400).json({ message: "Categories are required." });
     }
 
-    const categoriesStr = JSON.stringify(categories); // Store as stringified JSON
+    const categoriesStr = JSON.stringify(categories);
 
     // Create the restaurant
     const restaurant = await createRestaurant({
@@ -75,7 +75,7 @@ export const registerRestaurant = async (req, res) => {
       longitude,
       logo,
       userId,
-      categories: categoriesStr, // send stringified version
+      categories: categoriesStr,
     });
 
     res
@@ -118,44 +118,85 @@ export const fetchUserBusiness = async (req, res) => {
 
 export const updateBusinessLogo = async (req, res) => {
   try {
-    const userId = req.params.userId;
-    // Cloudinary provides the full URL in req.file.path
-    const logoPath = req.file?.path || null;
+    console.log("=== UPDATE LOGO CALLED ===");
+    console.log("User ID from params:", req.params.userId);
+    console.log("req.file:", req.file);
+    console.log("req.body:", req.body);
 
-    if (!logoPath) {
+    const userId = req.params.userId;
+
+    // Check if file exists after cloudinary middleware
+    if (!req.file || !req.file.path) {
+      console.error("❌ No file.path found after upload");
       return res.status(400).json({ message: "No image uploaded." });
     }
+
+    const logoPath = req.file.path; // This should be cloudinary URL
+    console.log("✅ Logo URL from Cloudinary:", logoPath);
 
     await pool.query("UPDATE business SET logo = ? WHERE userId = ?", [
       logoPath,
       userId,
     ]);
 
+    console.log("✅ Logo updated in database");
     res.status(200).json({
       message: "Logo updated successfully.",
       logo: logoPath,
     });
   } catch (error) {
-    console.error("Error updating logo:", error);
+    console.error("❌ Error updating logo:", error);
     res.status(500).json({ message: "Server error while updating logo." });
   }
 };
 
 export const createMenuItem = async (req, res) => {
   try {
+    console.log("=== CREATE MENU ITEM CALLED ===");
+    console.log("req.body:", req.body);
+    console.log("req.file:", req.file);
+
     const { userId, category, productName, price, description } = req.body;
 
-    if (!userId || !category || !productName || !price) {
-      return res.status(400).json({ message: "Missing required fields." });
+    // Validate required fields
+    if (!userId) {
+      console.error("❌ Missing userId");
+      return res.status(400).json({ message: "User ID is required." });
     }
+
+    if (!category) {
+      console.error("❌ Missing category");
+      return res.status(400).json({ message: "Category is required." });
+    }
+
+    if (!productName) {
+      console.error("❌ Missing productName");
+      return res.status(400).json({ message: "Product name is required." });
+    }
+
+    if (!price) {
+      console.error("❌ Missing price");
+      return res.status(400).json({ message: "Price is required." });
+    }
+
+    console.log("✅ All required fields present");
 
     const business = await getBusinessByUserId(userId);
     if (!business) {
+      console.error("❌ Business not found for userId:", userId);
       return res.status(404).json({ message: "Business not found." });
     }
 
-    // Cloudinary provides the full URL in req.file.path
-    const image = req.file?.path || null;
+    console.log("✅ Business found:", business.businessName);
+
+    // Check if file was uploaded and processed by cloudinary
+    if (!req.file || !req.file.path) {
+      console.error("❌ No image uploaded or cloudinary failed");
+      return res.status(400).json({ message: "Product image is required." });
+    }
+
+    const image = req.file.path; // Cloudinary URL
+    console.log("✅ Image URL from Cloudinary:", image);
 
     const newProductId = await addProductToMenu({
       category,
@@ -167,14 +208,20 @@ export const createMenuItem = async (req, res) => {
       image,
     });
 
+    console.log("✅ Product added with ID:", newProductId);
+
     res.status(201).json({
       message: "Product added successfully.",
       id: newProductId,
       image: image,
     });
   } catch (error) {
-    console.error("Error adding product:", error);
-    res.status(500).json({ message: "Server error." });
+    console.error("❌ Error adding product:", error);
+    console.error("Error stack:", error.stack);
+    res.status(500).json({
+      message: "Server error.",
+      error: error.message,
+    });
   }
 };
 
@@ -225,7 +272,7 @@ export const fetchRecommendedRestaurants = async (req, res) => {
 
     // Fetch user preferences via HTTP from user-service
     const userServiceUrl =
-      process.env.USER_SERVICE_URL || "http://localhost:3002"; // Default to localhost:3003
+      process.env.USER_SERVICE_URL || "http://localhost:3002";
     const response = await fetch(
       `${userServiceUrl}/api/auth/preferences/${userId}`
     );
@@ -306,7 +353,7 @@ export const fetchBusiness = async (req, res) => {
       return b;
     });
 
-    res.status(200).json(parsedBusinesses); // ✅ Return array
+    res.status(200).json(parsedBusinesses);
   } catch (error) {
     console.error("Error fetching businesses:", error);
     res.status(500).json({ message: "Server error." });
