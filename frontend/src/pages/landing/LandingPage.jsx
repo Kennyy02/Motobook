@@ -14,7 +14,7 @@ const LandingPage = () => {
       if (user.role === "Customer") {
         navigate("/customer/home");
       } else if (user.role === "Seller") {
-        navigate("/seller/business");
+        navigate("/seller/dashboard");
       } else if (user.role === "Rider") {
         navigate("/rider");
       } else if (user.role === "Admin") {
