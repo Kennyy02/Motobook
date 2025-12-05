@@ -8,6 +8,7 @@ const SellerOrdersPage = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
+  const [actionLoading, setActionLoading] = useState(null); // Track which order is being updated
 
   const businessServiceBaseURL =
     import.meta.env.VITE_BUSINESS_SERVICE_URL || "http://localhost:3003";
@@ -57,6 +58,66 @@ const SellerOrdersPage = () => {
     return () => clearInterval(interval);
   }, [business?.id]);
 
+  // ✅ NEW: Handle "Prepare" button click
+  const handlePrepareOrder = async (orderId) => {
+    setActionLoading(orderId);
+    try {
+      const res = await fetch(
+        `${orderServiceBaseURL}/api/orders/${orderId}/prepare`,
+        {
+          method: "PATCH",
+        }
+      );
+
+      if (res.ok) {
+        // Update local state
+        setOrders((prevOrders) =>
+          prevOrders.map((order) =>
+            order.id === orderId ? { ...order, status: "preparing" } : order
+          )
+        );
+      } else {
+        const error = await res.json();
+        alert(error.message || "Failed to prepare order");
+      }
+    } catch (error) {
+      console.error("Error preparing order:", error);
+      alert("Failed to prepare order");
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  // ✅ NEW: Handle "Ready" button click
+  const handleMarkReady = async (orderId) => {
+    setActionLoading(orderId);
+    try {
+      const res = await fetch(
+        `${orderServiceBaseURL}/api/orders/${orderId}/ready`,
+        {
+          method: "PATCH",
+        }
+      );
+
+      if (res.ok) {
+        // Update local state
+        setOrders((prevOrders) =>
+          prevOrders.map((order) =>
+            order.id === orderId ? { ...order, status: "ready" } : order
+          )
+        );
+      } else {
+        const error = await res.json();
+        alert(error.message || "Failed to mark order as ready");
+      }
+    } catch (error) {
+      console.error("Error marking order ready:", error);
+      alert("Failed to mark order as ready");
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
   const filteredOrders = orders.filter((order) => {
     if (filter === "all") return true;
     return order.status === filter;
@@ -65,15 +126,36 @@ const SellerOrdersPage = () => {
   const getStatusColor = (status) => {
     switch (status) {
       case "pending":
-        return "#f59e0b";
+        return "#f59e0b"; // Orange
+      case "preparing":
+        return "#8b5cf6"; // Purple
+      case "ready":
+        return "#06b6d4"; // Cyan
       case "accepted":
-        return "#3b82f6";
+        return "#3b82f6"; // Blue
       case "completed":
-        return "#10b981";
+        return "#10b981"; // Green
       case "cancelled":
-        return "#ef4444";
+        return "#ef4444"; // Red
       default:
-        return "#6b7280";
+        return "#6b7280"; // Gray
+    }
+  };
+
+  const getStatusLabel = (status) => {
+    switch (status) {
+      case "pending":
+        return "Pending";
+      case "preparing":
+        return "Preparing";
+      case "ready":
+        return "Ready for Pickup";
+      case "accepted":
+        return "Accepted";
+      case "completed":
+        return "Completed";
+      default:
+        return status;
     }
   };
 
@@ -110,6 +192,18 @@ const SellerOrdersPage = () => {
               {orders.filter((o) => o.status === "pending").length}
             </span>
           </div>
+          <div className="stat-badge preparing">
+            <span className="stat-label">Preparing</span>
+            <span className="stat-value">
+              {orders.filter((o) => o.status === "preparing").length}
+            </span>
+          </div>
+          <div className="stat-badge ready">
+            <span className="stat-label">Ready</span>
+            <span className="stat-value">
+              {orders.filter((o) => o.status === "ready").length}
+            </span>
+          </div>
           <div className="stat-badge accepted">
             <span className="stat-label">Accepted</span>
             <span className="stat-value">
@@ -137,6 +231,18 @@ const SellerOrdersPage = () => {
           onClick={() => setFilter("pending")}
         >
           Pending
+        </button>
+        <button
+          className={filter === "preparing" ? "active" : ""}
+          onClick={() => setFilter("preparing")}
+        >
+          Preparing
+        </button>
+        <button
+          className={filter === "ready" ? "active" : ""}
+          onClick={() => setFilter("ready")}
+        >
+          Ready
         </button>
         <button
           className={filter === "accepted" ? "active" : ""}
@@ -171,7 +277,7 @@ const SellerOrdersPage = () => {
                   className="order-status"
                   style={{ backgroundColor: getStatusColor(order.status) }}
                 >
-                  {order.status}
+                  {getStatusLabel(order.status)}
                 </span>
               </div>
 
@@ -221,6 +327,45 @@ const SellerOrdersPage = () => {
                 {order.rider_name && (
                   <div className="rider-info">
                     <span>🏍️ Rider: {order.rider_name}</span>
+                  </div>
+                )}
+              </div>
+
+              {/* ✅ NEW: Action buttons based on order status */}
+              <div className="order-actions">
+                {order.status === "pending" && (
+                  <button
+                    className="action-btn prepare-btn"
+                    onClick={() => handlePrepareOrder(order.id)}
+                    disabled={actionLoading === order.id}
+                  >
+                    {actionLoading === order.id
+                      ? "Processing..."
+                      : "Prepare Order"}
+                  </button>
+                )}
+
+                {order.status === "preparing" && (
+                  <button
+                    className="action-btn ready-btn"
+                    onClick={() => handleMarkReady(order.id)}
+                    disabled={actionLoading === order.id}
+                  >
+                    {actionLoading === order.id
+                      ? "Processing..."
+                      : "Mark as Ready"}
+                  </button>
+                )}
+
+                {order.status === "ready" && (
+                  <div className="status-message">
+                    Waiting for rider to accept...
+                  </div>
+                )}
+
+                {order.status === "accepted" && (
+                  <div className="status-message">
+                    Order picked up by {order.rider_name}
                   </div>
                 )}
               </div>
