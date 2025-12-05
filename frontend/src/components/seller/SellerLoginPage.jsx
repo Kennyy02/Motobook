@@ -14,7 +14,6 @@ const SellerLoginPage = () => {
     phone: "",
   });
 
-  // ✅ FIXED: Use USER service for login
   const userServiceBaseURL =
     import.meta.env.VITE_USER_SERVICE_URL || "http://localhost:3005";
 
@@ -39,10 +38,7 @@ const SellerLoginPage = () => {
       );
 
       const { token, user } = response.data;
-
-      // ✅ FIXED: Pass both token and user to login
       login(token, user);
-
       alert("Login successful!");
       navigate("/seller/dashboard");
     } catch (error) {
@@ -52,15 +48,43 @@ const SellerLoginPage = () => {
       alert(message);
     }
   };
+
   return (
-    <>
-      <div className="seller-access-wrapper">
-        <div className="seller-access-container">
-          <h2 className="seller-access-title">Seller Login</h2>
+    <div className="seller-access-wrapper">
+      <div className="seller-access-container">
+        {/* Logo Section */}
+        <div className="logo-container">
+          <img src="/logo.png" alt="MotoBook Logo" className="logo-image" />
+        </div>
 
-          <form onSubmit={handleSubmit} className="registration-form">
-            <h3>Login with {usePhoneLogin ? "Phone Number" : "Email"}</h3>
+        {/* Welcome Text */}
+        <div className="welcome-section">
+          <h2 className="welcome-title">Welcome Back</h2>
+          <p className="welcome-subtitle">Sign in to your seller account</p>
+        </div>
 
+        {/* Login Form */}
+        <form onSubmit={handleSubmit} className="registration-form">
+          {/* Toggle Tabs */}
+          <div className="login-toggle-tabs">
+            <button
+              type="button"
+              className={`tab-button ${!usePhoneLogin ? "active" : ""}`}
+              onClick={() => setUsePhoneLogin(false)}
+            >
+              Email
+            </button>
+            <button
+              type="button"
+              className={`tab-button ${usePhoneLogin ? "active" : ""}`}
+              onClick={() => setUsePhoneLogin(true)}
+            >
+              Phone
+            </button>
+          </div>
+
+          {/* Input Fields */}
+          <div className="input-group">
             {usePhoneLogin ? (
               <input
                 className="form-input"
@@ -92,37 +116,26 @@ const SellerLoginPage = () => {
               onChange={handleChange}
               required
             />
+          </div>
 
-            <button type="submit" className="submit-button">
-              Login
-            </button>
+          {/* Submit Button */}
+          <button type="submit" className="submit-button">
+            Sign In
+          </button>
 
-            {/* OR Divider */}
-            <div className="or-divider">
-              <span>or</span>
-            </div>
-
-            <button
-              type="button"
-              className="toggle-login-button"
-              onClick={() => setUsePhoneLogin(!usePhoneLogin)}
+          {/* Signup Link */}
+          <p className="signup-link">
+            Don't have an account?{" "}
+            <span
+              onClick={() => navigate("/seller/register")}
+              className="link-highlight"
             >
-              {usePhoneLogin ? "Login with Email" : "Login with Phone"}
-            </button>
-
-            <p className="signup-link">
-              No account?{" "}
-              <span
-                onClick={() => navigate("/seller/register")}
-                className="link-highlight"
-              >
-                Sign up now
-              </span>
-            </p>
-          </form>
-        </div>
+              Create one
+            </span>
+          </p>
+        </form>
       </div>
-    </>
+    </div>
   );
 };
 
