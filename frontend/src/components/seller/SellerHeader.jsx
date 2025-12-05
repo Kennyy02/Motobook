@@ -1,5 +1,5 @@
 import React, { useState, useContext, useRef, useEffect } from "react";
-import "../../styles/landing/Header.css";
+import "../../styles/seller/SellerHeader.css";
 import { AuthContext } from "../../context/AuthContext.js";
 import { FaUserCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
