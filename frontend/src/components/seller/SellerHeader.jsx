@@ -4,6 +4,7 @@ import { AuthContext } from "../../context/AuthContext.js";
 import { FaUserCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import logo from "../../assets/logo/Motobook3.png";
 
 const SellerHeader = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -79,7 +80,11 @@ const SellerHeader = () => {
   return (
     <>
       <header className="header">
-        <div className="logo">MotoBook</div>
+        {/* Logo - Updated to use image instead of text */}
+        <div className="logo" onClick={() => navigate("/seller/dashboard")}>
+          <img src={logo} alt="MotoBook" />
+        </div>
+
         <nav className="navbar">
           <div className="auth-buttons" ref={dropdownRef}>
             {!user || !user.name ? (
