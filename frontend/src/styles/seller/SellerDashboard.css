@@ -1,15 +1,57 @@
-/* SellerDashboard.css */
+/* SellerDashboard.css - Enhanced Layout */
 .seller-dashboard {
   display: flex;
-  margin-top: 60px; /* Height of header */
+  margin-top: 60px;
   height: calc(100vh - 60px);
   overflow: hidden;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
 .seller-content {
   flex: 1;
   overflow-y: auto;
-  background-color: #f9fafb;
-  padding: 2rem;
+  overflow-x: hidden;
+  background: transparent;
+  padding: 0;
   box-sizing: border-box;
+
+  /* Custom Scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(59, 130, 246, 0.5) rgba(255, 255, 255, 0.1);
+}
+
+/* Custom Scrollbar Webkit */
+.seller-content::-webkit-scrollbar {
+  width: 10px;
+}
+
+.seller-content::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+.seller-content::-webkit-scrollbar-thumb {
+  background: rgba(59, 130, 246, 0.5);
+  border-radius: 10px;
+  transition: background 0.3s ease;
+}
+
+.seller-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(59, 130, 246, 0.7);
+}
+
+/* Smooth Scroll Behavior */
+.seller-content {
+  scroll-behavior: smooth;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .seller-dashboard {
+    flex-direction: column;
+  }
+
+  .seller-content {
+    height: calc(100vh - 120px);
+  }
 }

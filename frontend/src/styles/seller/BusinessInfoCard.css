@@ -1,131 +1,528 @@
+/* BusinessInfoCard.css - Premium Sky Blue Theme */
+
 .business-container {
-  padding: 1.5rem;
+  padding: 2rem;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  position: relative;
+  overflow: hidden;
 }
 
+/* Animated Background Pattern */
+.business-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+      circle at 20% 50%,
+      rgba(120, 200, 255, 0.1) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 80% 80%,
+      rgba(147, 197, 253, 0.1) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 40% 20%,
+      rgba(96, 165, 250, 0.08) 0%,
+      transparent 50%
+    );
+  animation: backgroundShift 20s ease infinite;
+  pointer-events: none;
+}
+
+@keyframes backgroundShift {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(2%, 2%) scale(1.02);
+  }
+}
+
+/* Business Header Card - Glassmorphism */
 .business-header {
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   flex-wrap: wrap;
-  gap: 1rem;
-  background-color: #fff;
-  padding: 1.5rem;
-  border-radius: 1rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  gap: 2rem;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 2rem;
+  border-radius: 24px;
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15),
+    0 0 0 1px rgba(255, 255, 255, 0.18) inset;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  animation: slideDown 0.6s ease-out;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+.business-header:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 48px rgba(31, 38, 135, 0.2),
+    0 0 0 1px rgba(255, 255, 255, 0.18) inset;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Identity Card Section */
 .identity-card {
   display: flex;
   align-items: center;
-  gap: 1.25rem;
-  max-width: 600px;
+  gap: 1.5rem;
   flex: 1;
+  min-width: 300px;
 }
 
-.identity-info {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-}
-
-.identity-info h2 {
-  margin: 0;
-  font-size: 1.5rem;
-  font-weight: bold;
-}
-
-.status-badge {
-  display: inline-block;
-  padding: 0.25rem 0.6rem;
-  border-radius: 0.5rem;
-  font-size: 0.85rem;
-  font-weight: 600;
-  margin-top: 0.25rem;
-  width: fit-content;
-}
-
-.status-badge.open {
-  background-color: #d1f3d1;
-  color: #256029;
-}
-
-.status-badge.closed {
-  background-color: #fbdada;
-  color: #842029;
-}
-
-.business-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  align-items: flex-end;
-}
-
-.action-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  background-color: #f5f5f5;
-  border-radius: 0.5rem;
-  border: none;
-  text-decoration: none;
-  font-weight: 500;
-  color: #333;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.action-btn:hover {
-  background-color: #e0e0e0;
-}
-
-.metrics-row {
-  margin-top: 1.5rem;
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.metric-card {
-  flex: 1;
-  min-width: 200px;
-  background-color: #fff;
-  padding: 1rem;
-  border-radius: 1rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-  text-align: center;
-}
-
-.metric-card h4 {
-  margin-bottom: 0.5rem;
-  font-size: 1rem;
-}
-
-.identity-card input[type="file"] {
-  margin-top: 0.5rem;
-  font-size: 0.85rem;
-}
-
+/* Logo Section with Floating Effect */
 .logo-section {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-right: 0.5rem;
+  position: relative;
 }
 
 .business-logo {
-  width: 120px;
-  height: 120px;
+  width: 140px;
+  height: 140px;
   object-fit: cover;
-  border-radius: 7%;
-  border: 2px solid #ccc;
+  border-radius: 20px;
+  border: 4px solid transparent;
+  background: linear-gradient(white, white) padding-box,
+    linear-gradient(135deg, #60a5fa, #3b82f6, #2563eb) border-box;
+  box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3),
+    0 0 20px rgba(96, 165, 250, 0.2);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.business-logo:hover {
+  transform: scale(1.08) rotate(2deg);
+  box-shadow: 0 15px 40px rgba(59, 130, 246, 0.4),
+    0 0 30px rgba(96, 165, 250, 0.3);
 }
 
 .change-logo-btn {
-  margin-top: 0.5rem;
+  margin-top: 0.75rem;
+  padding: 0.5rem 1.25rem;
   cursor: pointer;
-  font-size: 0.9rem;
-  color: #007bff;
-  text-decoration: underline;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #3b82f6;
+  background: linear-gradient(
+    135deg,
+    rgba(59, 130, 246, 0.1),
+    rgba(147, 197, 253, 0.1)
+  );
+  border: 2px solid #93c5fd;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.change-logo-btn:hover {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+}
+
+/* Identity Info */
+.identity-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.identity-info p {
+  font-size: 0.875rem;
+  color: #64748b;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0;
+}
+
+.identity-info h2 {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #1e293b, #334155);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.2;
+}
+
+/* Status Badge with Glow */
+.status-badge {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  font-size: 0.813rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 0.5rem;
+  width: fit-content;
+  transition: all 0.3s ease;
+  animation: fadeIn 0.8s ease-out 0.2s both;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.status-badge.open {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+}
+
+.status-badge.closed {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+}
+
+.status-badge:hover {
+  transform: scale(1.05);
+}
+
+/* Business Actions */
+.business-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: flex-end;
+}
+
+/* Status Toggle Button */
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1.75rem;
+  border-radius: 16px;
+  border: none;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.status-indicator::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.status-indicator:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.status-indicator.open {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4),
+    0 0 20px rgba(16, 185, 129, 0.2);
+}
+
+.status-indicator.closed {
+  background: linear-gradient(135deg, #94a3b8, #64748b);
+  color: white;
+  box-shadow: 0 8px 25px rgba(100, 116, 139, 0.3),
+    0 0 20px rgba(148, 163, 184, 0.2);
+}
+
+.status-indicator:hover:not(:disabled) {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 12px 35px rgba(59, 130, 246, 0.5),
+    0 0 30px rgba(96, 165, 250, 0.3);
+}
+
+.status-indicator:active:not(:disabled) {
+  transform: translateY(-1px) scale(0.98);
+}
+
+.status-indicator:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.status-indicator .icon {
+  font-size: 1.75rem;
+  position: relative;
+  z-index: 1;
+}
+
+.status-indicator span {
+  position: relative;
+  z-index: 1;
+}
+
+/* Metrics Row */
+.metrics-row {
+  margin-top: 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+  animation: slideUp 0.8s ease-out 0.3s both;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Metric Cards with Icons */
+.metric-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 2rem 1.5rem;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15),
+    0 0 0 1px rgba(255, 255, 255, 0.18) inset;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  text-align: center;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.metric-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, #3b82f6, #60a5fa, #93c5fd);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.metric-card:hover::before {
+  transform: scaleX(1);
+}
+
+.metric-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 15px 50px rgba(31, 38, 135, 0.25),
+    0 0 0 1px rgba(255, 255, 255, 0.18) inset;
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.metric-card:nth-child(1):hover {
+  background: linear-gradient(
+    135deg,
+    rgba(59, 130, 246, 0.05),
+    rgba(147, 197, 253, 0.05)
+  );
+}
+
+.metric-card:nth-child(2):hover {
+  background: linear-gradient(
+    135deg,
+    rgba(251, 191, 36, 0.05),
+    rgba(252, 211, 77, 0.05)
+  );
+}
+
+.metric-card:nth-child(3):hover {
+  background: linear-gradient(
+    135deg,
+    rgba(239, 68, 68, 0.05),
+    rgba(252, 165, 165, 0.05)
+  );
+}
+
+.metric-card:nth-child(4):hover {
+  background: linear-gradient(
+    135deg,
+    rgba(16, 185, 129, 0.05),
+    rgba(110, 231, 183, 0.05)
+  );
+}
+
+.metric-card h4 {
+  margin: 0 0 1rem 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.metric-card p {
+  margin: 0;
+  font-size: 2.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #1e293b, #334155);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+}
+
+/* Add icon decorations to metric cards */
+.metric-card::after {
+  content: "";
+  position: absolute;
+  bottom: -30px;
+  right: -30px;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  opacity: 0.1;
+  transition: all 0.4s ease;
+}
+
+.metric-card:nth-child(1)::after {
+  background: radial-gradient(circle, #3b82f6, transparent);
+}
+
+.metric-card:nth-child(2)::after {
+  background: radial-gradient(circle, #fbbf24, transparent);
+}
+
+.metric-card:nth-child(3)::after {
+  background: radial-gradient(circle, #ef4444, transparent);
+}
+
+.metric-card:nth-child(4)::after {
+  background: radial-gradient(circle, #10b981, transparent);
+}
+
+.metric-card:hover::after {
+  transform: scale(1.5);
+  opacity: 0.15;
+}
+
+/* Loading States */
+.business-container p {
+  color: white;
+  font-size: 1.125rem;
+  font-weight: 500;
+  text-align: center;
+  padding: 3rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .business-container {
+    padding: 1rem;
+  }
+
+  .business-header {
+    padding: 1.5rem;
+    gap: 1.5rem;
+  }
+
+  .identity-card {
+    flex-direction: column;
+    text-align: center;
+    width: 100%;
+  }
+
+  .identity-info h2 {
+    font-size: 1.5rem;
+  }
+
+  .business-logo {
+    width: 120px;
+    height: 120px;
+  }
+
+  .business-actions {
+    width: 100%;
+    align-items: center;
+  }
+
+  .status-indicator {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .metrics-row {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .metric-card p {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .business-header {
+    padding: 1rem;
+    border-radius: 16px;
+  }
+
+  .metric-card {
+    padding: 1.5rem 1rem;
+  }
+
+  .identity-info h2 {
+    font-size: 1.25rem;
+  }
+}
+
+/* Smooth Animations for All Elements */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
