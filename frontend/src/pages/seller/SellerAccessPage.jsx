@@ -1,16 +1,15 @@
-import SellerHeader from "../../components/seller/SellerHeader";
-import LoginModal from "../../components/landing/LoginModal";
-import BusinessLocationPicker from "../../components/seller/BusinessLocationPicker";
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import "../../styles/seller/SellerAccessPage.css";
-import Flag from "react-world-flags";
+import BusinessLocationPicker from "../../components/seller/BusinessLocationPicker";
 import CategorySelectorModal from "../../components/seller/CategorySelectorModal";
+import logo from "../../assets/logo/Motobook.png";
 
 const SellerAccessPage = () => {
+  const navigate = useNavigate();
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [categoryModalOpen, setCategoryModalOpen] = useState(false);
-  const [showModal, setShowModal] = useState(false);
   const [mapModalOpen, setMapModalOpen] = useState(false);
   const [location, setLocation] = useState({
     lat: null,
@@ -39,7 +38,6 @@ const SellerAccessPage = () => {
     address: "",
   });
 
-  // Track if step 1 is complete and move to step 2
   const [step, setStep] = useState(1);
 
   const handleChange = (e) => {
@@ -54,7 +52,6 @@ const SellerAccessPage = () => {
     setFormData((prev) => ({ ...prev, address: loc.address }));
   };
 
-  // Validate step 1 inputs (except address)
   const validateStep1 = () => {
     if (
       !formData.businessName.trim() ||
@@ -68,14 +65,12 @@ const SellerAccessPage = () => {
       return false;
     }
 
-    // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
       alert("Please enter a valid email address.");
       return false;
     }
 
-    // Validate phone number: must be exactly 10 digits starting with 9 (excluding +63)
     const rawPhone = formData.phone.replace(/\s/g, "");
     if (!/^9\d{9}$/.test(rawPhone)) {
       alert(
@@ -92,7 +87,6 @@ const SellerAccessPage = () => {
     return true;
   };
 
-  // Handle Get Started button (step 1)
   const handleGetStarted = (e) => {
     e.preventDefault();
 
@@ -101,7 +95,6 @@ const SellerAccessPage = () => {
     }
   };
 
-  // Handle final registration submission (step 2)
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -124,7 +117,7 @@ const SellerAccessPage = () => {
           name: formData.fullName,
           email: formData.email,
           password: formData.password,
-          phone: `0${rawPhone}`, // Add leading 0 for local format
+          phone: `0${rawPhone}`,
           role: "Seller",
         }
       );
@@ -144,7 +137,7 @@ const SellerAccessPage = () => {
           latitude: location.lat,
           longitude: location.lng,
           userId: user.id,
-          categories: selectedCategories, // new field
+          categories: selectedCategories,
         },
         {
           headers: {
@@ -164,7 +157,8 @@ const SellerAccessPage = () => {
         address: "",
       });
       setLocation({ lat: null, lng: null, address: "" });
-      setStep(1); // Reset to step 1 after success
+      setStep(1);
+      navigate("/seller/login");
     } catch (error) {
       alert(error.response?.data?.message || "Registration failed.");
       console.error(error);
@@ -172,16 +166,33 @@ const SellerAccessPage = () => {
   };
 
   return (
-    <>
-      <SellerHeader onLoginClick={() => setShowModal(true)} />
-      <div
-        className="seller-access-page"
-        style={{
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-        }}
-      >
+    <div className="seller-register-wrapper">
+      {/* Header */}
+      <header className="seller-register-header">
+        <img
+          src={logo}
+          alt="MotoBook Logo"
+          className="header-logo"
+          onClick={() => navigate("/")}
+        />
+        <nav className="header-nav">
+          <button
+            className="nav-link"
+            onClick={() => navigate("/seller/login")}
+          >
+            Login
+          </button>
+          <button
+            className="nav-link active"
+            onClick={() => navigate("/seller/register")}
+          >
+            Sign Up
+          </button>
+        </nav>
+      </header>
+
+      {/* Content Area */}
+      <div className="seller-register-content">
         <div className="seller-access-container">
           {step === 1 && (
             <form onSubmit={handleGetStarted} className="registration-form">
@@ -252,7 +263,6 @@ const SellerAccessPage = () => {
               </div>
 
               <div className="phone-input-wrapper">
-                <div className="flag-dropdown"></div>
                 <div className="phone-field">
                   <span className="country-code">+63</span>
                   <input
@@ -329,7 +339,6 @@ const SellerAccessPage = () => {
         onClose={() => setMapModalOpen(false)}
         onConfirm={handleLocationConfirm}
       />
-      {showModal && <LoginModal onClose={() => setShowModal(false)} />}
 
       <CategorySelectorModal
         isOpen={categoryModalOpen}
@@ -337,7 +346,7 @@ const SellerAccessPage = () => {
         selectedCategories={selectedCategories}
         onConfirm={handleCategoryConfirm}
       />
-    </>
+    </div>
   );
 };
 
