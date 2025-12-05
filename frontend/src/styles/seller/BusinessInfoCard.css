@@ -461,14 +461,27 @@
 }
 
 /* Responsive Design */
+@media (max-width: 1024px) {
+  .business-container {
+    padding: 1.5rem 1rem;
+    padding-top: 80px; /* Space for hamburger button */
+  }
+
+  .metrics-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 @media (max-width: 768px) {
   .business-container {
     padding: 1rem;
+    padding-top: 80px;
   }
 
   .business-header {
     padding: 1.5rem;
     gap: 1.5rem;
+    flex-direction: column;
   }
 
   .identity-card {
@@ -482,8 +495,8 @@
   }
 
   .business-logo {
-    width: 120px;
-    height: 120px;
+    width: 110px;
+    height: 110px;
   }
 
   .business-actions {
@@ -493,31 +506,84 @@
 
   .status-indicator {
     width: 100%;
+    max-width: 300px;
     justify-content: center;
+    padding: 1rem 1.5rem;
   }
 
   .metrics-row {
     grid-template-columns: 1fr;
     gap: 1rem;
+    margin-top: 1.5rem;
+  }
+
+  .metric-card {
+    padding: 1.75rem 1.25rem;
   }
 
   .metric-card p {
-    font-size: 2rem;
+    font-size: 2.25rem;
+  }
+
+  .metric-card h4 {
+    font-size: 0.813rem;
   }
 }
 
 @media (max-width: 480px) {
+  .business-container {
+    padding: 0.75rem;
+    padding-top: 80px;
+  }
+
   .business-header {
-    padding: 1rem;
+    padding: 1.25rem;
     border-radius: 16px;
+  }
+
+  .business-logo {
+    width: 100px;
+    height: 100px;
+  }
+
+  .identity-info h2 {
+    font-size: 1.35rem;
+  }
+
+  .identity-info p {
+    font-size: 0.75rem;
+  }
+
+  .status-badge {
+    padding: 0.4rem 0.875rem;
+    font-size: 0.75rem;
+  }
+
+  .status-indicator {
+    padding: 0.875rem 1.25rem;
+    font-size: 0.938rem;
+  }
+
+  .status-indicator .icon {
+    font-size: 1.5rem;
   }
 
   .metric-card {
     padding: 1.5rem 1rem;
   }
 
-  .identity-info h2 {
-    font-size: 1.25rem;
+  .metric-card p {
+    font-size: 2rem;
+  }
+
+  .metric-card h4 {
+    font-size: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .change-logo-btn {
+    padding: 0.4rem 1rem;
+    font-size: 0.813rem;
   }
 }
 
