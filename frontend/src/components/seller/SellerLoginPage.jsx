@@ -8,11 +8,9 @@ import logo from "../../assets/logo/Motobook.png";
 const SellerLoginPage = () => {
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
-  const [usePhoneLogin, setUsePhoneLogin] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    phone: "",
   });
 
   const userServiceBaseURL =
@@ -28,14 +26,13 @@ const SellerLoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const payload = usePhoneLogin
-      ? { phone: formData.phone, password: formData.password }
-      : { email: formData.email, password: formData.password };
-
     try {
       const response = await axios.post(
         `${userServiceBaseURL}/api/auth/login-seller`,
-        payload
+        {
+          email: formData.email,
+          password: formData.password,
+        }
       );
 
       const { token, user } = response.data;
@@ -87,47 +84,17 @@ const SellerLoginPage = () => {
 
           {/* Login Form */}
           <form onSubmit={handleSubmit} className="registration-form">
-            {/* Toggle Tabs */}
-            <div className="login-toggle-tabs">
-              <button
-                type="button"
-                className={`tab-button ${!usePhoneLogin ? "active" : ""}`}
-                onClick={() => setUsePhoneLogin(false)}
-              >
-                Email
-              </button>
-              <button
-                type="button"
-                className={`tab-button ${usePhoneLogin ? "active" : ""}`}
-                onClick={() => setUsePhoneLogin(true)}
-              >
-                Phone
-              </button>
-            </div>
-
             {/* Input Fields */}
             <div className="input-group">
-              {usePhoneLogin ? (
-                <input
-                  className="form-input"
-                  type="tel"
-                  name="phone"
-                  placeholder="Phone Number"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  required
-                />
-              ) : (
-                <input
-                  className="form-input"
-                  type="email"
-                  name="email"
-                  placeholder="Email Address"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                />
-              )}
+              <input
+                className="form-input"
+                type="email"
+                name="email"
+                placeholder="Email Address"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
 
               <input
                 className="form-input"
