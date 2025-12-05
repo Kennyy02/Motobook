@@ -9,7 +9,24 @@ import {
   markOrderAsCompleted,
   getRiderDeliveryHistory, // ← ADD THIS IMPORT
   getRiderStats,
+  getOrdersByRestaurant,
 } from "../model/orderModel.js";
+
+export const getRestaurantOrders = async (req, res) => {
+  const { restaurantId } = req.params;
+
+  if (!restaurantId) {
+    return res.status(400).json({ message: "Missing restaurantId" });
+  }
+
+  try {
+    const orders = await getOrdersByRestaurant(restaurantId);
+    res.status(200).json(orders);
+  } catch (error) {
+    console.error("Error fetching restaurant orders:", error);
+    res.status(500).json({ message: "Failed to fetch restaurant orders" });
+  }
+};
 
 export const createOrder = async (req, res) => {
   const { user, cartItems, location, totalAmount, restaurant } = req.body;

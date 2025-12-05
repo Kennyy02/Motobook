@@ -100,6 +100,27 @@ export const getAllPendingOrders = async () => {
   return orders;
 };
 
+export const getOrdersByRestaurant = async (restaurantId) => {
+  const [orders] = await pool.query(
+    `SELECT * FROM orders 
+     WHERE restaurant_id = ? 
+     ORDER BY created_at DESC`,
+    [restaurantId]
+  );
+
+  for (const order of orders) {
+    const [items] = await pool.query(
+      `SELECT product_id, product_name, quantity, price, image 
+       FROM order_items 
+       WHERE order_id = ?`,
+      [order.id]
+    );
+    order.items = items;
+  }
+
+  return orders;
+};
+
 // ✅ Optional: Assign a rider (you can call this from the controller if needed)
 export const assignRiderToOrder = async (orderId, riderId, riderName) => {
   const [result] = await pool.query(

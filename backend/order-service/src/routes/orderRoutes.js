@@ -10,6 +10,7 @@ import {
   completeOrder,
   getRiderHistory, // ✅ NEW
   getRiderStatistics, // ✅ NEW
+  getRestaurantOrders,
 } from "../controller/orderController.js";
 
 const router = express.Router();
@@ -21,6 +22,7 @@ router.post("/create", createOrder);
 router.patch("/:id/status", updateOrderStatus); // Keep this one, it already works
 router.patch("/:id/assign", acceptOrder);
 router.patch("/:orderId/complete", completeOrder);
+router.get("/restaurant/:restaurantId", getRestaurantOrders);
 
 // ✅ NEW: Rider-specific endpoints
 router.get("/rider/:riderId/history", getRiderHistory);
