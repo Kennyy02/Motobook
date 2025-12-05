@@ -24,6 +24,16 @@ const SellerDashboard = () => {
           <Outlet />
         </main>
       </div>
+
+      <div className="seller-dashboard" style={{ display: "block" }}>
+        <SellerSidebar />
+        <main
+          className="seller-content"
+          style={{ width: "100vw", marginLeft: 0 }}
+        >
+          <Outlet />
+        </main>
+      </div>
     </>
   );
 };
