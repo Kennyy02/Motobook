@@ -30,6 +30,7 @@ import SellerAccessPage from "./pages/seller/SellerAccessPage";
 import SellerLoginPage from "./components/seller/SellerLoginPage"; // ✅ Make sure this is created
 import ManageMenusPage from "./pages/seller/ManageMenusPage";
 import BusinessManagement from "./pages/admin/BusinessManagement";
+import SellerOrdersPage from "./pages/seller/SellerOrdersPage";
 
 // Rider
 import RiderDashboard from "./pages/rider/RiderDashboard";
@@ -68,6 +69,7 @@ function App() {
             <Route index element={<Navigate to="dashboard" replace />} />
             <Route path="dashboard" element={<SellerBusinessPage />} />
             <Route path="menus" element={<ManageMenusPage />} />
+            <Route path="orders" element={<SellerOrdersPage />} />
           </Route>
         </Route>
 
