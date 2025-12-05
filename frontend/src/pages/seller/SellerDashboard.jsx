@@ -1,3 +1,6 @@
+// SellerDashboard.jsx - Fixed for Mobile Responsiveness
+// Check if your file matches this structure exactly
+
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import SellerSidebar from "../../components/seller/SellerSidebar";

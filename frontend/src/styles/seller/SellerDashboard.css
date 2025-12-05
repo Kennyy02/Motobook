@@ -1,7 +1,9 @@
 /* SellerDashboard.css - Enhanced Responsive Layout */
-/* Save this as: src/styles/seller/SellerDashboard.css */
+/* AGGRESSIVE FIX for mobile responsiveness */
 
-/* Desktop View - Sidebar visible */
+/* ============================================ */
+/* DESKTOP VIEW */
+/* ============================================ */
 .seller-dashboard {
   display: flex;
   margin-top: 60px;
@@ -43,38 +45,49 @@
   background: rgba(59, 130, 246, 0.7);
 }
 
-/* Smooth Scroll Behavior */
+/* Smooth Scroll */
 .seller-content {
   scroll-behavior: smooth;
 }
 
 /* ============================================ */
-/* RESPONSIVE - MOBILE & TABLET */
+/* MOBILE VIEW - AGGRESSIVE FIX */
 /* ============================================ */
-
-/* CRITICAL FIX: On mobile, sidebar is hidden by default */
-/* Content takes full width, sidebar appears as overlay when opened */
 @media (max-width: 1024px) {
+  /* CRITICAL: Remove flex layout on mobile */
   .seller-dashboard {
-    margin-top: 60px; /* Keep space for header */
+    display: block !important; /* Not flex anymore */
+    margin-top: 60px;
     height: calc(100vh - 60px);
-    /* Remove flex display on mobile - content takes full width */
-    display: block;
+    width: 100vw;
     position: relative;
+    overflow: hidden;
   }
 
-  /* CRITICAL: Content takes 100% width on mobile */
+  /* CRITICAL: Force content to take full width */
   .seller-content {
-    width: 100% !important; /* Force full width */
+    width: 100vw !important;
+    min-width: 100vw !important;
+    max-width: 100vw !important;
     height: calc(100vh - 60px);
-    margin-left: 0 !important; /* No offset from sidebar */
-    padding-top: 70px; /* Space for hamburger button */
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-top: 70px; /* Space for hamburger */
+    position: relative;
+    left: 0 !important;
+    right: 0 !important;
+  }
+
+  /* Ensure BusinessInfoCard and other content respect full width */
+  .seller-content > * {
+    max-width: 100vw;
+    box-sizing: border-box;
   }
 }
 
 @media (max-width: 768px) {
   .seller-content {
-    padding-top: 70px; /* Maintain space for hamburger */
+    padding-top: 70px;
   }
 }
 
