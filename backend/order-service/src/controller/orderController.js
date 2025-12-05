@@ -7,9 +7,11 @@ import {
   assignRiderToOrder,
   getAcceptedOrdersByRider,
   markOrderAsCompleted,
-  getRiderDeliveryHistory, // ← ADD THIS IMPORT
+  getRiderDeliveryHistory,
   getRiderStats,
   getOrdersByRestaurant,
+  setOrderPreparing, // ✅ NEW
+  setOrderReady, // ✅ NEW
 } from "../model/orderModel.js";
 
 export const getRestaurantOrders = async (req, res) => {
@@ -96,6 +98,52 @@ export const updateOrderStatus = async (req, res) => {
   }
 };
 
+// ✅ NEW: Seller clicks "Prepare" button
+export const prepareOrder = async (req, res) => {
+  const { orderId } = req.params;
+
+  try {
+    const result = await setOrderPreparing(orderId);
+
+    if (result.affectedRows === 0) {
+      return res.status(400).json({
+        message: "Order not found or already being prepared",
+      });
+    }
+
+    res.status(200).json({
+      message: "Order is now being prepared",
+      orderId,
+    });
+  } catch (error) {
+    console.error("Error preparing order:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+// ✅ NEW: Seller clicks "Ready" button
+export const markOrderReady = async (req, res) => {
+  const { orderId } = req.params;
+
+  try {
+    const result = await setOrderReady(orderId);
+
+    if (result.affectedRows === 0) {
+      return res.status(400).json({
+        message: "Order not found or not in preparing status",
+      });
+    }
+
+    res.status(200).json({
+      message: "Order is ready for pickup",
+      orderId,
+    });
+  } catch (error) {
+    console.error("Error marking order ready:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 export const getPendingOrders = async (req, res) => {
   try {
     const pendingOrders = await getAllPendingOrders();
@@ -106,7 +154,6 @@ export const getPendingOrders = async (req, res) => {
   }
 };
 
-// ✅ Optional: Assign a rider to an order
 export const acceptOrder = async (req, res) => {
   const { id } = req.params;
   const { riderId, riderName } = req.body;
@@ -116,7 +163,14 @@ export const acceptOrder = async (req, res) => {
   }
 
   try {
-    await assignRiderToOrder(id, riderId, riderName);
+    const result = await assignRiderToOrder(id, riderId, riderName);
+
+    if (result.affectedRows === 0) {
+      return res.status(400).json({
+        message: "Order not available or not ready for pickup",
+      });
+    }
+
     res.status(200).json({ message: "Order accepted by rider" });
   } catch (error) {
     console.error("Failed to assign rider:", error);

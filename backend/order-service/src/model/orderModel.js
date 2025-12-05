@@ -8,8 +8,8 @@ export const createOrder = async (orderData, items) => {
 
     const [orderResult] = await conn.query(
       `INSERT INTO orders 
-        (customer_id, customer_name, phone_number, delivery_address, latitude, longitude, restaurant_id, restaurant_name, total_amount, is_accepted, rider_id, rider_name) 
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        (customer_id, customer_name, phone_number, delivery_address, latitude, longitude, restaurant_id, restaurant_name, total_amount, status, is_accepted, rider_id, rider_name) 
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         orderData.id,
         orderData.fullName,
@@ -20,6 +20,7 @@ export const createOrder = async (orderData, items) => {
         orderData.restaurantId,
         orderData.restaurantName,
         orderData.totalAmount,
+        "pending", // ✅ Explicitly set initial status
         false, // is_accepted default false
         null, // rider_id (initially null)
         null, // rider_name (initially null)
@@ -82,9 +83,28 @@ export const updateOrderStatusInDB = async (orderId, status) => {
   return result;
 };
 
+// ✅ NEW: Update order to "preparing" status
+export const setOrderPreparing = async (orderId) => {
+  const [result] = await pool.query(
+    `UPDATE orders SET status = 'preparing' WHERE id = ? AND status = 'pending'`,
+    [orderId]
+  );
+  return result;
+};
+
+// ✅ NEW: Update order to "ready" status
+export const setOrderReady = async (orderId) => {
+  const [result] = await pool.query(
+    `UPDATE orders SET status = 'ready' WHERE id = ? AND status = 'preparing'`,
+    [orderId]
+  );
+  return result;
+};
+
+// ✅ MODIFIED: Only get orders with status 'ready' for riders
 export const getAllPendingOrders = async () => {
   const [orders] = await pool.query(
-    `SELECT * FROM orders WHERE status = 'pending' AND rider_id IS NULL`
+    `SELECT * FROM orders WHERE status = 'ready' AND rider_id IS NULL ORDER BY created_at ASC`
   );
 
   for (const order of orders) {
@@ -104,7 +124,16 @@ export const getOrdersByRestaurant = async (restaurantId) => {
   const [orders] = await pool.query(
     `SELECT * FROM orders 
      WHERE restaurant_id = ? 
-     ORDER BY created_at DESC`,
+     ORDER BY 
+       CASE 
+         WHEN status = 'pending' THEN 1
+         WHEN status = 'preparing' THEN 2
+         WHEN status = 'ready' THEN 3
+         WHEN status = 'accepted' THEN 4
+         WHEN status = 'completed' THEN 5
+         ELSE 6
+       END,
+       created_at DESC`,
     [restaurantId]
   );
 
@@ -121,12 +150,12 @@ export const getOrdersByRestaurant = async (restaurantId) => {
   return orders;
 };
 
-// ✅ Optional: Assign a rider (you can call this from the controller if needed)
+// ✅ MODIFIED: When rider accepts, update status to 'accepted' and set picked_up_at
 export const assignRiderToOrder = async (orderId, riderId, riderName) => {
   const [result] = await pool.query(
     `UPDATE orders 
-     SET is_accepted = TRUE, rider_id = ?, rider_name = ? 
-     WHERE id = ?`,
+     SET is_accepted = TRUE, rider_id = ?, rider_name = ?, status = 'accepted', picked_up_at = NOW()
+     WHERE id = ? AND status = 'ready'`,
     [riderId, riderName, orderId]
   );
   return result;
@@ -134,7 +163,9 @@ export const assignRiderToOrder = async (orderId, riderId, riderName) => {
 
 export const getAcceptedOrdersByRider = async (riderId) => {
   const [orders] = await pool.query(
-    `SELECT * FROM orders WHERE is_accepted = TRUE AND rider_id = ? ORDER BY created_at DESC`,
+    `SELECT * FROM orders 
+     WHERE is_accepted = TRUE AND rider_id = ? AND status = 'accepted'
+     ORDER BY created_at DESC`,
     [riderId]
   );
 
@@ -153,8 +184,8 @@ export const getAcceptedOrdersByRider = async (riderId) => {
 
 export const markOrderAsCompleted = async (orderId) => {
   const [result] = await pool.query(
-    "UPDATE orders SET status = ? WHERE id = ?",
-    ["completed", orderId]
+    "UPDATE orders SET status = 'completed', delivered_at = NOW() WHERE id = ?",
+    [orderId]
   );
   return result;
 };
