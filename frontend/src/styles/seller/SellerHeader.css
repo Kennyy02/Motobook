@@ -1,3 +1,7 @@
+/* SellerHeader.css - Modern Responsive Header */
+/* Save this file as: src/styles/seller/SellerHeader.css */
+
+/* Header Container */
 .header {
   position: fixed;
   top: 0;
@@ -334,4 +338,11 @@
 * {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Fix for Mobile - Ensure header stays on top */
+@media (max-width: 1024px) {
+  .header {
+    z-index: 1100; /* Above sidebar overlay */
+  }
 }

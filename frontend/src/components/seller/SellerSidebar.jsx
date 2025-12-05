@@ -1,4 +1,5 @@
-// SellerSidebar.jsx - Modern Hamburger Menu
+// SellerSidebar.jsx - Modern Hamburger Menu with Fixed Mobile View
+// REPLACE your existing SellerSidebar.jsx with this
 import { useContext, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
@@ -40,9 +41,6 @@ const SellerSidebar = () => {
       >
         {isOpen ? <FaTimes /> : <FaBars />}
       </button>
-
-      {/* Overlay */}
-      {isOpen && <div className="sidebar-overlay" onClick={closeSidebar}></div>}
 
       {/* Sidebar */}
       <aside className={`sidebar ${isOpen ? "sidebar-open" : ""}`}>
@@ -88,6 +86,9 @@ const SellerSidebar = () => {
           </Link>
         </nav>
       </aside>
+
+      {/* Overlay - Moved after sidebar */}
+      {isOpen && <div className="sidebar-overlay" onClick={closeSidebar}></div>}
     </>
   );
 };

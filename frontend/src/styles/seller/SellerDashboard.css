@@ -1,4 +1,7 @@
-/* SellerDashboard.css - Enhanced Layout */
+/* SellerDashboard.css - Enhanced Responsive Layout */
+/* Save this as: src/styles/seller/SellerDashboard.css */
+
+/* Desktop View - Sidebar visible */
 .seller-dashboard {
   display: flex;
   margin-top: 60px;
@@ -45,27 +48,42 @@
   scroll-behavior: smooth;
 }
 
-/* Responsive Adjustments */
+/* ============================================ */
+/* RESPONSIVE - MOBILE & TABLET */
+/* ============================================ */
+
+/* CRITICAL FIX: On mobile, sidebar is hidden by default */
+/* Content takes full width, sidebar appears as overlay when opened */
 @media (max-width: 1024px) {
   .seller-dashboard {
-    margin-top: 0;
-    height: 100vh;
+    margin-top: 60px; /* Keep space for header */
+    height: calc(100vh - 60px);
+    /* Remove flex display on mobile - content takes full width */
+    display: block;
+    position: relative;
   }
 
+  /* CRITICAL: Content takes 100% width on mobile */
   .seller-content {
-    width: 100%;
-    height: 100vh;
+    width: 100% !important; /* Force full width */
+    height: calc(100vh - 60px);
+    margin-left: 0 !important; /* No offset from sidebar */
+    padding-top: 70px; /* Space for hamburger button */
   }
 }
 
 @media (max-width: 768px) {
   .seller-content {
-    padding-top: 0;
+    padding-top: 70px; /* Maintain space for hamburger */
   }
 }
 
 @media (max-width: 480px) {
   .seller-content::-webkit-scrollbar {
     width: 6px;
+  }
+
+  .seller-content {
+    padding-top: 70px;
   }
 }
