@@ -45,12 +45,14 @@ router.get("/all-restaurants", fetchAllRestaurants);
 router.get("/locations", fetchBusinessLocations);
 
 router.post("/add", registerRestaurant);
-router.get("/:userId", fetchUserBusiness);
+
+// ✅ FIXED: Change from "/:userId" to "/user/:userId"
+router.get("/user/:userId", fetchUserBusiness);
 
 // ✅ FIXED: Spread the array returned by upload.single()
 router.put("/logo/:userId", ...upload.single("logo"), updateBusinessLogo);
 router.post(
-  "/menu/add-items",
+  "/menu-add-items",
   ...upload.single("productImage"),
   createMenuItem
 );
