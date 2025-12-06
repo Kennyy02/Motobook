@@ -25,9 +25,10 @@ import CustomerHome from "./pages/customer/CustomerHome";
 
 // Seller
 import SellerDashboard from "./pages/seller/SellerDashboard";
+import SellerDashboardHome from "./pages/seller/SellerDashboardHome"; // ✅ NEW - Add this import
 import SellerBusinessPage from "./pages/seller/SellerBusinessPage";
 import SellerAccessPage from "./pages/seller/SellerAccessPage";
-import SellerLoginPage from "./components/seller/SellerLoginPage"; // ✅ Make sure this is created
+import SellerLoginPage from "./components/seller/SellerLoginPage";
 import ManageMenusPage from "./pages/seller/ManageMenusPage";
 import BusinessManagement from "./pages/admin/BusinessManagement";
 import SellerOrdersPage from "./pages/seller/SellerOrdersPage";
@@ -67,7 +68,8 @@ function App() {
         <Route element={<ProtectedRoute allowedRoles={["Seller"]} />}>
           <Route path="/seller/" element={<SellerDashboard />}>
             <Route index element={<Navigate to="dashboard" replace />} />
-            <Route path="dashboard" element={<SellerBusinessPage />} />
+            <Route path="dashboard" element={<SellerDashboardHome />} />
+            <Route path="business" element={<SellerBusinessPage />} />
             <Route path="menus" element={<ManageMenusPage />} />
             <Route path="orders" element={<SellerOrdersPage />} />
           </Route>
