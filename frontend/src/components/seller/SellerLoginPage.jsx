@@ -47,6 +47,11 @@ const SellerLoginPage = () => {
     }
   };
 
+  const handleHomeClick = () => {
+    // Force navigation to landing page and replace history
+    navigate("/", { replace: true });
+  };
+
   return (
     <div className="seller-access-wrapper">
       {/* Header */}
@@ -55,10 +60,10 @@ const SellerLoginPage = () => {
           src={logo}
           alt="MotoBook Logo"
           className="header-logo"
-          onClick={() => navigate("/")}
+          onClick={handleHomeClick}
         />
         <nav className="header-nav">
-          <button className="nav-link" onClick={() => navigate("/")}>
+          <button className="nav-link" onClick={handleHomeClick}>
             Home
           </button>
           <button

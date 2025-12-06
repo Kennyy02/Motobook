@@ -165,6 +165,11 @@ const SellerAccessPage = () => {
     }
   };
 
+  const handleHomeClick = () => {
+    // Force navigation to landing page and replace history
+    navigate("/", { replace: true });
+  };
+
   return (
     <div className="seller-register-wrapper">
       {/* Header */}
@@ -173,10 +178,10 @@ const SellerAccessPage = () => {
           src={logo}
           alt="MotoBook Logo"
           className="header-logo"
-          onClick={() => navigate("/")}
+          onClick={handleHomeClick}
         />
         <nav className="header-nav">
-          <button className="nav-link" onClick={() => navigate("/")}>
+          <button className="nav-link" onClick={handleHomeClick}>
             Home
           </button>
           <button
