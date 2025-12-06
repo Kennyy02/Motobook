@@ -340,3 +340,24 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Add this to your SellerDashboard.css file */
+
+.stats-error-banner {
+  background-color: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: 8px;
+  padding: 12px 20px;
+  margin-bottom: 20px;
+  color: #856404;
+}
+
+.stats-error-banner p {
+  margin: 0 0 4px 0;
+  font-weight: 500;
+}
+
+.stats-error-banner small {
+  color: #856404;
+  opacity: 0.8;
+}
