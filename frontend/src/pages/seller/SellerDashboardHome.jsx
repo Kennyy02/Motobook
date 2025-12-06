@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
 import "../../styles/seller/SellerDashboard.css";
@@ -18,6 +18,8 @@ const SellerDashboardHome = () => {
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [uploadingLogo, setUploadingLogo] = useState(false);
+  const fileInputRef = useRef(null);
 
   // Service URLs
   const businessServiceURL =
@@ -77,6 +79,54 @@ const SellerDashboardHome = () => {
     return () => clearInterval(interval);
   }, [business, orderServiceURL]);
 
+  // Handle logo change
+  const handleLogoChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith("image/")) {
+      alert("Please select an image file");
+      return;
+    }
+
+    // Validate file size (5MB max)
+    if (file.size > 5 * 1024 * 1024) {
+      alert("Image size should be less than 5MB");
+      return;
+    }
+
+    setUploadingLogo(true);
+
+    try {
+      const formData = new FormData();
+      formData.append("logo", file);
+
+      const response = await axios.put(
+        `${businessServiceURL}/api/business/logo/${user.id}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      // Update local state with new logo
+      setBusiness({ ...business, logo: response.data.logo });
+      alert("Logo updated successfully!");
+    } catch (err) {
+      console.error("Error updating logo:", err);
+      alert(err.response?.data?.message || "Failed to update logo");
+    } finally {
+      setUploadingLogo(false);
+    }
+  };
+
+  const handleChangePhotoClick = () => {
+    fileInputRef.current?.click();
+  };
+
   if (!user || user.role !== "Seller") {
     return <div className="error-message">Unauthorized</div>;
   }
@@ -109,21 +159,39 @@ const SellerDashboardHome = () => {
     <div className="seller-dashboard-home">
       {/* Business Info Card */}
       <div className="business-info-card">
-        <div className="business-logo">
-          <img
-            src={business?.logo || "/default-logo.png"}
-            alt={business?.businessName}
-            onError={(e) => {
-              e.target.src = "/default-logo.png";
-            }}
+        <div className="business-logo-container">
+          <div className="business-logo">
+            <img
+              src={business?.logo || "/default-logo.png"}
+              alt={business?.businessName}
+              onError={(e) => {
+                e.target.src = "/default-logo.png";
+              }}
+            />
+          </div>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleLogoChange}
+            style={{ display: "none" }}
           />
+          <button
+            className="change-photo-btn"
+            onClick={handleChangePhotoClick}
+            disabled={uploadingLogo}
+          >
+            {uploadingLogo ? "Uploading..." : "Change Photo"}
+          </button>
         </div>
+
         <div className="business-details">
           <h2>{business?.businessName || "Loading..."}</h2>
           <span className={`status-badge ${business?.status || "pending"}`}>
             {business?.status?.toUpperCase() || "PENDING"}
           </span>
         </div>
+
         <button
           className={`toggle-btn ${business?.isOpen ? "open" : "closed"}`}
           onClick={async () => {
