@@ -1,8 +1,7 @@
-/* SellerDashboard.css - Enhanced Responsive Layout */
-/* AGGRESSIVE FIX for mobile responsiveness */
+/* SellerDashboard.css - Horizontal Nav Below Header Layout */
 
 /* ============================================ */
-/* DESKTOP VIEW */
+/* DESKTOP VIEW (> 768px) */
 /* ============================================ */
 .seller-dashboard {
   display: flex;
@@ -14,6 +13,7 @@
 
 .seller-content {
   flex: 1;
+  margin-left: 260px; /* Width of desktop sidebar */
   overflow-y: auto;
   overflow-x: hidden;
   background: transparent;
@@ -51,52 +51,58 @@
 }
 
 /* ============================================ */
-/* MOBILE VIEW - AGGRESSIVE FIX */
+/* MOBILE VIEW (≤ 768px) */
 /* ============================================ */
-@media (max-width: 1024px) {
-  /* CRITICAL: Remove flex layout on mobile */
+@media (max-width: 768px) {
   .seller-dashboard {
-    display: block !important; /* Not flex anymore */
-    margin-top: 60px;
-    height: calc(100vh - 60px);
+    display: block;
+    margin-top: 120px; /* 60px header + 60px horizontal nav */
+    height: calc(100vh - 120px);
     width: 100vw;
     position: relative;
-    overflow: hidden;
   }
 
-  /* CRITICAL: Force content to take full width */
   .seller-content {
-    width: 100vw !important;
-    min-width: 100vw !important;
-    max-width: 100vw !important;
-    height: calc(100vh - 60px);
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-    padding-top: 70px; /* Space for hamburger */
+    width: 100vw;
+    min-width: 100vw;
+    max-width: 100vw;
+    height: calc(100vh - 120px); /* 60px header + 60px horizontal nav */
+    margin-left: 0;
+    margin-right: 0;
+    padding: 0;
     position: relative;
-    left: 0 !important;
-    right: 0 !important;
+    left: 0;
+    right: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 
-  /* Ensure BusinessInfoCard and other content respect full width */
+  /* Ensure all child content respects viewport width */
   .seller-content > * {
     max-width: 100vw;
     box-sizing: border-box;
   }
-}
 
-@media (max-width: 768px) {
-  .seller-content {
-    padding-top: 70px;
-  }
-}
-
-@media (max-width: 480px) {
+  /* Thinner scrollbar on mobile */
   .seller-content::-webkit-scrollbar {
-    width: 6px;
+    width: 4px;
+  }
+}
+
+/* ============================================ */
+/* SMALL MOBILE (≤ 480px) */
+/* ============================================ */
+@media (max-width: 480px) {
+  .seller-dashboard {
+    margin-top: 115px; /* 60px header + 55px horizontal nav */
+    height: calc(100vh - 115px);
   }
 
   .seller-content {
-    padding-top: 70px;
+    height: calc(100vh - 115px);
+  }
+
+  .seller-content::-webkit-scrollbar {
+    width: 3px;
   }
 }

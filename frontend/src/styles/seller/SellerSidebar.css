@@ -1,17 +1,11 @@
-/* SellerSidebar.css - Modern Responsive Hamburger Menu */
-/* CRITICAL: This fixes mobile responsiveness completely */
-
-/* Hamburger Button - Hidden on Desktop, Visible on Mobile */
-.hamburger-btn {
-  display: none;
-}
+/* SellerSidebar.css - Horizontal Nav Below Header on Mobile */
 
 /* ============================================ */
-/* DESKTOP VIEW (> 1024px) */
+/* DESKTOP SIDEBAR (> 768px) */
 /* ============================================ */
-.sidebar {
+.sidebar-desktop {
   width: 260px;
-  height: 100%;
+  height: calc(100vh - 60px);
   background: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -20,39 +14,11 @@
   flex-direction: column;
   padding: 0;
   box-shadow: 4px 0 20px rgba(0, 0, 0, 0.08);
-  position: relative;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: fixed;
+  top: 60px;
+  left: 0;
   z-index: 100;
-}
-
-/* Sidebar Header - Hidden on Desktop */
-.sidebar-header {
-  display: none;
-}
-
-.sidebar-header h3 {
-  margin: 0;
-  font-size: 1.25rem;
-  font-weight: 700;
-  background: linear-gradient(135deg, #1e293b, #334155);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.close-btn {
-  display: none;
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  color: #64748b;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.close-btn:hover {
-  color: #3b82f6;
-  transform: rotate(90deg);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Sidebar Navigation */
@@ -136,135 +102,112 @@
   box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
 }
 
-/* Overlay - Hidden on Desktop */
-.sidebar-overlay {
+/* ============================================ */
+/* MOBILE HORIZONTAL NAV (≤ 768px) */
+/* ============================================ */
+.horizontal-nav-mobile {
   display: none;
 }
 
-/* ============================================ */
-/* MOBILE VIEW (≤ 1024px) */
-/* ============================================ */
-@media (max-width: 1024px) {
-  /* Show Hamburger Button */
-  .hamburger-btn {
+@media (max-width: 768px) {
+  /* Hide Desktop Sidebar */
+  .sidebar-desktop {
+    display: none;
+  }
+
+  /* Show Horizontal Navigation Below Header */
+  .horizontal-nav-mobile {
     display: flex;
+    justify-content: space-around;
+    align-items: center;
+    position: fixed;
+    top: 60px; /* Right below the header */
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    z-index: 99;
+    padding: 0 1rem;
+  }
+
+  .horizontal-nav-item {
+    display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    position: fixed;
-    top: 15px;
-    left: 15px;
-    z-index: 1101;
-    background: linear-gradient(135deg, #3b82f6, #2563eb);
-    color: white;
-    border: none;
+    gap: 0.25rem;
+    padding: 0.5rem 1rem;
     border-radius: 12px;
-    width: 50px;
-    height: 50px;
+    text-decoration: none;
+    color: #64748b;
+    font-weight: 600;
+    font-size: 0.75rem;
+    transition: all 0.3s ease;
+    flex: 1;
+    position: relative;
+  }
+
+  .horizontal-nav-icon {
     font-size: 1.5rem;
-    cursor: pointer;
-    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
     transition: all 0.3s ease;
   }
 
-  .hamburger-btn:hover {
-    transform: scale(1.1);
-    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
+  /* Active State */
+  .horizontal-nav-item.active {
+    color: #3b82f6;
+    background: linear-gradient(
+      135deg,
+      rgba(59, 130, 246, 0.1),
+      rgba(147, 197, 253, 0.1)
+    );
   }
 
-  .hamburger-btn:active {
+  .horizontal-nav-item.active .horizontal-nav-icon {
+    color: #3b82f6;
+    transform: scale(1.15);
+  }
+
+  .horizontal-nav-item.active::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50%;
+    height: 3px;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    border-radius: 3px 3px 0 0;
+  }
+
+  /* Hover/Tap State */
+  .horizontal-nav-item:active {
     transform: scale(0.95);
-  }
-
-  /* CRITICAL FIX: Completely hide sidebar on mobile */
-  .sidebar {
-    /* Remove from normal document flow */
-    position: fixed !important;
-    top: 0;
-    left: -100% !important; /* Start completely off-screen */
-    width: 280px;
-    height: 100vh;
-    z-index: 1100;
-    background: rgba(255, 255, 255, 0.98);
-    backdrop-filter: blur(30px);
-    -webkit-backdrop-filter: blur(30px);
-    box-shadow: 0 0 40px rgba(0, 0, 0, 0.15);
-    transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    /* Force removal from layout */
-    margin: 0 !important;
-    flex-shrink: 0 !important;
-  }
-
-  /* Show Sidebar When Open */
-  .sidebar.sidebar-open {
-    left: 0 !important;
-  }
-
-  /* Show Header on Mobile */
-  .sidebar-header {
-    display: flex;
-    padding: 1.5rem;
-    border-bottom: 1px solid rgba(226, 232, 240, 0.8);
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  /* Show Close Button */
-  .close-btn {
-    display: block;
-  }
-
-  /* Overlay Backdrop */
-  .sidebar-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    z-index: 1099;
-    display: block;
-    animation: fadeIn 0.3s ease;
-  }
-
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-
-  /* Navigation */
-  .sidebar-nav {
-    padding: 1rem;
-    overflow-y: auto;
-    max-height: calc(100vh - 80px);
-  }
-
-  .sidebar-link {
-    padding: 1.25rem 1.5rem;
-    font-size: 1rem;
   }
 }
 
+/* ============================================ */
+/* SMALL MOBILE (≤ 480px) */
+/* ============================================ */
 @media (max-width: 480px) {
-  .sidebar {
-    width: 85% !important;
-    max-width: 320px;
+  .horizontal-nav-mobile {
+    height: 55px;
+    padding: 0 0.5rem;
   }
 
-  .hamburger-btn {
-    width: 45px;
-    height: 45px;
-    font-size: 1.25rem;
-    top: 12px;
-    left: 12px;
+  .horizontal-nav-item {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.688rem;
   }
 
-  .sidebar-link {
-    padding: 1rem 1.25rem;
+  .horizontal-nav-icon {
+    font-size: 1.375rem;
+  }
+
+  .horizontal-nav-item span {
+    font-size: 0.688rem;
   }
 }
