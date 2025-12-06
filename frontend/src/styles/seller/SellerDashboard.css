@@ -1,103 +1,261 @@
-.seller-dashboard {
-  display: flex;
-  margin-top: 60px;
-  height: calc(100vh - 60px);
-  overflow: hidden;
+/* Add these styles to your existing SellerDashboard.css */
+
+.seller-dashboard-home {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Business Info Card */
+.business-info-card {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 16px;
+  padding: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+  color: white;
 }
 
-.seller-content {
+.business-logo {
+  width: 120px;
+  height: 120px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.business-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.business-details {
   flex: 1;
-  margin-left: 260px; /* Width of desktop sidebar */
-  overflow-y: auto;
-  overflow-x: hidden;
-  background: transparent;
-  padding: 0;
-  box-sizing: border-box;
-
-  /* Custom Scrollbar */
-  scrollbar-width: thin;
-  scrollbar-color: rgba(59, 130, 246, 0.5) rgba(255, 255, 255, 0.1);
 }
 
-/* Custom Scrollbar Webkit */
-.seller-content::-webkit-scrollbar {
-  width: 10px;
+.business-details h2 {
+  margin: 0 0 0.5rem 0;
+  font-size: 2rem;
+  font-weight: 700;
 }
 
-.seller-content::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
+.status-badge {
+  display: inline-block;
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
 }
 
-.seller-content::-webkit-scrollbar-thumb {
-  background: rgba(59, 130, 246, 0.5);
-  border-radius: 10px;
-  transition: background 0.3s ease;
+.status-badge.approved {
+  background: #10b981;
+  color: white;
 }
 
-.seller-content::-webkit-scrollbar-thumb:hover {
-  background: rgba(59, 130, 246, 0.7);
+.status-badge.pending {
+  background: #f59e0b;
+  color: white;
 }
 
-/* Smooth Scroll */
-.seller-content {
-  scroll-behavior: smooth;
+.status-badge.rejected {
+  background: #ef4444;
+  color: white;
 }
 
-/* ============================================ */
-/* MOBILE VIEW (≤ 768px) */
-/* ============================================ */
+.toggle-btn {
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  border: none;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 120px;
+}
+
+.toggle-btn.open {
+  background: #10b981;
+  color: white;
+}
+
+.toggle-btn.closed {
+  background: #ef4444;
+  color: white;
+}
+
+.toggle-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Statistics Cards */
+.stats-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+.stat-header {
+  color: #6b7280;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+}
+
+.stat-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+}
+
+.stat-value.pending {
+  color: #f59e0b;
+}
+
+.stat-value.item {
+  font-size: 1.5rem;
+  color: #667eea;
+}
+
+.stat-subtext {
+  color: #9ca3af;
+  font-size: 0.9rem;
+}
+
+/* Revenue Section */
+.revenue-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.revenue-card {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  text-align: center;
+}
+
+.revenue-card h3 {
+  color: #6b7280;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.revenue-amount {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #10b981;
+  margin: 0.5rem 0;
+}
+
+.revenue-card small {
+  color: #9ca3af;
+  font-size: 0.9rem;
+}
+
+/* Loading & Error States */
+.loading,
+.error,
+.dashboard-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 400px;
+  padding: 2rem;
+  text-align: center;
+}
+
+.loading {
+  font-size: 1.2rem;
+  color: #6b7280;
+}
+
+.error {
+  color: #ef4444;
+}
+
+.dashboard-error {
+  background: white;
+  border-radius: 16px;
+  padding: 3rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  max-width: 500px;
+  margin: 2rem auto;
+}
+
+.dashboard-error h2 {
+  color: #ef4444;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.dashboard-error p {
+  color: #6b7280;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* Mobile Responsive */
 @media (max-width: 768px) {
-  .seller-dashboard {
-    display: block;
-    margin-top: 120px; /* 60px header + 60px horizontal nav */
-    height: calc(100vh - 120px);
-    width: 100vw;
-    position: relative;
+  .seller-dashboard-home {
+    padding: 1rem;
   }
 
-  .seller-content {
-    width: 100vw;
-    min-width: 100vw;
-    max-width: 100vw;
-    height: calc(100vh - 120px); /* 60px header + 60px horizontal nav */
-    margin-left: 0;
-    margin-right: 0;
-    padding: 0;
-    position: relative;
-    left: 0;
-    right: 0;
-    overflow-y: auto;
-    overflow-x: hidden;
+  .business-info-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 1.5rem;
   }
 
-  /* Ensure all child content respects viewport width */
-  .seller-content > * {
-    max-width: 100vw;
-    box-sizing: border-box;
+  .business-logo {
+    width: 100px;
+    height: 100px;
   }
 
-  /* Thinner scrollbar on mobile */
-  .seller-content::-webkit-scrollbar {
-    width: 4px;
-  }
-}
-
-/* ============================================ */
-/* SMALL MOBILE (≤ 480px) */
-/* ============================================ */
-@media (max-width: 480px) {
-  .seller-dashboard {
-    margin-top: 115px; /* 60px header + 55px horizontal nav */
-    height: calc(100vh - 115px);
+  .business-details h2 {
+    font-size: 1.5rem;
   }
 
-  .seller-content {
-    height: calc(100vh - 115px);
+  .stats-container {
+    grid-template-columns: 1fr;
   }
 
-  .seller-content::-webkit-scrollbar {
-    width: 3px;
+  .stat-value {
+    font-size: 2rem;
+  }
+
+  .revenue-section {
+    grid-template-columns: 1fr;
   }
 }

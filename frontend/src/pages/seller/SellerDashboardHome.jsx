@@ -33,7 +33,14 @@ const SellerDashboardHome = () => {
         setBusiness(response.data);
       } catch (err) {
         console.error("Error fetching business:", err);
-        setError("Failed to load business information");
+        // Don't set error if it's a 404 - user might not have business yet
+        if (err.response?.status === 404) {
+          setError(
+            "No business registered. Please register your business first."
+          );
+        } else {
+          setError("Failed to load business information");
+        }
       }
     };
 
