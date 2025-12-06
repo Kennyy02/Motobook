@@ -1,13 +1,13 @@
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import { AuthContext } from "../../context/AuthContext"; // ✅ Import AuthContext
+import { AuthContext } from "../../context/AuthContext";
 import "../../styles/seller/ManageMenusPage.css";
 
 const businessServiceBaseURL =
   import.meta.env.VITE_BUSINESS_SERVICE_URL || "http://localhost:3003";
 
 const ManageMenusPage = () => {
-  const { user } = useContext(AuthContext); // ✅ Get user from context
+  const { user } = useContext(AuthContext);
   const [categories, setCategories] = useState([]);
   const [productsByCategory, setProductsByCategory] = useState({});
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -23,15 +23,14 @@ const ManageMenusPage = () => {
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState("");
   const [uploading, setUploading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchMenuItems = async () => {
       try {
-        // ✅ Use user.id from context with fallback to localStorage
+        setLoading(true);
         const userId = user?.id || localStorage.getItem("userId");
-        const token = localStorage.getItem("token");
 
-        // ✅ Validate userId before making request
         if (!userId || userId === "null" || userId === "undefined") {
           console.error("❌ Invalid userId:", userId);
           alert("Unable to fetch menu items. Please log in again.");
@@ -40,13 +39,9 @@ const ManageMenusPage = () => {
 
         console.log("✅ Fetching business for userId:", userId);
 
+        // ✅ FIXED: Correct endpoint
         const businessResponse = await axios.get(
-          `${businessServiceBaseURL}/api/business/${userId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
+          `${businessServiceBaseURL}/api/business/user/${userId}`
         );
 
         const business = businessResponse.data;
@@ -54,13 +49,9 @@ const ManageMenusPage = () => {
 
         console.log("✅ Business found:", business.businessName);
 
+        // ✅ FIXED: Correct endpoint
         const menuResponse = await axios.get(
-          `${businessServiceBaseURL}/api/business/menu-items/${businessId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
+          `${businessServiceBaseURL}/api/business/menu-items/${businessId}`
         );
 
         const items = menuResponse.data;
@@ -93,18 +84,20 @@ const ManageMenusPage = () => {
         setSelectedCategory("All");
       } catch (error) {
         console.error("❌ Error fetching menu items:", error);
+        console.error("Error response:", error.response?.data);
         alert(
           error.response?.data?.message ||
             "Failed to fetch menu items. Please check your connection and try again."
         );
+      } finally {
+        setLoading(false);
       }
     };
 
-    // ✅ Only fetch if user exists
     if (user?.id) {
       fetchMenuItems();
     }
-  }, [user?.id]); // ✅ Add user.id as dependency
+  }, [user?.id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -143,11 +136,8 @@ const ManageMenusPage = () => {
     setUploading(true);
 
     try {
-      // ✅ Get userId from context with fallback
       const userId = user?.id || localStorage.getItem("userId");
-      const token = localStorage.getItem("token");
 
-      // ✅ CRITICAL: Validate userId before sending
       if (!userId || userId === "null" || userId === "undefined") {
         alert("Session expired. Please log in again.");
         setUploading(false);
@@ -164,18 +154,17 @@ const ManageMenusPage = () => {
       formData.append("category", category);
       formData.append("productImage", image);
 
-      // ✅ Log FormData contents for debugging
       console.log("FormData contents:");
       for (let [key, value] of formData.entries()) {
         console.log(`  ${key}:`, value instanceof File ? value.name : value);
       }
 
+      // ✅ FIXED: Correct endpoint
       const response = await axios.post(
-        `${businessServiceBaseURL}/api/business/menu/add-items`,
+        `${businessServiceBaseURL}/api/business/menu-add-items`,
         formData,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
             "Content-Type": "multipart/form-data",
           },
         }
@@ -293,11 +282,20 @@ const ManageMenusPage = () => {
     return ["All", ...filteredCats.sort()];
   };
 
-  // ✅ Show loading state if user is not loaded yet
+  // Loading state
   if (!user) {
     return (
       <div className="menus-page">
         <p>Loading user information...</p>
+      </div>
+    );
+  }
+
+  if (loading) {
+    return (
+      <div className="menus-page">
+        <h2>Manage Menus</h2>
+        <p>Loading menu items...</p>
       </div>
     );
   }

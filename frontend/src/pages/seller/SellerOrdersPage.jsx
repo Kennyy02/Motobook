@@ -8,7 +8,7 @@ const SellerOrdersPage = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
-  const [actionLoading, setActionLoading] = useState(null); // Track which order is being updated
+  const [actionLoading, setActionLoading] = useState(null);
 
   const businessServiceBaseURL =
     import.meta.env.VITE_BUSINESS_SERVICE_URL || "http://localhost:3003";
@@ -19,8 +19,9 @@ const SellerOrdersPage = () => {
   useEffect(() => {
     const fetchBusiness = async () => {
       try {
+        // ✅ FIXED: Correct endpoint
         const res = await fetch(
-          `${businessServiceBaseURL}/api/business/${user.id}`
+          `${businessServiceBaseURL}/api/business/user/${user.id}`
         );
         const data = await res.json();
         setBusiness(data);
@@ -30,7 +31,7 @@ const SellerOrdersPage = () => {
     };
 
     if (user?.id) fetchBusiness();
-  }, [user?.id]);
+  }, [user?.id, businessServiceBaseURL]);
 
   // Fetch orders when business is loaded
   useEffect(() => {
@@ -56,9 +57,8 @@ const SellerOrdersPage = () => {
     // Auto-refresh every 30 seconds
     const interval = setInterval(fetchOrders, 30000);
     return () => clearInterval(interval);
-  }, [business?.id]);
+  }, [business?.id, orderServiceBaseURL]);
 
-  // ✅ NEW: Handle "Prepare" button click
   const handlePrepareOrder = async (orderId) => {
     setActionLoading(orderId);
     try {
@@ -70,7 +70,6 @@ const SellerOrdersPage = () => {
       );
 
       if (res.ok) {
-        // Update local state
         setOrders((prevOrders) =>
           prevOrders.map((order) =>
             order.id === orderId ? { ...order, status: "preparing" } : order
@@ -88,7 +87,6 @@ const SellerOrdersPage = () => {
     }
   };
 
-  // ✅ NEW: Handle "Ready" button click
   const handleMarkReady = async (orderId) => {
     setActionLoading(orderId);
     try {
@@ -100,7 +98,6 @@ const SellerOrdersPage = () => {
       );
 
       if (res.ok) {
-        // Update local state
         setOrders((prevOrders) =>
           prevOrders.map((order) =>
             order.id === orderId ? { ...order, status: "ready" } : order
@@ -126,19 +123,19 @@ const SellerOrdersPage = () => {
   const getStatusColor = (status) => {
     switch (status) {
       case "pending":
-        return "#f59e0b"; // Orange
+        return "#f59e0b";
       case "preparing":
-        return "#8b5cf6"; // Purple
+        return "#8b5cf6";
       case "ready":
-        return "#06b6d4"; // Cyan
+        return "#06b6d4";
       case "accepted":
-        return "#3b82f6"; // Blue
+        return "#3b82f6";
       case "completed":
-        return "#10b981"; // Green
+        return "#10b981";
       case "cancelled":
-        return "#ef4444"; // Red
+        return "#ef4444";
       default:
-        return "#6b7280"; // Gray
+        return "#6b7280";
     }
   };
 
@@ -331,7 +328,6 @@ const SellerOrdersPage = () => {
                 )}
               </div>
 
-              {/* ✅ NEW: Action buttons based on order status */}
               <div className="order-actions">
                 {order.status === "pending" && (
                   <button
