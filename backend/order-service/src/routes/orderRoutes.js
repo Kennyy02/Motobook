@@ -1,4 +1,3 @@
-// routes/orderRoutes.js
 import express from "express";
 import {
   createOrder,
@@ -11,8 +10,9 @@ import {
   getRiderHistory,
   getRiderStatistics,
   getRestaurantOrders,
-  prepareOrder, // ✅ NEW
-  markOrderReady, // ✅ NEW
+  prepareOrder,
+  markOrderReady,
+  getSellerStatistics,
 } from "../controller/orderController.js";
 
 const router = express.Router();
@@ -25,8 +25,9 @@ router.patch("/:id/status", updateOrderStatus);
 router.patch("/:id/assign", acceptOrder);
 router.patch("/:orderId/complete", completeOrder);
 router.get("/restaurant/:restaurantId", getRestaurantOrders);
+router.get("/seller/:restaurantId/stats", getSellerStatistics); // ✅ Add this route
 
-// ✅ NEW: Seller order management endpoints
+// Seller order management endpoints
 router.patch("/:orderId/prepare", prepareOrder);
 router.patch("/:orderId/ready", markOrderReady);
 

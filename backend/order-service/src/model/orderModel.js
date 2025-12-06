@@ -150,6 +150,94 @@ export const getOrdersByRestaurant = async (restaurantId) => {
   return orders;
 };
 
+// Add this function to your orderModel.js file
+
+export const getSellerStats = async (restaurantId) => {
+  const conn = await pool.getConnection();
+
+  try {
+    // Get today's date range
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // Query for all statistics in one go for better performance
+    const [stats] = await conn.query(
+      `SELECT 
+        -- Total orders today
+        COUNT(CASE WHEN DATE(created_at) = CURDATE() THEN 1 END) as total_orders_today,
+        
+        -- Pending orders (pending + preparing)
+        COUNT(CASE WHEN status IN ('pending', 'preparing') THEN 1 END) as pending_orders,
+        
+        -- Completed orders today
+        COUNT(CASE WHEN status = 'completed' AND DATE(delivered_at) = CURDATE() THEN 1 END) as completed_today,
+        
+        -- Total revenue today
+        COALESCE(SUM(CASE WHEN status = 'completed' AND DATE(delivered_at) = CURDATE() THEN total_amount ELSE 0 END), 0) as revenue_today,
+        
+        -- All time stats
+        COUNT(*) as total_orders_all_time,
+        COUNT(CASE WHEN status = 'completed' THEN 1 END) as completed_all_time,
+        COALESCE(SUM(CASE WHEN status = 'completed' THEN total_amount ELSE 0 END), 0) as revenue_all_time
+       
+       FROM orders 
+       WHERE restaurant_id = ?`,
+      [restaurantId]
+    );
+
+    // Query for top-selling item
+    const [topItem] = await conn.query(
+      `SELECT 
+        oi.product_name,
+        SUM(oi.quantity) as total_sold
+       FROM order_items oi
+       JOIN orders o ON oi.order_id = o.id
+       WHERE o.restaurant_id = ? AND o.status = 'completed'
+       GROUP BY oi.product_id, oi.product_name
+       ORDER BY total_sold DESC
+       LIMIT 1`,
+      [restaurantId]
+    );
+
+    // Query for average preparation time
+    const [avgPrepTime] = await conn.query(
+      `SELECT 
+        AVG(TIMESTAMPDIFF(MINUTE, created_at, picked_up_at)) as avg_prep_minutes
+       FROM orders 
+       WHERE restaurant_id = ? 
+         AND status = 'completed' 
+         AND picked_up_at IS NOT NULL
+         AND DATE(created_at) >= DATE_SUB(CURDATE(), INTERVAL 7 DAYS)`,
+      [restaurantId]
+    );
+
+    return {
+      // Today's statistics
+      totalOrdersToday: stats[0].total_orders_today || 0,
+      pendingOrders: stats[0].pending_orders || 0,
+      completedToday: stats[0].completed_today || 0,
+      revenueToday: parseFloat(stats[0].revenue_today) || 0,
+
+      // Top selling item
+      topSellingItem: topItem[0]?.product_name || "N/A",
+      topSellingItemQuantity: topItem[0]?.total_sold || 0,
+
+      // Average prep time (last 7 days)
+      avgPrepTime: Math.round(avgPrepTime[0]?.avg_prep_minutes || 0),
+
+      // All time stats
+      totalOrdersAllTime: stats[0].total_orders_all_time || 0,
+      completedAllTime: stats[0].completed_all_time || 0,
+      revenueAllTime: parseFloat(stats[0].revenue_all_time) || 0,
+    };
+  } catch (err) {
+    console.error("Error fetching seller stats:", err);
+    throw err;
+  } finally {
+    conn.release();
+  }
+};
+
 // ✅ MODIFIED: When rider accepts, update status to 'accepted' and set picked_up_at
 export const assignRiderToOrder = async (orderId, riderId, riderName) => {
   const [result] = await pool.query(

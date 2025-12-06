@@ -12,7 +12,24 @@ import {
   getOrdersByRestaurant,
   setOrderPreparing, // ✅ NEW
   setOrderReady, // ✅ NEW
+  getSellerStats,
 } from "../model/orderModel.js";
+
+export const getSellerStatistics = async (req, res) => {
+  const { restaurantId } = req.params;
+
+  if (!restaurantId) {
+    return res.status(400).json({ message: "Missing restaurantId" });
+  }
+
+  try {
+    const stats = await getSellerStats(restaurantId);
+    res.status(200).json(stats);
+  } catch (error) {
+    console.error("Error fetching seller statistics:", error);
+    res.status(500).json({ message: "Failed to fetch seller statistics" });
+  }
+};
 
 export const getRestaurantOrders = async (req, res) => {
   const { restaurantId } = req.params;
