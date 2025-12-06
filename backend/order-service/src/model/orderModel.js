@@ -20,10 +20,10 @@ export const createOrder = async (orderData, items) => {
         orderData.restaurantId,
         orderData.restaurantName,
         orderData.totalAmount,
-        "pending", // ✅ Explicitly set initial status
-        false, // is_accepted default false
-        null, // rider_id (initially null)
-        null, // rider_name (initially null)
+        "pending",
+        false,
+        null,
+        null,
       ]
     );
 
@@ -83,7 +83,6 @@ export const updateOrderStatusInDB = async (orderId, status) => {
   return result;
 };
 
-// ✅ NEW: Update order to "preparing" status
 export const setOrderPreparing = async (orderId) => {
   const [result] = await pool.query(
     `UPDATE orders SET status = 'preparing' WHERE id = ? AND status = 'pending'`,
@@ -92,7 +91,6 @@ export const setOrderPreparing = async (orderId) => {
   return result;
 };
 
-// ✅ NEW: Update order to "ready" status
 export const setOrderReady = async (orderId) => {
   const [result] = await pool.query(
     `UPDATE orders SET status = 'ready' WHERE id = ? AND status = 'preparing'`,
@@ -101,7 +99,6 @@ export const setOrderReady = async (orderId) => {
   return result;
 };
 
-// ✅ MODIFIED: Only get orders with status 'ready' for riders
 export const getAllPendingOrders = async () => {
   const [orders] = await pool.query(
     `SELECT * FROM orders WHERE status = 'ready' AND rider_id IS NULL ORDER BY created_at ASC`
@@ -150,8 +147,7 @@ export const getOrdersByRestaurant = async (restaurantId) => {
   return orders;
 };
 
-// Fixed getSellerStats function for orderModel.js
-
+// ✅ FIXED: Complete getSellerStats function with proper error handling
 export const getSellerStats = async (restaurantId) => {
   const conn = await pool.getConnection();
 
@@ -259,7 +255,6 @@ export const getSellerStats = async (restaurantId) => {
   }
 };
 
-// ✅ MODIFIED: When rider accepts, update status to 'accepted' and set picked_up_at
 export const assignRiderToOrder = async (orderId, riderId, riderName) => {
   const [result] = await pool.query(
     `UPDATE orders 

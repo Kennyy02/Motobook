@@ -10,13 +10,12 @@ import {
   getRiderDeliveryHistory,
   getRiderStats,
   getOrdersByRestaurant,
-  setOrderPreparing, // ✅ NEW
-  setOrderReady, // ✅ NEW
+  setOrderPreparing,
+  setOrderReady,
   getSellerStats,
 } from "../model/orderModel.js";
 
-// Fixed getSellerStatistics controller function
-
+// ✅ FIXED: Enhanced error handling and logging
 export const getSellerStatistics = async (req, res) => {
   const { restaurantId } = req.params;
 
@@ -37,11 +36,26 @@ export const getSellerStatistics = async (req, res) => {
     console.error("❌ Error fetching seller statistics:", error);
     console.error("Error stack:", error.stack);
 
-    // Send more detailed error in development
     res.status(500).json({
       message: "Failed to fetch seller statistics",
       error: process.env.NODE_ENV === "development" ? error.message : undefined,
     });
+  }
+};
+
+export const getRestaurantOrders = async (req, res) => {
+  const { restaurantId } = req.params;
+
+  if (!restaurantId) {
+    return res.status(400).json({ message: "Missing restaurantId" });
+  }
+
+  try {
+    const orders = await getOrdersByRestaurant(restaurantId);
+    res.status(200).json(orders);
+  } catch (error) {
+    console.error("Error fetching restaurant orders:", error);
+    res.status(500).json({ message: "Failed to fetch restaurant orders" });
   }
 };
 
@@ -113,7 +127,6 @@ export const updateOrderStatus = async (req, res) => {
   }
 };
 
-// ✅ NEW: Seller clicks "Prepare" button
 export const prepareOrder = async (req, res) => {
   const { orderId } = req.params;
 
@@ -136,7 +149,6 @@ export const prepareOrder = async (req, res) => {
   }
 };
 
-// ✅ NEW: Seller clicks "Ready" button
 export const markOrderReady = async (req, res) => {
   const { orderId } = req.params;
 
