@@ -15,35 +15,33 @@ import {
   getSellerStats,
 } from "../model/orderModel.js";
 
+// Fixed getSellerStatistics controller function
+
 export const getSellerStatistics = async (req, res) => {
   const { restaurantId } = req.params;
 
+  console.log("=== SELLER STATS REQUEST ===");
+  console.log("Restaurant ID:", restaurantId);
+
   if (!restaurantId) {
+    console.error("❌ Missing restaurantId");
     return res.status(400).json({ message: "Missing restaurantId" });
   }
 
   try {
     const stats = await getSellerStats(restaurantId);
+    console.log("✅ Stats fetched successfully:", stats);
+
     res.status(200).json(stats);
   } catch (error) {
-    console.error("Error fetching seller statistics:", error);
-    res.status(500).json({ message: "Failed to fetch seller statistics" });
-  }
-};
+    console.error("❌ Error fetching seller statistics:", error);
+    console.error("Error stack:", error.stack);
 
-export const getRestaurantOrders = async (req, res) => {
-  const { restaurantId } = req.params;
-
-  if (!restaurantId) {
-    return res.status(400).json({ message: "Missing restaurantId" });
-  }
-
-  try {
-    const orders = await getOrdersByRestaurant(restaurantId);
-    res.status(200).json(orders);
-  } catch (error) {
-    console.error("Error fetching restaurant orders:", error);
-    res.status(500).json({ message: "Failed to fetch restaurant orders" });
+    // Send more detailed error in development
+    res.status(500).json({
+      message: "Failed to fetch seller statistics",
+      error: process.env.NODE_ENV === "development" ? error.message : undefined,
+    });
   }
 };
 

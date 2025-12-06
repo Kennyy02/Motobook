@@ -150,15 +150,21 @@ export const getOrdersByRestaurant = async (restaurantId) => {
   return orders;
 };
 
-// Add this function to your orderModel.js file
+// Fixed getSellerStats function for orderModel.js
 
 export const getSellerStats = async (restaurantId) => {
   const conn = await pool.getConnection();
 
   try {
-    // Get today's date range
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    console.log("📊 Fetching stats for restaurant ID:", restaurantId);
+
+    // First, verify the restaurant exists and has orders
+    const [checkRestaurant] = await conn.query(
+      `SELECT COUNT(*) as total FROM orders WHERE restaurant_id = ?`,
+      [restaurantId]
+    );
+
+    console.log("Total orders for this restaurant:", checkRestaurant[0].total);
 
     // Query for all statistics in one go for better performance
     const [stats] = await conn.query(
@@ -166,13 +172,13 @@ export const getSellerStats = async (restaurantId) => {
         -- Total orders today
         COUNT(CASE WHEN DATE(created_at) = CURDATE() THEN 1 END) as total_orders_today,
         
-        -- Pending orders (pending + preparing)
-        COUNT(CASE WHEN status IN ('pending', 'preparing') THEN 1 END) as pending_orders,
+        -- Pending orders (pending + preparing + ready - not yet picked up)
+        COUNT(CASE WHEN status IN ('pending', 'preparing', 'ready') THEN 1 END) as pending_orders,
         
         -- Completed orders today
         COUNT(CASE WHEN status = 'completed' AND DATE(delivered_at) = CURDATE() THEN 1 END) as completed_today,
         
-        -- Total revenue today
+        -- Total revenue today (completed orders only)
         COALESCE(SUM(CASE WHEN status = 'completed' AND DATE(delivered_at) = CURDATE() THEN total_amount ELSE 0 END), 0) as revenue_today,
         
         -- All time stats
@@ -184,6 +190,8 @@ export const getSellerStats = async (restaurantId) => {
        WHERE restaurant_id = ?`,
       [restaurantId]
     );
+
+    console.log("📊 Basic stats:", stats[0]);
 
     // Query for top-selling item
     const [topItem] = await conn.query(
@@ -199,39 +207,52 @@ export const getSellerStats = async (restaurantId) => {
       [restaurantId]
     );
 
-    // Query for average preparation time
+    console.log("🏆 Top item:", topItem[0]);
+
+    // Query for average preparation time (last 7 days)
+    // Calculate from order creation to delivery completion
     const [avgPrepTime] = await conn.query(
       `SELECT 
-        AVG(TIMESTAMPDIFF(MINUTE, created_at, picked_up_at)) as avg_prep_minutes
+        AVG(TIMESTAMPDIFF(MINUTE, created_at, delivered_at)) as avg_prep_minutes
        FROM orders 
        WHERE restaurant_id = ? 
          AND status = 'completed' 
-         AND picked_up_at IS NOT NULL
+         AND delivered_at IS NOT NULL
+         AND created_at IS NOT NULL
          AND DATE(created_at) >= DATE_SUB(CURDATE(), INTERVAL 7 DAYS)`,
       [restaurantId]
     );
 
-    return {
+    console.log("⏱️ Avg prep time:", avgPrepTime[0]);
+
+    const result = {
       // Today's statistics
-      totalOrdersToday: stats[0].total_orders_today || 0,
-      pendingOrders: stats[0].pending_orders || 0,
-      completedToday: stats[0].completed_today || 0,
+      totalOrdersToday: parseInt(stats[0].total_orders_today) || 0,
+      pendingOrders: parseInt(stats[0].pending_orders) || 0,
+      completedToday: parseInt(stats[0].completed_today) || 0,
       revenueToday: parseFloat(stats[0].revenue_today) || 0,
 
       // Top selling item
       topSellingItem: topItem[0]?.product_name || "N/A",
-      topSellingItemQuantity: topItem[0]?.total_sold || 0,
+      topSellingItemQuantity: parseInt(topItem[0]?.total_sold) || 0,
 
-      // Average prep time (last 7 days)
-      avgPrepTime: Math.round(avgPrepTime[0]?.avg_prep_minutes || 0),
+      // Average prep time (last 7 days) - rounded to nearest minute
+      avgPrepTime: Math.round(
+        parseFloat(avgPrepTime[0]?.avg_prep_minutes) || 0
+      ),
 
       // All time stats
-      totalOrdersAllTime: stats[0].total_orders_all_time || 0,
-      completedAllTime: stats[0].completed_all_time || 0,
+      totalOrdersAllTime: parseInt(stats[0].total_orders_all_time) || 0,
+      completedAllTime: parseInt(stats[0].completed_all_time) || 0,
       revenueAllTime: parseFloat(stats[0].revenue_all_time) || 0,
     };
+
+    console.log("✅ Final result:", result);
+    return result;
   } catch (err) {
-    console.error("Error fetching seller stats:", err);
+    console.error("❌ Error fetching seller stats:", err);
+    console.error("Error details:", err.message);
+    console.error("Error stack:", err.stack);
     throw err;
   } finally {
     conn.release();
