@@ -39,7 +39,6 @@ const ManageMenusPage = () => {
 
         console.log("✅ Fetching business for userId:", userId);
 
-        // ✅ FIXED: Correct endpoint
         const businessResponse = await axios.get(
           `${businessServiceBaseURL}/api/business/user/${userId}`
         );
@@ -49,7 +48,6 @@ const ManageMenusPage = () => {
 
         console.log("✅ Business found:", business.businessName);
 
-        // ✅ FIXED: Correct endpoint
         const menuResponse = await axios.get(
           `${businessServiceBaseURL}/api/business/menu-items/${businessId}`
         );
@@ -159,7 +157,6 @@ const ManageMenusPage = () => {
         console.log(`  ${key}:`, value instanceof File ? value.name : value);
       }
 
-      // ✅ FIXED: Correct endpoint
       const response = await axios.post(
         `${businessServiceBaseURL}/api/business/menu-add-items`,
         formData,
@@ -216,13 +213,21 @@ const ManageMenusPage = () => {
     const { category } = newProduct;
     const updatedProducts = { ...productsByCategory };
 
-    if (category !== selectedCategory) {
+    // Remove from old category
+    if (updatedProducts[selectedCategory]) {
       updatedProducts[selectedCategory].splice(editingIndex, 1);
     }
 
+    // Add to new category (or same category if unchanged)
     if (!updatedProducts[category]) updatedProducts[category] = [];
     updatedProducts[category].push(newProduct);
 
+    // Update "All" category
+    updatedProducts["All"] = Object.keys(updatedProducts)
+      .filter((cat) => cat !== "All")
+      .flatMap((cat) => updatedProducts[cat]);
+
+    // Add category to list if it doesn't exist
     if (!categories.includes(category)) {
       setCategories((prev) => [...prev, category]);
     }
@@ -230,6 +235,30 @@ const ManageMenusPage = () => {
     setProductsByCategory(updatedProducts);
     setSelectedCategory(category);
     resetForm();
+    alert("Product updated successfully!");
+  };
+
+  const handleDelete = (index) => {
+    // Confirmation dialog
+    const productToDelete = productsByCategory[selectedCategory][index];
+    const confirmDelete = window.confirm(
+      `Are you sure you want to delete "${productToDelete.name}"?\n\nThis action cannot be undone.`
+    );
+
+    if (!confirmDelete) return;
+
+    const updatedProducts = { ...productsByCategory };
+
+    // Remove from current category
+    updatedProducts[selectedCategory].splice(index, 1);
+
+    // Rebuild "All" category to remove the deleted item
+    updatedProducts["All"] = Object.keys(updatedProducts)
+      .filter((cat) => cat !== "All")
+      .flatMap((cat) => updatedProducts[cat]);
+
+    setProductsByCategory(updatedProducts);
+    alert("Product deleted successfully!");
   };
 
   const handleOpenAddModal = () => {
@@ -412,7 +441,17 @@ const ManageMenusPage = () => {
             <h3>{prod.name}</h3>
             <p>{prod.description}</p>
             <strong>₱{prod.price}</strong>
-            <button onClick={() => handleEdit(index)}>Edit</button>
+            <div className="card-buttons">
+              <button className="edit-btn" onClick={() => handleEdit(index)}>
+                Edit
+              </button>
+              <button
+                className="delete-btn"
+                onClick={() => handleDelete(index)}
+              >
+                Delete
+              </button>
+            </div>
           </div>
         ))}
       </div>
