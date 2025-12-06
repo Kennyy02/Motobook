@@ -1,8 +1,9 @@
 /* ============================================
-   MOBILE-FIRST HEADER DESIGN
+   LANDING PAGE HEADER - MOBILE-FIRST DESIGN
+   Namespaced with 'landing-' prefix
    ============================================ */
 
-.header {
+.landing-header {
   background-color: #ffffff;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
   position: fixed;
@@ -13,7 +14,7 @@
   height: 60px;
 }
 
-.header-content {
+.landing-header-content {
   max-width: 1400px;
   margin: 0 auto;
   padding: 0 16px;
@@ -27,7 +28,7 @@
    LOGO
    ============================================ */
 
-.logo {
+.landing-logo {
   display: flex;
   align-items: center;
   height: 36px;
@@ -35,7 +36,7 @@
   flex-shrink: 0;
 }
 
-.logo img {
+.landing-logo img {
   height: 100%;
   width: auto;
   object-fit: contain;
@@ -45,13 +46,13 @@
    MOBILE NAVIGATION (Default)
    ============================================ */
 
-.mobile-nav {
+.landing-mobile-nav {
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
-.hamburger-btn {
+.landing-hamburger-btn {
   background: none;
   border: none;
   color: #333;
@@ -64,16 +65,16 @@
   transition: background-color 0.2s;
 }
 
-.hamburger-btn:hover {
+.landing-hamburger-btn:hover {
   background-color: #f5f5f5;
 }
 
-.hamburger-btn:active {
+.landing-hamburger-btn:active {
   transform: scale(0.95);
 }
 
 /* Hide desktop nav on mobile */
-.desktop-nav {
+.landing-desktop-nav {
   display: none;
 }
 
@@ -81,7 +82,7 @@
    MOBILE MENU OVERLAY
    ============================================ */
 
-.mobile-menu-overlay {
+.landing-mobile-menu-overlay {
   position: absolute;
   top: 60px;
   left: 0;
@@ -89,12 +90,12 @@
   background: #ffffff;
   border-top: 1px solid #e5e5e5;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  animation: slideDown 0.2s ease-out;
+  animation: landing-slideDown 0.2s ease-out;
   max-height: calc(100vh - 60px);
   overflow-y: auto;
 }
 
-@keyframes slideDown {
+@keyframes landing-slideDown {
   from {
     opacity: 0;
     transform: translateY(-10px);
@@ -106,15 +107,15 @@
 }
 
 /* Mobile Auth Buttons */
-.mobile-auth {
+.landing-mobile-auth {
   padding: 20px 16px;
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.mobile-login-btn,
-.mobile-signup-btn {
+.landing-mobile-login-btn,
+.landing-mobile-signup-btn {
   width: 100%;
   padding: 14px;
   font-size: 15px;
@@ -125,31 +126,31 @@
   transition: all 0.2s ease;
 }
 
-.mobile-login-btn {
+.landing-mobile-login-btn {
   background-color: transparent;
   color: #42a9fc;
   border: 2px solid #42a9fc;
 }
 
-.mobile-login-btn:active {
+.landing-mobile-login-btn:active {
   background-color: #f0f9ff;
 }
 
-.mobile-signup-btn {
+.landing-mobile-signup-btn {
   background-color: #42a9fc;
   color: #fff;
 }
 
-.mobile-signup-btn:active {
+.landing-mobile-signup-btn:active {
   background-color: #3090db;
 }
 
 /* Mobile User Menu */
-.mobile-user-menu {
+.landing-mobile-user-menu {
   padding: 20px 0;
 }
 
-.mobile-user-header {
+.landing-mobile-user-header {
   display: flex;
   align-items: center;
   gap: 16px;
@@ -158,26 +159,26 @@
   color: #42a9fc;
 }
 
-.mobile-user-header h3 {
+.landing-mobile-user-header h3 {
   margin: 0;
   font-size: 18px;
   font-weight: 600;
   color: #1c1c1e;
 }
 
-.mobile-user-header p {
+.landing-mobile-user-header p {
   margin: 4px 0 0;
   font-size: 13px;
   color: #8e8e93;
 }
 
-.mobile-menu-list {
+.landing-mobile-menu-list {
   list-style: none;
   margin: 0;
   padding: 8px 0;
 }
 
-.mobile-menu-list li {
+.landing-mobile-menu-list li {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -189,11 +190,11 @@
   transition: background-color 0.2s;
 }
 
-.mobile-menu-list li:active {
+.landing-mobile-menu-list li:active {
   background-color: #f5f5f5;
 }
 
-.mobile-menu-list li.logout {
+.landing-mobile-menu-list li.logout {
   color: #ff3b30;
 }
 
@@ -201,7 +202,7 @@
    BADGE STYLES
    ============================================ */
 
-.badge-dot {
+.landing-badge-dot {
   position: absolute;
   top: 0;
   right: 0;
@@ -212,7 +213,7 @@
   border-radius: 50%;
 }
 
-.badge-count {
+.landing-badge-count {
   background: #ff3b30;
   color: white;
   font-size: 11px;
@@ -228,42 +229,42 @@
    ============================================ */
 
 @media (min-width: 768px) {
-  .header {
+  .landing-header {
     height: 70px;
   }
 
-  .header-content {
+  .landing-header-content {
     padding: 0 32px;
   }
 
-  .logo {
+  .landing-logo {
     height: 42px;
   }
 
   /* Show desktop nav, hide mobile */
-  .desktop-nav {
+  .landing-desktop-nav {
     display: flex;
     align-items: center;
     gap: 20px;
   }
 
-  .mobile-nav {
+  .landing-mobile-nav {
     display: none;
   }
 
-  .mobile-menu-overlay {
+  .landing-mobile-menu-overlay {
     display: none !important;
   }
 
   /* Desktop Auth Buttons */
-  .auth-buttons {
+  .landing-auth-buttons {
     display: flex;
     align-items: center;
     gap: 12px;
   }
 
-  .login-btn,
-  .signup-btn {
+  .landing-login-btn,
+  .landing-signup-btn {
     padding: 10px 24px;
     font-size: 14px;
     font-weight: 600;
@@ -273,33 +274,33 @@
     transition: all 0.2s ease;
   }
 
-  .login-btn {
+  .landing-login-btn {
     background-color: transparent;
     color: #42a9fc;
     border: 2px solid #42a9fc;
   }
 
-  .login-btn:hover {
+  .landing-login-btn:hover {
     background-color: #f0f9ff;
   }
 
-  .signup-btn {
+  .landing-signup-btn {
     background-color: #42a9fc;
     color: #fff;
   }
 
-  .signup-btn:hover {
+  .landing-signup-btn:hover {
     background-color: #3090db;
   }
 
   /* Desktop User Section */
-  .user-section {
+  .landing-user-section {
     position: relative;
     display: flex;
     align-items: center;
   }
 
-  .user-toggle {
+  .landing-user-toggle {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -310,17 +311,17 @@
     position: relative;
   }
 
-  .user-toggle:hover {
+  .landing-user-toggle:hover {
     background-color: #f5f5f5;
   }
 
-  .user-icon {
+  .landing-user-icon {
     color: #42a9fc;
     transition: color 0.2s;
     flex-shrink: 0;
   }
 
-  .user-name {
+  .landing-user-name {
     color: #1c1c1e;
     font-size: 15px;
     font-weight: 500;
@@ -328,7 +329,7 @@
   }
 
   /* Desktop Dropdown */
-  .dropdown-menu {
+  .landing-dropdown-menu {
     position: absolute;
     top: calc(100% + 8px);
     right: 0;
@@ -340,10 +341,10 @@
     padding: 8px;
     margin: 0;
     min-width: 200px;
-    animation: fadeIn 0.15s ease-out;
+    animation: landing-fadeIn 0.15s ease-out;
   }
 
-  @keyframes fadeIn {
+  @keyframes landing-fadeIn {
     from {
       opacity: 0;
       transform: translateY(-5px);
@@ -354,7 +355,7 @@
     }
   }
 
-  .dropdown-menu li {
+  .landing-dropdown-menu li {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -367,11 +368,11 @@
     transition: background-color 0.2s;
   }
 
-  .dropdown-menu li:hover {
+  .landing-dropdown-menu li:hover {
     background-color: #f5f5f5;
   }
 
-  .dropdown-menu li.logout {
+  .landing-dropdown-menu li.logout {
     color: #ff3b30;
   }
 }
@@ -381,25 +382,25 @@
    ============================================ */
 
 @media (min-width: 1024px) {
-  .header {
+  .landing-header {
     height: 75px;
   }
 
-  .logo {
+  .landing-logo {
     height: 45px;
   }
 
-  .desktop-nav {
+  .landing-desktop-nav {
     gap: 24px;
   }
 
-  .login-btn,
-  .signup-btn {
+  .landing-login-btn,
+  .landing-signup-btn {
     padding: 11px 28px;
     font-size: 15px;
   }
 
-  .user-name {
+  .landing-user-name {
     font-size: 16px;
   }
 }

@@ -14,7 +14,6 @@ const SellerHeader = () => {
 
   const [orders, setOrders] = useState([]);
   const [showOrdersModal, setShowOrdersModal] = useState(false);
-
   const [hasUnreadOrders, setHasUnreadOrders] = useState(false);
 
   //ORDER SERVICE DOMAIN
@@ -73,43 +72,47 @@ const SellerHeader = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("userId");
     localStorage.removeItem("token");
-
     navigate("/seller/login");
   };
 
   return (
     <>
-      <header className="header">
-        {/* Logo - Updated to use image instead of text */}
-        <div className="logo" onClick={() => navigate("/seller/dashboard")}>
+      <header className="seller-header">
+        {/* Logo */}
+        <div
+          className="seller-logo"
+          onClick={() => navigate("/seller/dashboard")}
+        >
           <img src={logo} alt="MotoBook" />
         </div>
 
-        <nav className="navbar">
-          <div className="auth-buttons" ref={dropdownRef}>
+        <nav className="seller-navbar">
+          <div className="seller-auth-buttons" ref={dropdownRef}>
             {!user || !user.name ? (
               <>
-                <button className="login-btn" onClick={handleLoginClick}>
+                <button className="seller-login-btn" onClick={handleLoginClick}>
                   Login
                 </button>
               </>
             ) : (
-              <div className="user-dropdown">
+              <div className="seller-user-dropdown">
                 <div
-                  className="user-toggle"
+                  className="seller-user-toggle"
                   onClick={() => setDropdownOpen((prev) => !prev)}
                 >
-                  <div className="icon-wrapper">
-                    <FaUserCircle className="user-icon" size={28} />
+                  <div className="seller-icon-wrapper">
+                    <FaUserCircle className="seller-user-icon" size={28} />
                     {hasUnreadOrders && (
-                      <span className="badge">{orders.length}</span>
+                      <span className="seller-badge">{orders.length}</span>
                     )}
                   </div>
-                  <h3 className="user-name">{user.name.split(" ")[0]}</h3>
+                  <h3 className="seller-user-name">
+                    {user.name.split(" ")[0]}
+                  </h3>
                 </div>
 
                 {dropdownOpen && (
-                  <ul className="dropdown-menu">
+                  <ul className="seller-dropdown-menu">
                     <li
                       onClick={() =>
                         handleMenuClick(() => navigate("/seller/profile"))

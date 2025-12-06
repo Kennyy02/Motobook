@@ -1,8 +1,8 @@
 /* SellerHeader.css - Modern Responsive Header */
-/* Save this file as: src/styles/seller/SellerHeader.css */
+/* NAMESPACED with 'seller-' prefix to avoid conflicts */
 
 /* Header Container */
-.header {
+.seller-header {
   position: fixed;
   top: 0;
   left: 0;
@@ -22,32 +22,32 @@
 }
 
 /* Logo Section */
-.logo {
+.seller-logo {
   display: flex;
   align-items: center;
   cursor: pointer;
   transition: transform 0.3s ease;
 }
 
-.logo:hover {
+.seller-logo:hover {
   transform: scale(1.05);
 }
 
-.logo img {
+.seller-logo img {
   height: 40px;
   width: auto;
   object-fit: contain;
 }
 
 /* Navbar */
-.navbar {
+.seller-navbar {
   display: flex;
   align-items: center;
   gap: 1.5rem;
 }
 
 /* Auth Buttons Container */
-.auth-buttons {
+.seller-auth-buttons {
   position: relative;
   display: flex;
   align-items: center;
@@ -55,7 +55,7 @@
 }
 
 /* Login Button */
-.login-btn {
+.seller-login-btn {
   padding: 0.625rem 1.5rem;
   background: linear-gradient(135deg, #3b82f6, #2563eb);
   color: white;
@@ -68,25 +68,25 @@
   box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
 }
 
-.login-btn:hover {
+.seller-login-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
   background: linear-gradient(135deg, #2563eb, #1d4ed8);
 }
 
-.login-btn:active {
+.seller-login-btn:active {
   transform: translateY(0);
 }
 
 /* User Dropdown Container */
-.user-dropdown {
+.seller-user-dropdown {
   position: relative;
   display: flex;
   align-items: center;
 }
 
 /* User Toggle Button */
-.user-toggle {
+.seller-user-toggle {
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -97,30 +97,30 @@
   background: transparent;
 }
 
-.user-toggle:hover {
+.seller-user-toggle:hover {
   background: rgba(59, 130, 246, 0.1);
 }
 
 /* Icon Wrapper with Badge */
-.icon-wrapper {
+.seller-icon-wrapper {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.user-icon {
+.seller-user-icon {
   color: #3b82f6;
   transition: all 0.3s ease;
 }
 
-.user-toggle:hover .user-icon {
+.seller-user-toggle:hover .seller-user-icon {
   color: #2563eb;
   transform: scale(1.1);
 }
 
 /* Notification Badge */
-.badge {
+.seller-badge {
   position: absolute;
   top: -4px;
   right: -4px;
@@ -136,10 +136,10 @@
   justify-content: center;
   padding: 0 4px;
   box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
-  animation: pulse 2s ease-in-out infinite;
+  animation: seller-pulse 2s ease-in-out infinite;
 }
 
-@keyframes pulse {
+@keyframes seller-pulse {
   0%,
   100% {
     transform: scale(1);
@@ -152,7 +152,7 @@
 }
 
 /* User Name */
-.user-name {
+.seller-user-name {
   margin: 0;
   font-size: 0.938rem;
   font-weight: 600;
@@ -160,15 +160,15 @@
   transition: color 0.3s ease;
 }
 
-.user-toggle:hover .user-name {
+.seller-user-toggle:hover .seller-user-name {
   color: #3b82f6;
 }
 
-/* Dropdown Menu - CRITICAL FIX: Position relative to .user-dropdown */
-.dropdown-menu {
+/* Dropdown Menu */
+.seller-dropdown-menu {
   position: absolute;
-  top: calc(100% + 0.5rem); /* Position below the user toggle */
-  right: 0; /* Align to the right edge of .user-dropdown */
+  top: calc(100% + 0.5rem);
+  right: 0;
   min-width: 200px;
   background: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(20px);
@@ -181,11 +181,11 @@
   margin: 0;
   list-style: none;
   z-index: 1000;
-  animation: dropdownSlideIn 0.3s ease-out;
+  animation: seller-dropdownSlideIn 0.3s ease-out;
   transform-origin: top right;
 }
 
-@keyframes dropdownSlideIn {
+@keyframes seller-dropdownSlideIn {
   from {
     opacity: 0;
     transform: translateY(-10px) scale(0.95);
@@ -197,7 +197,7 @@
 }
 
 /* Dropdown Menu Items */
-.dropdown-menu li {
+.seller-dropdown-menu li {
   padding: 0.75rem 1rem;
   cursor: pointer;
   border-radius: 10px;
@@ -210,7 +210,7 @@
   gap: 0.75rem;
 }
 
-.dropdown-menu li:hover {
+.seller-dropdown-menu li:hover {
   background: linear-gradient(
     135deg,
     rgba(59, 130, 246, 0.1),
@@ -220,19 +220,19 @@
   transform: translateX(4px);
 }
 
-.dropdown-menu li:active {
+.seller-dropdown-menu li:active {
   transform: translateX(2px) scale(0.98);
 }
 
 /* Last item (Logout) - Red accent */
-.dropdown-menu li:last-child {
+.seller-dropdown-menu li:last-child {
   color: #ef4444;
   margin-top: 0.25rem;
   border-top: 1px solid rgba(226, 232, 240, 0.8);
   padding-top: 0.875rem;
 }
 
-.dropdown-menu li:last-child:hover {
+.seller-dropdown-menu li:last-child:hover {
   background: linear-gradient(
     135deg,
     rgba(239, 68, 68, 0.1),
@@ -247,50 +247,50 @@
 
 /* Tablet View */
 @media (max-width: 1024px) {
-  .header {
+  .seller-header {
     padding: 0 1.5rem;
     height: 60px;
+    z-index: 1100;
   }
 
-  .logo img {
+  .seller-logo img {
     height: 36px;
   }
 
-  .user-name {
+  .seller-user-name {
     font-size: 0.875rem;
   }
 
-  .dropdown-menu {
+  .seller-dropdown-menu {
     min-width: 180px;
   }
 }
 
 /* Mobile View */
 @media (max-width: 768px) {
-  .header {
+  .seller-header {
     padding: 0 1rem;
     height: 60px;
   }
 
-  .logo img {
+  .seller-logo img {
     height: 32px;
   }
 
-  /* Hide user name on mobile, show only icon */
-  .user-name {
+  .seller-user-name {
     display: none;
   }
 
-  .user-toggle {
+  .seller-user-toggle {
     padding: 0.5rem;
   }
 
-  .dropdown-menu {
+  .seller-dropdown-menu {
     min-width: 160px;
-    right: -0.5rem; /* Adjust for smaller screens */
+    right: -0.5rem;
   }
 
-  .dropdown-menu li {
+  .seller-dropdown-menu li {
     padding: 0.625rem 0.875rem;
     font-size: 0.875rem;
   }
@@ -298,51 +298,44 @@
 
 /* Small Mobile View */
 @media (max-width: 480px) {
-  .header {
+  .seller-header {
     padding: 0 0.75rem;
     height: 60px;
   }
 
-  .logo img {
+  .seller-logo img {
     height: 28px;
   }
 
-  .user-icon {
+  .seller-user-icon {
     font-size: 24px !important;
   }
 
-  .badge {
+  .seller-badge {
     font-size: 0.563rem;
     min-width: 16px;
     height: 16px;
   }
 
-  .dropdown-menu {
+  .seller-dropdown-menu {
     min-width: 150px;
     right: -0.25rem;
     padding: 0.375rem;
   }
 
-  .dropdown-menu li {
+  .seller-dropdown-menu li {
     padding: 0.5rem 0.75rem;
     font-size: 0.813rem;
   }
 
-  .login-btn {
+  .seller-login-btn {
     padding: 0.5rem 1rem;
     font-size: 0.875rem;
   }
 }
 
-/* Smooth transitions for all elements */
+/* Smooth transitions */
 * {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-/* Fix for Mobile - Ensure header stays on top */
-@media (max-width: 1024px) {
-  .header {
-    z-index: 1100; /* Above sidebar overlay */
-  }
 }

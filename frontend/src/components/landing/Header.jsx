@@ -84,43 +84,47 @@ function Header({ cartItems, onToggleCart }) {
 
   return (
     <>
-      <header className="header">
-        <div className="header-content">
+      <header className="landing-header">
+        <div className="landing-header-content">
           {/* Logo */}
-          <div className="logo" onClick={() => navigate("/")}>
+          <div className="landing-logo" onClick={() => navigate("/")}>
             <img src={logo} alt="MotoBook" />
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="desktop-nav">
+          <nav className="landing-desktop-nav">
             {!user || !user.name ? (
-              <div className="auth-buttons">
+              <div className="landing-auth-buttons">
                 <button
-                  className="login-btn"
+                  className="landing-login-btn"
                   onClick={() => showLogin("login")}
                 >
                   Login
                 </button>
                 <button
-                  className="signup-btn"
+                  className="landing-signup-btn"
                   onClick={() => showLogin("signup")}
                 >
                   Signup
                 </button>
               </div>
             ) : (
-              <div className="user-section" ref={dropdownRef}>
+              <div className="landing-user-section" ref={dropdownRef}>
                 <div
-                  className="user-toggle"
+                  className="landing-user-toggle"
                   onClick={() => setDropdownOpen((prev) => !prev)}
                 >
-                  <FaUserCircle className="user-icon" size={24} />
-                  {hasUnreadOrders && <span className="badge-dot"></span>}
-                  <span className="user-name">{user.name.split(" ")[0]}</span>
+                  <FaUserCircle className="landing-user-icon" size={24} />
+                  {hasUnreadOrders && (
+                    <span className="landing-badge-dot"></span>
+                  )}
+                  <span className="landing-user-name">
+                    {user.name.split(" ")[0]}
+                  </span>
                 </div>
 
                 {dropdownOpen && (
-                  <ul className="dropdown-menu">
+                  <ul className="landing-dropdown-menu">
                     <li
                       onClick={() =>
                         handleMenuClick(() => setShowOrdersModal(true))
@@ -128,7 +132,9 @@ function Header({ cartItems, onToggleCart }) {
                     >
                       <span>My Orders</span>
                       {hasUnreadOrders && (
-                        <span className="badge-count">{orders.length}</span>
+                        <span className="landing-badge-count">
+                          {orders.length}
+                        </span>
                       )}
                     </li>
                     <li
@@ -159,10 +165,10 @@ function Header({ cartItems, onToggleCart }) {
           </nav>
 
           {/* Mobile Navigation */}
-          <div className="mobile-nav">
+          <div className="landing-mobile-nav">
             <Cart cartItems={cartItems} onToggleCart={onToggleCart} />
             <button
-              className="hamburger-btn"
+              className="landing-hamburger-btn"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label="Menu"
             >
@@ -173,32 +179,32 @@ function Header({ cartItems, onToggleCart }) {
 
         {/* Mobile Menu Overlay */}
         {mobileMenuOpen && (
-          <div className="mobile-menu-overlay" ref={mobileMenuRef}>
+          <div className="landing-mobile-menu-overlay" ref={mobileMenuRef}>
             {!user || !user.name ? (
-              <div className="mobile-auth">
+              <div className="landing-mobile-auth">
                 <button
-                  className="mobile-login-btn"
+                  className="landing-mobile-login-btn"
                   onClick={() => showLogin("login")}
                 >
                   Login
                 </button>
                 <button
-                  className="mobile-signup-btn"
+                  className="landing-mobile-signup-btn"
                   onClick={() => showLogin("signup")}
                 >
                   Signup
                 </button>
               </div>
             ) : (
-              <div className="mobile-user-menu">
-                <div className="mobile-user-header">
+              <div className="landing-mobile-user-menu">
+                <div className="landing-mobile-user-header">
                   <FaUserCircle size={40} />
                   <div>
                     <h3>{user.name}</h3>
                     <p>{user.email}</p>
                   </div>
                 </div>
-                <ul className="mobile-menu-list">
+                <ul className="landing-mobile-menu-list">
                   <li
                     onClick={() =>
                       handleMenuClick(() => setShowOrdersModal(true))
@@ -206,7 +212,9 @@ function Header({ cartItems, onToggleCart }) {
                   >
                     <span>My Orders</span>
                     {hasUnreadOrders && (
-                      <span className="badge-count">{orders.length}</span>
+                      <span className="landing-badge-count">
+                        {orders.length}
+                      </span>
                     )}
                   </li>
                   <li
