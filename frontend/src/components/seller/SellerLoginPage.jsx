@@ -58,6 +58,9 @@ const SellerLoginPage = () => {
           onClick={() => navigate("/")}
         />
         <nav className="header-nav">
+          <button className="nav-link" onClick={() => navigate("/")}>
+            Home
+          </button>
           <button
             className="nav-link active"
             onClick={() => navigate("/seller/login")}
